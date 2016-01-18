@@ -1,0 +1,16 @@
+prefix=/opt/lilei/mlt-master/android/build/mlt-armv7a/output
+exec_prefix=/opt/lilei/mlt-master/android/build/mlt-armv7a/output
+libdir=/opt/lilei/mlt-master/android/build/mlt-armv7a/output/lib
+includedir=/opt/lilei/mlt-master/android/build/mlt-armv7a/output/include
+datadir=/opt/lilei/mlt-master/android/build/mlt-armv7a/output/share
+mandir=/opt/lilei/mlt-master/android/build/mlt-armv7a/output/share/man
+version=0.9.9
+cflags=
+libs=
+
+Name: mlt++
+Description: C++ API for MLT multimedia framework
+Version: ${version}
+Requires: mlt-framework
+Libs: -L${libdir} ${libs}
+Cflags: ${cflags}

@@ -1,0 +1,19 @@
+prefix=/opt/lilei/mlt-master/android/build/mlt-armv7a/output
+exec_prefix=/opt/lilei/mlt-master/android/build/mlt-armv7a/output
+libdir=/opt/lilei/mlt-master/android/build/mlt-armv7a/output/lib
+includedir=/opt/lilei/mlt-master/android/build/mlt-armv7a/output/include
+datadir=/opt/lilei/mlt-master/android/build/mlt-armv7a/output/share
+mandir=/opt/lilei/mlt-master/android/build/mlt-armv7a/output/share/man
+version=0.9.9
+cflags=-I/opt/lilei/mlt-master/android/build/mlt-armv7a/output/include -I/opt/lilei/mlt-master/android/build/mlt-armv7a/output/include/mlt -D_REENTRANT
+libs=-L/opt/lilei/mlt-master/android/build/mlt-armv7a/output/lib -lmlt
+moduledir=/opt/lilei/mlt-master/android/build/mlt-armv7a/output/lib/mlt
+mltdatadir=/opt/lilei/mlt-master/android/build/mlt-armv7a/output/share/mlt
+meltbin=/opt/lilei/mlt-master/android/build/mlt-armv7a/output/bin/melt
+
+Name: mlt-framework
+Description: MLT multimedia framework
+Version: ${version}
+Requires:
+Libs: -L${libdir} ${libs}
+Cflags: ${cflags}

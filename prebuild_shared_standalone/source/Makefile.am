@@ -1,0 +1,8 @@
+ACLOCAL_AMFLAGS=-I m4
+
+lib_LTLIBRARIES= libprebuild_shared_standalone.la
+
+libprebuild_shared_standalone_la_LDFLAGS=-avoid-version
+libprebuild_shared_standalone_la_SOURCES=my.c
+libprebuild_shared_standalone_la_LIBADD=-llog -landroid
+
