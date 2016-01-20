@@ -127,17 +127,22 @@ static jboolean FactoryInit(JNIEnv* env,jclass clazz, jobjectArray plugins, jstr
 		AAssetManager* mgr = AAssetManager_fromJava(env, assetMgr);
 		const char* filesRoot = (*env)->GetStringUTFChars(env,jfilesRoot, NULL);
 		char err[1024];
-		mlt_android_check_data(mgr, filesRoot, err, sizeof(err));
+		if ( !mlt_android_check_data(mgr, filesRoot, err, sizeof(err)) ) {
+			pthread_mutex_unlock(&g_repository_lock);
+			return JNI_FALSE;
+		}
 	}
 
 	int count = 0, ess_count = 0, i = 0;
 	if ( plugins == NULL ) {
+		pthread_mutex_unlock(&g_repository_lock);
 		return JNI_FALSE;
 	}
 
 	count = (*env)->GetArrayLength(env, plugins), ess_count = 0;
 
 	if ( count == 0 ) {
+		pthread_mutex_unlock(&g_repository_lock);
 		return JNI_FALSE;
 	}
 
@@ -148,6 +153,7 @@ static jboolean FactoryInit(JNIEnv* env,jclass clazz, jobjectArray plugins, jstr
 	}
 
 	if (ess_count == 0 ) {
+		pthread_mutex_unlock(&g_repository_lock);
 		return JNI_FALSE;
 	}
 
@@ -165,6 +171,11 @@ static jboolean FactoryInit(JNIEnv* env,jclass clazz, jobjectArray plugins, jstr
 
 		g_repository = mlt_factory_init2(plugin_names, ess_count);
 		free(plugin_names);
+
+		if ( g_repository == NULL) {
+			pthread_mutex_unlock(&g_repository_lock);
+			return JNI_TRUE;
+		}
 	}
 
 	pthread_mutex_unlock(&g_repository_lock);
