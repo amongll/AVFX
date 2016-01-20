@@ -3,7 +3,7 @@
 set -e
 set -x
 
-MY_TOOLCHAIN_ROOT=${MY_TOOLCHAIN_ROOT:$HOME/toolchain}
+MY_TOOLCHAIN_ROOT=/opt/lilei/android_compile_toolchain
 
 make_toolchain_for_abi() 
 {

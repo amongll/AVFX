@@ -18,7 +18,7 @@
 #include <unistd.h>
 #include <string.h>
 #include "mlt_properties.h"
-extern JavaVM* gJavaVm;
+extern JavaVM* mlt_android_global_javavm;
 
 extern mlt_properties mlt_properties_load_AAsset(AAssetManager* mgr, const char *assetName );
 extern int mlt_properties_preset_AAsset(AAssetManager* mgr, mlt_properties self, const char *assetName );

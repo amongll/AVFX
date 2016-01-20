@@ -481,5 +481,9 @@ MLT_0.9.8 {
 
 MLT_0.9.10 {
   global:
+    mlt_android_check_data;
+    mlt_android_global_javavm;
     mlt_factory_repository;
+    mlt_properties_load_AAsset;
+    mlt_properties_preset_AAsset;
 } MLT_0.9.8;

@@ -8,17 +8,208 @@
 #include "mlt_android_env.h"
 #include "mlt_factory.h"
 #include <libgen.h>
-
+#include <errno.h>
+#include "mlt_log.h"
 #ifdef ANDROID
 
-JavaVM *gJavaVm = NULL;
+JavaVM *mlt_android_global_javavm = NULL;
+
+typedef enum property_parse_status_E {
+	status_start=0,
+	status_key,
+	status_equal,
+	status_value,
+	status_comment,
+	status_cr,
+	status_lb,
+	status_invalid
+} property_parse_status_e;
+
+typedef struct property_parse_context_s {
+	char* buf;
+	size_t buf_size;
+	int cur;
+	int end;
+	int v_crlb;
+	char* key;
+	char* value;
+	property_parse_status_e state;
+} property_parse_context_t;
+
+static int parse_property(char* input, size_t size, property_parse_context_t *context)
+{
+	if ( !context ) return -1;
+
+	if ( size ) {
+		if ( size + context->end >= context->buf_size ) {
+			context->buf = (char*)realloc( context->buf, size + context->end  + 256);
+			context->buf_size = context->end + size + 256;
+		}
+		memcpy ( context->buf + context->end, input, size);
+		context->end += size;
+	}
+
+	while( context->cur < context->end ) {
+		char p = context->buf[context->cur];
+		switch(context->state) {
+		case status_invalid:
+			return -1;
+			break;
+		case status_start:
+			switch( p ) {
+			case '\n':
+				context->state = status_lb;
+				break;
+			case '\r':
+				context->state = status_cr;
+				break;
+			case '#':
+				context->state = status_comment;
+				break;
+			default:
+				context->state = status_key;
+				context->key = context->buf + context->cur;
+				break;
+			}
+
+			break;
+		case status_key:
+			switch ( p ) {
+			case '=':
+				context->state = status_equal;
+				context->buf[context->cur] = '\0';
+				break;
+			case '\r':
+			case '\n':
+				context->state = status_invalid;
+				return -1;
+				break;
+			default:
+				break;
+			}
+			break;
+		case status_equal:
+			context->value = context->buf + context->cur;
+			switch ( p ) {
+			case '\r':
+				context->v_crlb = 1;
+				context->state = status_cr;
+				context->buf[context->cur]='\0';
+				context->cur++;
+				return 1;
+				break;
+			case '\n':
+				context->v_crlb = 1;
+				context->state = status_lb;
+				context->buf[context->cur]='\0';
+				context->cur++;
+				return 1;
+				break;
+			default:
+				context->state = status_value;
+				break;
+			}
+			break;
+		case status_value:
+			switch ( p ) {
+			case '\r':
+				context->v_crlb = 1;
+				context->state = status_cr;
+				context->buf[context->cur]='\0';
+				context->cur++;
+				return 1;
+				break;
+			case '\n':
+				context->v_crlb = 1;
+				context->state = status_lb;
+				context->buf[context->cur]='\0';
+				context->cur++;
+				return 1;
+				break;
+			default:
+				context->state = status_value;
+				break;
+			}
+			break;
+		case status_lb:
+			switch( p ) {
+			case '\n':
+				context->v_crlb=0;
+				context->state = status_lb;
+				break;
+			case '\r':
+				context->v_crlb=0;
+				context->state = status_cr;
+				break;
+			case '.':
+				if (context->v_crlb) {
+					context->state = status_value;
+					memmove(context->buf + context->cur, context->buf + context->cur + 1, context->end - context->cur - 1);
+					context->end--;
+					continue;
+				}
+				else {
+					context->state = status_invalid;
+					return -1;
+				}
+				break;
+			case '#':
+				context->v_crlb=0;
+				context->state = status_comment;
+				break;
+			default:
+				context->v_crlb=0;
+				context->state = status_key;
+				context->key = context->buf + context->cur;
+				break;
+			}
+			break;
+		case status_cr:
+			switch( p ) {
+			case '\n':
+				context->state = status_lb;
+				break;
+			default:
+				context->state = status_invalid;
+				return -1;
+				break;
+			}
+			break;
+		case status_comment:
+			switch(p) {
+			case '\n':
+				context->state = status_lb;
+				break;
+			case '\r':
+				context->state = status_cr;
+				break;
+			default:
+				break;
+			}
+			break;
+		}
+		context->cur++;
+	}
+	return 0;
+}
+
+static void step_parse_context(property_parse_context_t* ctx)
+{
+	if (ctx->cur == 0)return;
+	if (ctx->cur < ctx->end)
+		memmove(ctx->buf, ctx->buf + ctx->cur, ctx->end - ctx->cur);
+	ctx->end -= ctx->cur;
+	ctx->cur = 0;
+	ctx->key = NULL;
+	ctx->value = NULL;
+}
 
 static int load_properties(AAssetManager* mgr, mlt_properties self, const char *name)
 {
 	// Convert filename string encoding.
-	mlt_properties_set( self, "_mlt_properties_load", name );
-	mlt_properties_from_utf8( self, "_mlt_properties_load", "__mlt_properties_load" );
-	name = mlt_properties_get( self, "__mlt_properties_load" );
+	//mlt_properties_set( self, "_mlt_properties_load", name );
+	//mlt_properties_from_utf8( self, "_mlt_properties_load", "__mlt_properties_load" );
+	//name = mlt_properties_get( self, "__mlt_properties_load" );
 
 	// Open the file
 	AAsset* file = AAssetManager_open(mgr, name, AASSET_MODE_STREAMING );
@@ -28,7 +219,8 @@ static int load_properties(AAssetManager* mgr, mlt_properties self, const char *
 
 	int ret = 0;
 	char temp[ 1024 ];
-	char last[ 1024 ] = "";
+	property_parse_context_t ctx;
+	memset(&ctx,0x00,sizeof(property_parse_context_t));
 
 	do {
 		ret = AAsset_read(file, temp, sizeof(temp));
@@ -36,29 +228,22 @@ static int load_properties(AAssetManager* mgr, mlt_properties self, const char *
 			break;
 		}
 		else if (ret > 0 ) {
-			int x = strlen( temp ) - 1;
-			if ( temp[x] == '\n' || temp[x] == '\r' )
-				temp[x] = '\0';
-
-			// Check if the line starts with a .
-			if ( temp[ 0 ] == '.' )
-			{
-				char temp2[ 1024 ];
-				sprintf( temp2, "%s%s", last, temp );
-				strcpy( temp, temp2 );
+			int have = parse_property(temp, ret, &ctx);
+			while(have == 1) {
+				mlt_properties_set(self, ctx.key, ctx.value);
+				step_parse_context(&ctx);
+				have = parse_property(NULL, 0, &ctx);
 			}
-
-			else if ( strchr( temp, '=' ) )
-			{
-				strcpy( last, temp );
-				*( strchr( last, '=' ) ) = '\0';
+			if (have == -1) {
+				AAsset_close(file);
+				return -1;
 			}
-
-			// Parse and set the property
-			if ( strcmp( temp, "" ) && temp[ 0 ] != '#' )
-				mlt_properties_parse( self, temp );
 		}
 	} while( ret > 0);
+
+	if ( ctx.state == status_value && ctx.key && ctx.value ) {
+		mlt_properties_set(self, ctx.key, ctx.value);
+	}
 
 	// Close the file
 	AAsset_close(file);
@@ -109,16 +294,35 @@ static bool my_get_dir(const char* dir_name);
 static bool my_get_dir_for_file(const char* file)
 {
 	char buf[1024];
-	snprintf(buf, sizeof(buf), "%s", file);
-	char* dir = dirname(buf);
-	return my_get_dir(dir);
+	int len = snprintf(buf, sizeof(buf), "%s", file);
+	int prev_del = -1, i;
+	for ( i = len - 1; i >= 0 ; i--) {
+		if ( buf[i] == '/' && (prev_del == -1 || i == prev_del - 1) ) {
+			buf[i] = '\0';
+			prev_del = i;
+		}
+		else if (prev_del != -1)
+			break;
+	}
+
+	return my_get_dir(buf);
 }
 
 static bool my_get_dir(const char* dir_name)
 {
 	char buf[1024];
-	snprintf(buf, sizeof(buf), "%s", dir_name);
-	char* dir = dirname(buf);
+	int len = snprintf(buf, sizeof(buf), "%s", dir_name);
+	int prev_del = -1, i;
+	for ( i = len - 1; i >= 0 ; i--) {
+		if ( buf[i] == '/' && (prev_del == -1 || i == prev_del - 1) ) {
+			buf[i] = '\0';
+			prev_del = i;
+		}
+		else if (prev_del != -1)
+			break;
+	}
+
+	//char* dir = dirname(buf);
 	//char* base = basename(buf);
 
 	struct stat statbuf1;
@@ -133,8 +337,9 @@ static bool my_get_dir(const char* dir_name)
 			return false;
 	}
 	else {
-		if ( true == my_get_dir(dir) ) {
-			mkdir(dir_name, S_IRWXU);
+		if ( true == my_get_dir(buf) ) {
+			if (mkdir(dir_name, S_IRWXU))
+				return false;
 			return true;
 		}
 		else
@@ -172,7 +377,13 @@ extern bool mlt_android_check_data(AAssetManager* mgr, const char* files_path, c
 	mlt_properties assMd5s = mlt_properties_load_AAsset(mgr, "mlt/md5check.props");
 	if (assMd5s == NULL) {
 		snprintf(err,err_size, "Asset mlt/md5check.props load failed");
+		mlt_log_error(NULL, "%s", err);
 		goto failed;
+	}
+
+	const char* _fmt = "%s/%s";
+	if ( files_path[strlen(files_path)-1] == '/') {
+		_fmt = "%s%s";
 	}
 
 	int i, count = mlt_properties_count(assMd5s);
@@ -183,42 +394,52 @@ extern bool mlt_android_check_data(AAssetManager* mgr, const char* files_path, c
 		memset(path,0x00,sizeof(path));
 		memset(real_path,0x00,sizeof(real_path));
 
-		snprintf(path,sizeof(path), "%s/%s", files_path, name);
+		snprintf(path,sizeof(path), _fmt, files_path, name);
 		snprintf(real_path,sizeof(real_path), "%s.%s", path, value);
 
 		struct stat statbuf;
 		if ( 0 == lstat(path, &statbuf) ) {
 			if ( !S_ISLNK(statbuf.st_mode) ) {
 				snprintf(err,err_size, "%s not symbol link", path);
+				mlt_log_error(NULL, "%s", err);
 				goto failed;
 			}
 			else {
 				char check_real[1024];
-				readlink(path, check_real,sizeof(check_real));
-				if ( strcmp( check_real, real_path) == 0 && !stat(path,&statbuf) ) {
+				ssize_t _ret = readlink(path, check_real,sizeof(check_real));
+				if ( _ret > 0 && strncmp( check_real, real_path, _ret) == 0 && !stat(path,&statbuf) ) {
+					mlt_log_info(NULL, "mlt presets file: %s for MD5:%s exists",
+							path, value);
 					continue;
 				}
 			}
 		}
 		else {
 			if ( false == my_get_dir_for_file(real_path) ) {
-				snprintf(err,err_size,"check dir for %s failed", real_path);
-				return false;
+				snprintf(err,err_size,"check dir for %s failed, %s", real_path, strerror(errno));
+				mlt_log_error(NULL, "%s", err);
+				goto failed;
 			}
 		}
 
 		AAsset* asset = AAssetManager_open(mgr, name, O_RDONLY);
-		int fd = open(real_path, O_CREAT|O_EXCL, S_IRWXU);
+		int fd = open(real_path, O_CREAT|O_TRUNC|O_WRONLY, S_IRWXU);
 		if ( false == copy_asset_file(fd, asset) ) {
 			if (asset)AAsset_close(asset);
 			if (fd != -1)close(fd);
+			snprintf(err,err_size,"copy asset failed:%s %s",name, strerror(errno));
+			mlt_log_error(NULL, "%s", err);
 			goto failed;
 		}
 		AAsset_close(asset);
 		close(fd);
 
 		unlink(path);
-		symlink(real_path, path);
+		if (symlink(real_path, path) ) {
+			snprintf(err, err_size, "symlink %s %s failed:%s", real_path, path, strerror(errno));
+			mlt_log_error(NULL, "%s", err);
+			goto failed;
+		}
 	}
 
 	if (assMd5s)mlt_properties_close(assMd5s);

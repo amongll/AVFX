@@ -75,7 +75,7 @@ build_config()
 		echo "SSE2_FLAGS=-DUSE_SSE2"
 
 		[ "$debug" = "true" ] && 
-		echo "DEBUG_FLAGS=-g"
+		echo "DEBUG_FLAGS=-g -O0"
 
 		echo "LARGE_FILE=-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE"
 
@@ -244,7 +244,10 @@ do
 		--mandir=* )			mandir="${i#--mandir=}" ;;
 		--rename-melt=* )		meltname="${i#--rename-melt=}"; melt_noversion=true ;;
 		--enable-extra-versioning )	extra_versioning=true ;;
-		--enable-debug )		optimisations=false ;;
+		--enable-debug )		
+            optimisations=false 
+            debug=true
+            ;;
 		--disable-debug )		debug=false ;;
 		--disable-mmx )			mmx=false; sse=false; sse2=false ;;
 		--disable-sse )			sse=false; sse2=false ;;

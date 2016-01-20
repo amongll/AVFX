@@ -1,0 +1,3 @@
+set solib-search-path ./obj/local/armeabi
+source /opt/lilei/Android/Sdk/ndk-bundle/prebuilt/common/gdb/common.setup
+directory /opt/lilei/Android/Sdk/ndk-bundle/platforms/android-9/arch-arm/usr/include jni/mlt /opt/lilei/AVFX/mlt-standalone/output/armeabi/build/include/mlt /opt/lilei/Android/Sdk/ndk-bundle/sources/cxx-stl/system
