@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.content.res.AssetManager;
 
+import java.io.File;
+
 public class MltFactory {
 	static {
 		System.loadLibrary("mlt_jni");
@@ -20,6 +22,15 @@ public class MltFactory {
 		return init(plugins, logTag, logLevel, filesRoot, mgr);
 	}
 
-	public static native boolean init(String[] plugins,String logTag, int logLevel,String filesRoot,AssetManager mgr);
-	public static native void close();
+	public static void cleanup()
+	{
+		close();
+	}
+
+	private static native boolean init(String[] plugins,String logTag, int logLevel,String filesRoot,AssetManager mgr);
+	private static native void close();
+
+	public static native void _startTestAvformat(String media, String file);
+	public static native void _stopTestAvformat();
+	public static native String _statusTestAvformat();
 }

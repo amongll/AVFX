@@ -17,6 +17,7 @@ JavaVM *mlt_android_global_javavm = NULL;
 typedef enum property_parse_status_E {
 	status_start=0,
 	status_key,
+	status_subkey,
 	status_equal,
 	status_value,
 	status_comment,
@@ -30,10 +31,15 @@ typedef struct property_parse_context_s {
 	size_t buf_size;
 	int cur;
 	int end;
-	int v_crlb;
+
 	char* key;
+	char* compose_key;
+	int compose_main_sz;
+	int compose_key_bufsz;
 	char* value;
 	property_parse_status_e state;
+	int v_crlb:1;
+	int is_subkey:1;
 } property_parse_context_t;
 
 static int parse_property(char* input, size_t size, property_parse_context_t *context)
@@ -88,6 +94,21 @@ static int parse_property(char* input, size_t size, property_parse_context_t *co
 				break;
 			}
 			break;
+		case status_subkey:
+			switch (p) {
+			case '\r':
+			case '\n':
+			case '=':
+			case '.':
+				context->state = status_invalid;
+				return -1;
+				break;
+			default:
+				context->state = status_key;
+				context->key = context->buf + context->cur - 1;
+				break;
+			}
+			break;
 		case status_equal:
 			context->value = context->buf + context->cur;
 			switch ( p ) {
@@ -96,6 +117,26 @@ static int parse_property(char* input, size_t size, property_parse_context_t *co
 				context->state = status_cr;
 				context->buf[context->cur]='\0';
 				context->cur++;
+				if (context->is_subkey == 0) {
+					if (context->compose_key == NULL ||
+							context->compose_key_bufsz <= strlen(context->key) ) {
+						context->compose_key = (char*)realloc(context->compose_key,
+								strlen(context->key)+256);
+						context->compose_key_bufsz = strlen(context->key) + 256;
+					}
+					context->compose_main_sz = strlen(context->key);
+					sprintf(context->compose_key,"%s",context->key);
+				}
+				else {
+					if (context->compose_key_bufsz <= strlen(context->key) + context->compose_main_sz) {
+						context->compose_key = (char*)realloc(context->compose_key,
+							strlen(context->key) + context->compose_main_sz + 256);
+						context->compose_key_bufsz = strlen(context->key) +
+							context->compose_main_sz + 256;
+					}
+					sprintf(context->compose_key+context->compose_main_sz,"%s",context->key);
+					context->key = context->compose_key;
+				}
 				return 1;
 				break;
 			case '\n':
@@ -103,6 +144,26 @@ static int parse_property(char* input, size_t size, property_parse_context_t *co
 				context->state = status_lb;
 				context->buf[context->cur]='\0';
 				context->cur++;
+				if (context->is_subkey == 0) {
+					if (context->compose_key == NULL ||
+							context->compose_key_bufsz <= strlen(context->key) ) {
+						context->compose_key = (char*)realloc(context->compose_key,
+								strlen(context->key)+256);
+						context->compose_key_bufsz = strlen(context->key) + 256;
+					}
+					context->compose_main_sz = strlen(context->key);
+					sprintf(context->compose_key,"%s",context->key);
+				}
+				else {
+					if (context->compose_key_bufsz <= strlen(context->key) + context->compose_main_sz) {
+						context->compose_key = (char*)realloc(context->compose_key,
+							strlen(context->key) + context->compose_main_sz + 256);
+						context->compose_key_bufsz = strlen(context->key) +
+							context->compose_main_sz + 256;
+					}
+					sprintf(context->compose_key+context->compose_main_sz,"%s",context->key);
+					context->key = context->compose_key;
+				}
 				return 1;
 				break;
 			default:
@@ -117,6 +178,26 @@ static int parse_property(char* input, size_t size, property_parse_context_t *co
 				context->state = status_cr;
 				context->buf[context->cur]='\0';
 				context->cur++;
+				if (context->is_subkey == 0) {
+					if (context->compose_key == NULL ||
+							context->compose_key_bufsz <= strlen(context->key) ) {
+						context->compose_key = (char*)realloc(context->compose_key,
+								strlen(context->key)+256);
+						context->compose_key_bufsz = strlen(context->key) + 256;
+					}
+					context->compose_main_sz = strlen(context->key);
+					sprintf(context->compose_key,"%s",context->key);
+				}
+				else {
+					if (context->compose_key_bufsz <= strlen(context->key) + context->compose_main_sz) {
+						context->compose_key = (char*)realloc(context->compose_key,
+							strlen(context->key) + context->compose_main_sz + 256);
+						context->compose_key_bufsz = strlen(context->key)
+							+ context->compose_main_sz + 256;
+					}
+					sprintf(context->compose_key+context->compose_main_sz,"%s",context->key);
+					context->key = context->compose_key;
+				}
 				return 1;
 				break;
 			case '\n':
@@ -124,6 +205,26 @@ static int parse_property(char* input, size_t size, property_parse_context_t *co
 				context->state = status_lb;
 				context->buf[context->cur]='\0';
 				context->cur++;
+				if (context->is_subkey == 0) {
+					if (context->compose_key == NULL ||
+							context->compose_key_bufsz <= strlen(context->key) ) {
+						context->compose_key = (char*)realloc(context->compose_key,
+								strlen(context->key)+256);
+						context->compose_key_bufsz = strlen(context->key) + 256;
+					}
+					context->compose_main_sz = strlen(context->key);
+					sprintf(context->compose_key,"%s",context->key);
+				}
+				else {
+					if (context->compose_key_bufsz <= strlen(context->key) + context->compose_main_sz) {
+						context->compose_key = (char*)realloc(context->compose_key,
+							strlen(context->key) + context->compose_main_sz + 256);
+						context->compose_key_bufsz = strlen(context->key)
+							+ context->compose_main_sz + 256;
+					}
+					sprintf(context->compose_key+context->compose_main_sz,"%s",context->key);
+					context->key = context->compose_key;
+				}
 				return 1;
 				break;
 			default:
@@ -143,10 +244,8 @@ static int parse_property(char* input, size_t size, property_parse_context_t *co
 				break;
 			case '.':
 				if (context->v_crlb) {
-					context->state = status_value;
-					memmove(context->buf + context->cur, context->buf + context->cur + 1, context->end - context->cur - 1);
-					context->end--;
-					continue;
+					context->is_subkey = 1;
+					context->state = status_subkey;
 				}
 				else {
 					context->state = status_invalid;
@@ -159,6 +258,7 @@ static int parse_property(char* input, size_t size, property_parse_context_t *co
 				break;
 			default:
 				context->v_crlb=0;
+				context->is_subkey = 0;
 				context->state = status_key;
 				context->key = context->buf + context->cur;
 				break;
@@ -204,6 +304,18 @@ static void step_parse_context(property_parse_context_t* ctx)
 	ctx->value = NULL;
 }
 
+static void init_parse_context(property_parse_context_t* ctx)
+{
+	memset(ctx, 0x00, sizeof(property_parse_context_t));
+}
+
+static void cleanup_parse_context(property_parse_context_t* ctx)
+{
+	if (!ctx) return;
+	if (ctx->compose_key)free(ctx->compose_key);
+	memset(ctx, 0x00, sizeof(property_parse_context_t));
+}
+
 static int load_properties(AAssetManager* mgr, mlt_properties self, const char *name)
 {
 	// Convert filename string encoding.
@@ -244,6 +356,8 @@ static int load_properties(AAssetManager* mgr, mlt_properties self, const char *
 	if ( ctx.state == status_value && ctx.key && ctx.value ) {
 		mlt_properties_set(self, ctx.key, ctx.value);
 	}
+
+	cleanup_parse_context(&ctx);
 
 	// Close the file
 	AAsset_close(file);

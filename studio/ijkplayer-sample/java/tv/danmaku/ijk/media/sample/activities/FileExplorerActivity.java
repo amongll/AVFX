@@ -16,6 +16,9 @@
 
 package tv.danmaku.ijk.media.sample.activities;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -35,6 +38,12 @@ import tv.danmaku.ijk.media.sample.fragments.FileListFragment;
 public class FileExplorerActivity extends AppActivity {
     private Settings mSettings;
 
+    public static void intentTo(Activity context,int requestCode) {
+        Intent intent = new Intent(context, FileExplorerActivity.class);
+        intent.putExtra("from", context.getClass().getCanonicalName());
+        context.startActivityForResult(intent, requestCode);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +51,7 @@ public class FileExplorerActivity extends AppActivity {
         if (mSettings == null) {
             mSettings = new Settings(this);
         }
+
 
         String lastDirectory = mSettings.getLastDirectory();
         if (!TextUtils.isEmpty(lastDirectory) && new File(lastDirectory).isDirectory())
@@ -92,7 +102,17 @@ public class FileExplorerActivity extends AppActivity {
             mSettings.setLastDirectory(path);
             doOpenDirectory(path, true);
         } else if (f.exists()) {
-            VideoActivity.intentTo(this, f.getPath(), f.getName());
+
+            Intent intent = getIntent();
+            String from = intent.getStringExtra("from");
+            if (from != null) {
+                Intent result = new Intent();
+                result.putExtra("path", f.getAbsoluteFile().toString());
+                setResult(Activity.RESULT_OK, result);
+            }
+            else {
+                VideoActivity.intentTo(this, f.getPath(), f.getName());
+            }
         }
     }
 }

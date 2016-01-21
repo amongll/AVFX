@@ -27,6 +27,7 @@
 #include <string.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <framework/mlt_log.h>
 
 // Forward references.
 static int consumer_start( mlt_consumer consumer );
@@ -137,6 +138,22 @@ static void *consumer_thread( void *arg )
 	int terminate_on_pause = mlt_properties_get_int( properties, "terminate_on_pause" );
 	int detail_fd = mlt_properties_get_int(properties, "detail_fd");
 	int terminated = 0;
+
+	struct sched_param sched;
+	int policy;
+	pthread_t thread = pthread_self();
+
+	if (pthread_getschedparam(thread, &policy, &sched) < 0) {
+		mlt_log_info("null", "getschedparam failed");
+
+	}
+	else {
+		sched.sched_priority = sched_get_priority_max(policy);
+		if (pthread_setschedparam(thread, policy, &sched) < 0) {
+			mlt_log_info("null", "setschedparam failed");
+		}
+	}
+
 
 	// Frame and size
 	mlt_frame frame = NULL;
