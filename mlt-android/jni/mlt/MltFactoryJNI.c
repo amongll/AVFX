@@ -13,6 +13,8 @@
 #include <framework/mlt_log.h>
 #include <framework/mlt_android_env.h>
 
+#include <modules/android/android_preview_consumer.h>
+
 typedef struct YkopMltHookInfo {
 	jclass clazz;
 } YkopMltHookInfo;
@@ -23,15 +25,32 @@ static jboolean FactoryInit(JNIEnv* env,jclass clazz, jobjectArray plugins, jstr
 		jstring filesRoot, jobject assetMgr);
 static void FactoryClose(JNIEnv* env, jobject thiz);
 
+#ifdef DEBUG
+
 typedef struct test_context_S {
 	mlt_consumer consumer;
 	mlt_producer producer;
 	mlt_profile profile;
 	int infoFd;
+	int init:1;
 	int run:1;
 }test_context_t;
 
 static test_context_t gTestCtx = {NULL,NULL,NULL,-1,0};
+
+static void testSetSurface(JNIEnv* env, jclass clazz, jobject vSurface,
+		jobject fxSurface)
+{
+	if (gTestCtx.init == 0) return;
+	if (gTestCtx.run == 1)return;
+	if (gTestCtx.consumer == NULL)return;
+	android_preview_consumer_vout_created(gTestCtx.consumer, vSurface);
+}
+
+static void testUnsetSurface(JNIEnv* env, jclass clazz, jobject vSurface)
+{
+	android_preview_consumer_vout_destroyed(gTestCtx.consumer);
+}
 
 static void testAvformatStop(JNIEnv* env, jclass clazz)
 {
@@ -56,6 +75,7 @@ static void testAvformatStop(JNIEnv* env, jclass clazz)
 
 static jstring testAvformatStatus(JNIEnv* env, jclass clazz)
 {
+	if (gTestCtx.run == 0) return "";
 	int length = mlt_producer_get_length(gTestCtx.producer);
 	int played =  mlt_consumer_position(gTestCtx.consumer);
 	char buf[256];
@@ -64,8 +84,28 @@ static jstring testAvformatStatus(JNIEnv* env, jclass clazz)
 	return (*env)->NewStringUTF(env, buf);
 }
 
-static void testAvformatStart(JNIEnv* env,jclass clazz, jstring mediaFile, jstring infoFile)
+static void testAvformatStart(JNIEnv* env, jclass clazz)
 {
+	if (gTestCtx.run == 1)
+		return;
+	if (gTestCtx.init == 0)
+		return;
+	mlt_consumer_connect(gTestCtx.consumer, mlt_producer_service(gTestCtx.producer));
+	if (mlt_consumer_start(gTestCtx.consumer)) {
+		mlt_log_error(NULL, "prepare test producer/consumer failed");
+		if (gTestCtx.profile)mlt_profile_close(gTestCtx.profile);
+		if (gTestCtx.producer)mlt_producer_close(gTestCtx.producer);
+		if (gTestCtx.consumer)mlt_consumer_close(gTestCtx.consumer);
+		if(gTestCtx.infoFd != -1)close(gTestCtx.infoFd);
+		gTestCtx.infoFd = -1;
+		return;
+	}
+	gTestCtx.run = 1;
+}
+
+static void testAvformatInit(JNIEnv* env,jclass clazz, jstring mediaFile, jstring infoFile)
+{
+	if (gTestCtx.init == 1 ) return;
 	const char* inputPath =  (*env)->GetStringUTFChars(env,mediaFile, NULL);;
 
 	if (infoFile ) {
@@ -78,8 +118,10 @@ static void testAvformatStart(JNIEnv* env,jclass clazz, jstring mediaFile, jstri
 		}
 	}
 
-	mlt_profile profile = mlt_profile_init("atsc_1080p_25");
+	mlt_profile profile = mlt_profile_init("hd_720_25p");
 	mlt_producer producer = mlt_factory_producer(profile, "avformat", inputPath);
+	//mlt_profile_close(profile);
+	//mlt_profile_from_producer(profile,producer);
 	mlt_consumer consumer = mlt_factory_consumer(profile, "null", NULL);
 	if (!profile || !producer || !consumer) {
 		mlt_log_error(NULL, "prepare test producer/consumer failed");
@@ -96,30 +138,31 @@ static void testAvformatStart(JNIEnv* env,jclass clazz, jstring mediaFile, jstri
 	if (gTestCtx.infoFd != -1)
 		mlt_properties_set_int(consumer_properties, "detail_fd", gTestCtx.infoFd );
 
-	mlt_consumer_connect(consumer, mlt_producer_service(producer));
-	if (mlt_consumer_start(consumer)) {
-		mlt_log_error(NULL, "prepare test producer/consumer failed");
-		if (profile)mlt_profile_close(profile);
-		if (producer)mlt_producer_close(producer);
-		if (consumer)mlt_consumer_close(consumer);
-		if(gTestCtx.infoFd != -1)close(gTestCtx.infoFd);
-		gTestCtx.infoFd = -1;
-		return;
-	}
-	gTestCtx.run = 1;
+	mlt_properties_set_int(consumer_properties, "buffer", 200);
+	mlt_properties_set_int(consumer_properties, "prefill", 100);
+
+
 	gTestCtx.consumer = consumer;
 	gTestCtx.producer = producer;
 	gTestCtx.profile = profile;
 	mlt_log_info(NULL, "test producer/consumer started");
+	gTestCtx.init = 1;
 	return;
 }
+#endif
 
 static JNINativeMethod gMethods[] = {
 		{"init", "([Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Landroid/content/res/AssetManager;)Z", (void*)FactoryInit},
-		{"close", "()V", (void*)FactoryClose},
-		{"_startTestAvformat","(Ljava/lang/String;Ljava/lang/String;)V", (void*)testAvformatStart},
+		{"close", "()V", (void*)FactoryClose}
+#ifdef DEBUG
+		,
+		{"_initTestAvformat","(Ljava/lang/String;Ljava/lang/String;)V", (void*)testAvformatInit},
+		{"_startTestAvformat","()V", (void*)testAvformatStart},
 		{"_stopTestAvformat","()V", (void*)testAvformatStop},
 		{"_statusTestAvformat","()Ljava/lang/String;", (void*)testAvformatStatus},
+		{"_setTestSurface","(Landroid/view/Surface;Landroid/view/Surface;)Z", (void*)testSetSurface},
+		{"_unsetTestSurface","(Landroid/view/Surface;Landroid/view/Surface;)Z", (void*)testUnsetSurface},
+#endif
 };
 
 #define YKOP_MLT_CLASS "com/youku/cloud/vedit/MltFactory"
