@@ -1133,3 +1133,76 @@ mlt_frame mlt_frame_clone( mlt_frame self, int is_deep )
 
 	return new_frame;
 }
+
+extern mlt_frame mlt_frame_clone_audio(mlt_frame self)
+{
+	mlt_frame new_frame = mlt_frame_init( NULL );
+	mlt_properties properties = MLT_FRAME_PROPERTIES( self );
+	mlt_properties new_props = MLT_FRAME_PROPERTIES( new_frame );
+	void *data, *copy;
+	int size;
+
+	mlt_properties_inherit( new_props, properties );
+
+	// Carry over some special data properties for the multi consumer.
+	mlt_properties_set_data( new_props, "_producer",
+		mlt_frame_get_original_producer( self ), 0, NULL, NULL );
+	mlt_properties_set_data( new_props, "movit.convert",
+		mlt_properties_get_data( properties, "movit.convert", NULL), 0, NULL, NULL );
+
+	data = mlt_properties_get_data( properties, "audio", &size );
+	if ( data )
+	{
+		if ( !size )
+			size = mlt_audio_format_size( mlt_properties_get_int( properties, "audio_format" ),
+				mlt_properties_get_int( properties, "audio_samples" ),
+				mlt_properties_get_int( properties, "audio_channels" ) );
+		copy = mlt_pool_alloc( size );
+		memcpy( copy, data, size );
+		mlt_properties_set_data( new_props, "audio", copy, size, mlt_pool_release, NULL );
+	}
+
+	return new_frame;
+}
+
+extern mlt_frame mlt_frame_clone_video(mlt_frame self)
+{
+	mlt_frame new_frame = mlt_frame_init( NULL );
+	mlt_properties properties = MLT_FRAME_PROPERTIES( self );
+	mlt_properties new_props = MLT_FRAME_PROPERTIES( new_frame );
+	void *data, *copy;
+	int size;
+
+	mlt_properties_inherit( new_props, properties );
+
+	// Carry over some special data properties for the multi consumer.
+	mlt_properties_set_data( new_props, "_producer",
+		mlt_frame_get_original_producer( self ), 0, NULL, NULL );
+	mlt_properties_set_data( new_props, "movit.convert",
+		mlt_properties_get_data( properties, "movit.convert", NULL), 0, NULL, NULL );
+
+	data = mlt_properties_get_data( properties, "image", &size );
+	if ( data )
+	{
+		int width = mlt_properties_get_int( properties, "width" );
+		int height = mlt_properties_get_int( properties, "height" );
+
+		if ( ! size )
+			size = mlt_image_format_size( mlt_properties_get_int( properties, "format" ),
+				width, height, NULL );
+		copy = mlt_pool_alloc( size );
+		memcpy( copy, data, size );
+		mlt_properties_set_data( new_props, "image", copy, size, mlt_pool_release, NULL );
+
+		data = mlt_properties_get_data( properties, "alpha", &size );
+		if ( data )
+		{
+			if ( ! size )
+				size = width * height;
+			copy = mlt_pool_alloc( size );
+			memcpy( copy, data, size );
+			mlt_properties_set_data( new_props, "alpha", copy, size, mlt_pool_release, NULL );
+		};
+	}
+	return new_frame;;
+}

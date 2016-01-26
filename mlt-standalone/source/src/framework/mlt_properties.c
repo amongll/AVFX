@@ -932,6 +932,13 @@ int mlt_properties_get_int( mlt_properties self, const char *name )
 	return result;
 }
 
+int mlt_properties_have( mlt_properties self, const char* name )
+{
+	mlt_property value = mlt_properties_find(self, name);
+	if (value) return 1;
+	return 0;
+}
+
 /** Set a property to an integer value.
  *
  * \public \memberof mlt_properties_s

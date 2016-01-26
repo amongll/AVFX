@@ -484,6 +484,9 @@ MLT_0.9.10 {
     mlt_android_check_data;
     mlt_android_global_javavm;
     mlt_factory_repository;
+    mlt_frame_clone_audio;
+    mlt_frame_clone_video;
+    mlt_properties_have;
     mlt_properties_load_AAsset;
     mlt_properties_preset_AAsset;
 } MLT_0.9.8;

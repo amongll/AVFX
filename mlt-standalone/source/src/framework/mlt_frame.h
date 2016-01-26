@@ -141,6 +141,8 @@ extern mlt_producer mlt_frame_get_original_producer( mlt_frame self );
 extern void mlt_frame_close( mlt_frame self );
 extern mlt_properties mlt_frame_unique_properties( mlt_frame self, mlt_service service );
 extern mlt_frame mlt_frame_clone( mlt_frame self, int is_deep );
+extern mlt_frame mlt_frame_clone_video(mlt_frame self);
+extern mlt_frame mlt_frame_clone_audio(mlt_frame self);
 
 /* convenience functions */
 extern int mlt_sample_calculator( float fps, int frequency, int64_t position );

@@ -14,11 +14,11 @@
 #include <android/native_window_jni.h>
 #include "framework/mlt_consumer.h"
 
-int android_preview_consumer_vout_created(mlt_consumer obj, jobject out);
-int android_preview_consumer_vout_destroyed(mlt_consumer obj);
+int mlt_apreview_consumer_vout_created(mlt_consumer obj, JNIEnv* env, jobject out);
+int mlt_apreview_consumer_vout_destroyed(mlt_consumer obj);
 
-int android_preview_consumer_aout_created(mlt_consumer obj);
-int android_preview_consumer_aout_destroyed(mlt_consumer obj);
+int mlt_apreview_consumer_aout_created(mlt_consumer obj);
+int mlt_apreview_consumer_aout_destroyed(mlt_consumer obj);
 
 #endif
 
