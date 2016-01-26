@@ -13,7 +13,8 @@
 #include <framework/mlt_log.h>
 #include <framework/mlt_android_env.h>
 
-#include <modules/android/android_preview_consumer.h>
+int mlt_apreview_consumer_vout_created(mlt_consumer obj, JNIEnv* env, jobject out);
+int mlt_apreview_consumer_vout_destroyed(mlt_consumer obj);
 
 typedef struct YkopMltHookInfo {
 	jclass clazz;
@@ -31,25 +32,25 @@ typedef struct test_context_S {
 	mlt_consumer consumer;
 	mlt_producer producer;
 	mlt_profile profile;
-	int infoFd;
+	int vinfoFd;
+	int ainfoFd;
 	int init:1;
 	int run:1;
 }test_context_t;
 
 static test_context_t gTestCtx = {NULL,NULL,NULL,-1,0};
 
-static void testSetSurface(JNIEnv* env, jclass clazz, jobject vSurface,
-		jobject fxSurface)
+static void testSetSurface(JNIEnv* env, jclass clazz, jobject vSurface)
 {
 	if (gTestCtx.init == 0) return;
 	if (gTestCtx.run == 1)return;
 	if (gTestCtx.consumer == NULL)return;
-	android_preview_consumer_vout_created(gTestCtx.consumer, vSurface);
+	mlt_apreview_consumer_vout_created(gTestCtx.consumer, env, vSurface);
 }
 
 static void testUnsetSurface(JNIEnv* env, jclass clazz, jobject vSurface)
 {
-	android_preview_consumer_vout_destroyed(gTestCtx.consumer);
+	mlt_apreview_consumer_vout_destroyed(gTestCtx.consumer);
 }
 
 static void testAvformatStop(JNIEnv* env, jclass clazz)
@@ -64,12 +65,14 @@ static void testAvformatStop(JNIEnv* env, jclass clazz)
 		nanosleep(&req,NULL);
 	}
 
-	if(gTestCtx.infoFd != -1)close(gTestCtx.infoFd);
+	if(gTestCtx.vinfoFd != -1)close(gTestCtx.vinfoFd);
+	if(gTestCtx.ainfoFd != -1)close(gTestCtx.ainfoFd);
 	if (gTestCtx.profile)mlt_profile_close(gTestCtx.profile);
 	if (gTestCtx.producer)mlt_producer_close(gTestCtx.producer);
 	if (gTestCtx.consumer)mlt_consumer_close(gTestCtx.consumer);
 	memset(&gTestCtx,0x00,sizeof(gTestCtx));
-	gTestCtx.infoFd = -1;
+	gTestCtx.vinfoFd = -1;
+	gTestCtx.ainfoFd = -1;
 	return;
 }
 
@@ -96,51 +99,74 @@ static void testAvformatStart(JNIEnv* env, jclass clazz)
 		if (gTestCtx.profile)mlt_profile_close(gTestCtx.profile);
 		if (gTestCtx.producer)mlt_producer_close(gTestCtx.producer);
 		if (gTestCtx.consumer)mlt_consumer_close(gTestCtx.consumer);
-		if(gTestCtx.infoFd != -1)close(gTestCtx.infoFd);
-		gTestCtx.infoFd = -1;
+		if(gTestCtx.ainfoFd != -1)close(gTestCtx.ainfoFd);
+		if(gTestCtx.vinfoFd != -1)close(gTestCtx.vinfoFd);
+		gTestCtx.ainfoFd = -1;
+		gTestCtx.vinfoFd = -1;
 		return;
 	}
 	gTestCtx.run = 1;
 }
 
-static void testAvformatInit(JNIEnv* env,jclass clazz, jstring mediaFile, jstring infoFile)
+static void testAvformatInit(JNIEnv* env,jclass clazz, jstring mediaFile, jstring infoFile,
+		jstring jConsumerId)
 {
 	if (gTestCtx.init == 1 ) return;
 	const char* inputPath =  (*env)->GetStringUTFChars(env,mediaFile, NULL);;
 
 	if (infoFile ) {
-		const char* infoPath =  (*env)->GetStringUTFChars(env,infoFile, NULL);;
-		gTestCtx.infoFd = open(infoPath, O_CREAT|O_TRUNC|O_WRONLY, S_IRWXU);
+		const char* infoPath =  (*env)->GetStringUTFChars(env,infoFile, NULL);
+		char temp[1024];
+		snprintf(temp, "%s_v", infoPath);
+		gTestCtx.vinfoFd = open(temp, O_CREAT|O_TRUNC|O_WRONLY, S_IRWXU);
 
-		if (gTestCtx.infoFd == -1) {
+		if (gTestCtx.vinfoFd == -1) {
 			mlt_log_error(NULL, "open info file failed:%s", strerror(errno));
 			return;
 		}
+
+		snprintf(temp, "%s_a", infoPath);
+		gTestCtx.ainfoFd = open(temp, O_CREAT|O_TRUNC|O_WRONLY, S_IRWXU);
+
+		if (gTestCtx.ainfoFd == -1) {
+			mlt_log_error(NULL, "open info file failed:%s", strerror(errno));
+			return;
+		}
+	}
+	const char* consumer_id = "null";
+	if ( jConsumerId) {
+		consumer_id = (*env)->GetStringUTFChars(env,jConsumerId,NULL);
 	}
 
 	mlt_profile profile = mlt_profile_init("hd_720_25p");
 	mlt_producer producer = mlt_factory_producer(profile, "avformat", inputPath);
 	//mlt_profile_close(profile);
 	//mlt_profile_from_producer(profile,producer);
-	mlt_consumer consumer = mlt_factory_consumer(profile, "null", NULL);
+	mlt_consumer consumer = mlt_factory_consumer(profile, consumer_id, NULL);
 	if (!profile || !producer || !consumer) {
 		mlt_log_error(NULL, "prepare test producer/consumer failed");
 		if (profile)mlt_profile_close(profile);
 		if (producer)mlt_producer_close(producer);
 		if (consumer)mlt_consumer_close(consumer);
-		close(gTestCtx.infoFd);
-		gTestCtx.infoFd = -1;
+		close(gTestCtx.vinfoFd);
+		gTestCtx.vinfoFd = -1;
+		close(gTestCtx.ainfoFd);
+		gTestCtx.ainfoFd = -1;
 		return;
 	}
 
 	mlt_properties consumer_properties = mlt_consumer_properties(consumer);
 	mlt_properties_set_int(consumer_properties,"terminate_on_pause",1);
-	if (gTestCtx.infoFd != -1)
-		mlt_properties_set_int(consumer_properties, "detail_fd", gTestCtx.infoFd );
+	if (gTestCtx.vinfoFd != -1) {
+		mlt_properties_set_int(consumer_properties, "detail_fd", gTestCtx.vinfoFd );
+		mlt_properties_set_int(consumer_properties, "video_info_fd", gTestCtx.vinfoFd);
+	}
+	if (gTestCtx.ainfoFd != -1) {
+		mlt_properties_set_int(consumer_properties, "audio_info_fd", gTestCtx.ainfoFd);
+	}
 
-	mlt_properties_set_int(consumer_properties, "buffer", 200);
-	mlt_properties_set_int(consumer_properties, "prefill", 100);
-
+	//mlt_properties_set_int(consumer_properties, "buffer", 200);
+	//mlt_properties_set_int(consumer_properties, "prefill", 100);
 
 	gTestCtx.consumer = consumer;
 	gTestCtx.producer = producer;
@@ -156,12 +182,12 @@ static JNINativeMethod gMethods[] = {
 		{"close", "()V", (void*)FactoryClose}
 #ifdef DEBUG
 		,
-		{"_initTestAvformat","(Ljava/lang/String;Ljava/lang/String;)V", (void*)testAvformatInit},
+		{"_initTestAvformat","(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V", (void*)testAvformatInit},
 		{"_startTestAvformat","()V", (void*)testAvformatStart},
 		{"_stopTestAvformat","()V", (void*)testAvformatStop},
 		{"_statusTestAvformat","()Ljava/lang/String;", (void*)testAvformatStatus},
-		{"_setTestSurface","(Landroid/view/Surface;Landroid/view/Surface;)Z", (void*)testSetSurface},
-		{"_unsetTestSurface","(Landroid/view/Surface;Landroid/view/Surface;)Z", (void*)testUnsetSurface},
+		{"_setTestSurface","(Landroid/view/Surface;)Z", (void*)testSetSurface},
+		{"_unsetTestSurface","(Landroid/view/Surface;)Z", (void*)testUnsetSurface},
 #endif
 };
 
@@ -213,11 +239,36 @@ static void MltLogCallback( void* ptr, int level, const char* fmt, va_list vl )
 	print_prefix = strstr( fmt, "\n" ) != NULL;
 	vsnprintf( logbuf,sizeof(logbuf), fmt, vl );
 
+	int aLevel = ANDROID_LOG_INFO;
+	switch(level)
+	{
+	case MLT_LOG_DEBUG:
+		aLevel = ANDROID_LOG_DEBUG;
+		break;
+	case MLT_LOG_VERBOSE:
+		aLevel = ANDROID_LOG_VERBOSE;
+		break;
+	case MLT_LOG_INFO:
+		aLevel = ANDROID_LOG_INFO;
+		break;
+	case MLT_LOG_WARNING:
+		aLevel = ANDROID_LOG_WARN;
+		break;
+	case MLT_LOG_ERROR:
+		aLevel = ANDROID_LOG_ERROR;
+		break;
+	case MLT_LOG_FATAL:
+		aLevel = ANDROID_LOG_FATAL;
+		break;
+	default:
+		break;
+	}
+
 	if (print_prefix) {
-		__android_log_print(ANDROID_LOG_ERROR, mltLogTag, "%s%s", prefixbuf, logbuf);
+		__android_log_print(aLevel, mltLogTag, "%s%s", prefixbuf, logbuf);
 	}
 	else {
-		__android_log_print(ANDROID_LOG_ERROR, mltLogTag, "%s", logbuf);
+		__android_log_print(aLevel, mltLogTag, "%s", logbuf);
 	}
 }
 
