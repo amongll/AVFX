@@ -33,6 +33,7 @@
 									<listOptionValue builtIn="false" value="__ANDROID__"/>
 									<listOptionValue builtIn="false" value="CODECS=1"/>
 									<listOptionValue builtIn="false" value="FILTERS=1"/>
+									<listOptionValue builtIn="false" value="DEBUG"/>
 								</option>
 								<option id="gnu.c.compiler.option.include.paths.414622934" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;D:\youku\anarm64_include&quot;"/>

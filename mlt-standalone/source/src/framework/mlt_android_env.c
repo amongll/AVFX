@@ -10,6 +10,7 @@
 #include <libgen.h>
 #include <errno.h>
 #include "mlt_log.h"
+#include <pthread.h>
 #ifdef ANDROID
 
 JavaVM *mlt_android_global_javavm = NULL;
@@ -562,6 +563,104 @@ failed:
 	if (assMd5s)mlt_properties_close(assMd5s);
 	return false;
 }
+
+static mlt_properties g_aenv = NULL;
+static pthread_mutex_t g_aenv_lock = PTHREAD_MUTEX_INITIALIZER;
+
+void mlt_android_env_init()
+{
+	if ( g_aenv == NULL) {
+		pthread_mutex_lock(&g_aenv_lock);
+		if (g_aenv == NULL)
+			g_aenv = mlt_properties_new();
+		pthread_mutex_unlock(&g_aenv_lock);
+	}
+}
+
+void mlt_android_env_destroy()
+{
+	pthread_mutex_lock(&g_aenv_lock);
+	if (g_aenv) {
+		mlt_properties_dec_ref(g_aenv);
+		g_aenv = NULL;
+	}
+	pthread_mutex_unlock(&g_aenv_lock);
+}
+
+/**
+#define SURFACE_CONTAINER_NAME "surface_container"
+
+static void properties_clean_proxy(void* obj)
+{
+	mlt_properties props = (mlt_properties)obj;
+	mlt_properties_dec_ref(props);
+}
+
+static void native_clean_proxy(void* obj)
+{
+	ANativeWindow* _obj = (ANativeWindow*)obj;
+	ANativeWindow_release(_obj);
+}
+
+bool mlt_android_surface_regist(ANativeWindow* surface, const char* id)
+{
+	if (!surface || !id)return false;
+	if ( g_aenv == NULL) {
+		mlt_android_env_init();
+		if (g_aenv == NULL) return false;
+	}
+
+	mlt_properties surface_container = (mlt_properties)mlt_properties_get_data
+			(g_aenv,SURFACE_CONTAINER_NAME,NULL);
+	if (surface_container == NULL) {
+		surface_container = mlt_properties_new();
+		mlt_properties_set_data(g_aenv, SURFACE_CONTAINER_NAME,
+				surface_container, sizeof(mlt_properties),
+				properties_clean_proxy,NULL);
+	}
+
+	void* previous = mlt_properties_get_data(surface_container, id, NULL);
+	if ( previous ) {
+		mlt_log_warning(NULL, "surface container duplicated for id:%s", id);
+		return false;
+	}
+	ANativeWindow_acquire(surface);
+	mlt_properties_set_data(surface_container, id, surface, sizeof(ANativeWindow*),
+			native_clean_proxy, NULL);
+	return true;
+}
+
+extern bool mlt_android_surface_detach(ANativeWindow* surface, const char* id)
+{
+	if (!surface || !id) return false;
+	if (g_aenv == NULL) return true;
+	mlt_properties surface_container = (mlt_properties)mlt_properties_get_data
+			(g_aenv,SURFACE_CONTAINER_NAME,NULL);
+	if (surface_container==NULL) return true;
+
+	void* previous = mlt_properties_get_data(surface_container, id, NULL);
+	if ( previous == NULL) return false;
+	if ((ANativeWindow*)previous != surface) return false;
+
+	mlt_properties_set_data(surface_container, id, NULL, sizeof(ANativeWindow*), NULL, NULL);
+	return true;
+}
+
+ANativeWindow* mlt_android_surface_get(const char* id)
+{
+	if (!id) return NULL;
+	if (g_aenv==NULL) return NULL;
+	mlt_properties surface_container = (mlt_properties)mlt_properties_get_data
+			(g_aenv,SURFACE_CONTAINER_NAME,NULL);
+	if (surface_container==NULL) return NULL;
+
+	void* previous = mlt_properties_get_data(surface_container, id, NULL);
+	return (ANativeWindow*)previous;
+}
+**/
+#ifdef DEBUG
+ANativeWindow* g_testAWindow = NULL;
+#endif
 
 #endif
 

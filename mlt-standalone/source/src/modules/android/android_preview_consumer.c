@@ -5,7 +5,11 @@
  *      Author: li.lei
  */
 
-#include "android_preview_consumer.h"
+#include <jni.h>
+#include <android/native_window.h>
+#include <android/native_window_jni.h>
+#include "framework/mlt_android_env.h"
+#include "framework/mlt_consumer.h"
 #include "framework/mlt_deque.h"
 #include "framework/mlt_consumer.h"
 #include "framework/mlt_log.h"
@@ -50,8 +54,8 @@ static void queue_thread_startup(render_queue_t* queue)
 {
 	pthread_mutex_lock(&queue->mutex);
 	queue->running = 1;
-	pthread_mutex_unlock(&queue->mutex);
 	pthread_cond_signal(&queue->cond);
+	pthread_mutex_unlock(&queue->mutex);
 }
 
 static void queue_init(render_queue_t* queue)
@@ -67,7 +71,7 @@ static void queue_destroy(render_queue_t* queue)
 	render_entry_t* entry;
 	do {
 		entry = rget_queue_entry(queue, NULL);
-		mlt_frame_close(entry->frame);
+		if(entry)mlt_frame_close(entry->frame);
 	}while (entry != NULL);
 
 	pthread_mutex_destroy(&queue->mutex);
@@ -81,14 +85,15 @@ static render_entry_t* rget_queue_entry(render_queue_t* queue, int* stopped)
 		struct timespec tm;
 		struct timeval tv;
 		gettimeofday(&tv,NULL);
-		if ( tv.tv_usec + 20000 >= 1000000 ) {
+		if ( tv.tv_usec + 200000 >= 1000000 ) {
 			tm.tv_sec = tv.tv_sec + 1;
-			tm.tv_nsec = (tv.tv_usec+20000 - 1000000) * 1000;
+			tm.tv_nsec = (tv.tv_usec+200000 - 1000000) * 1000;
 		}
 		else {
 			tm.tv_sec = tv.tv_sec;
-			tm.tv_nsec = (tv.tv_usec + 20000) * 1000;
+			tm.tv_nsec = (tv.tv_usec + 200000) * 1000;
 		}
+		mlt_log_info(NULL, "read queue wait");
 		pthread_cond_timedwait(&queue->cond,&queue->mutex,&tm);
 	}
 
@@ -122,14 +127,15 @@ static void wqueue_entry(render_queue_t* queue, mlt_frame frame, int audio)
 			struct timeval tv;
 			gettimeofday(&tv,NULL);
 			try_cnt++;
-			if ( tv.tv_usec + 20000 >= 1000000 ) {
+			if ( tv.tv_usec + 200000 >= 1000000 ) {
 				tm.tv_sec = tv.tv_sec + 1;
-				tm.tv_nsec = (tv.tv_usec + 20000 - 1000000) * 1000;
+				tm.tv_nsec = (tv.tv_usec + 200000 - 1000000) * 1000;
 			}
 			else {
 				tm.tv_sec = tv.tv_sec;
-				tm.tv_nsec = (tv.tv_usec + 20000) * 1000;
+				tm.tv_nsec = (tv.tv_usec + 200000) * 1000;
 			}
+			mlt_log_info(NULL, "write queue:%d wait",audio);
 			pthread_cond_timedwait(&queue->cond,&queue->mutex,&tm);
 			if (try_cnt >= 5) {
 				pthread_mutex_unlock(&queue->mutex);
@@ -146,8 +152,8 @@ static void wqueue_entry(render_queue_t* queue, mlt_frame frame, int audio)
 			else {
 				wo->frame = mlt_frame_clone_video(frame);
 			}
-			pthread_mutex_unlock(&queue->mutex);
 			pthread_cond_signal(&queue->cond);
+			pthread_mutex_unlock(&queue->mutex);
 			return;
 		}
 	}
@@ -209,7 +215,7 @@ typedef struct consumer_local_S {
 
 static uint64_t gettime(const struct timeval* tv)
 {
-	return (uint64_t)tv->tv_sec * tv->tv_usec*1000000;
+	return (uint64_t)tv->tv_sec * 1000000 + tv->tv_usec;
 }
 
 static void* video_thread( void* arg );
@@ -225,8 +231,8 @@ static void* consumer_thread( void *arg )
 	local->status_stopped = 0;
 	queue_thread_start(&local->video_queue, local, video_thread);
 	queue_thread_start(&local->audio_queue, local, audio_thread);
-	pthread_mutex_unlock(&local->run_lock);
 	pthread_cond_signal(&local->run_cond);
+	pthread_mutex_unlock(&local->run_lock);
 
 	double fps = local->fps;
 
@@ -251,17 +257,19 @@ static void* consumer_thread( void *arg )
 		is_last = mlt_properties_get_double(MLT_FRAME_PROPERTIES(frame),
 			"_speed") == 0.0;
 		mlt_properties frame_props = MLT_FRAME_PROPERTIES(frame);
+		mlt_position _position = mlt_properties_get_position(frame_props,"_position");
 		struct timeval curtv ;
 		gettimeofday(&curtv, NULL);
 		uint64_t curtm = gettime(&curtv);
 		if (local->start_position==0xffffffff) {
-			local->start_position = mlt_properties_get_position(frame_props,"_position");
+			local->start_position = _position;
 			local->start_time = curtm;
 		}
 		else {
 			local->elapse_time = curtm - local->start_time;
 		}
 
+		mlt_log_info(&local->parent, "consumer get frame:%d",_position );
 		wqueue_entry(&local->audio_queue,frame,1);
 		wqueue_entry(&local->video_queue,frame,0);
 		next_time = curtm + (1000000/fps)/local->play_speed;
@@ -274,8 +282,8 @@ static void* consumer_thread( void *arg )
 	queue_destroy(&local->audio_queue);
 	pthread_mutex_lock(&local->run_lock);
 	local->status_stopped = 1;
-	pthread_mutex_unlock(&local->run_lock);
 	pthread_cond_signal(&local->run_cond);
+	pthread_mutex_unlock(&local->run_lock);
 
 	return NULL;
 }
@@ -294,6 +302,8 @@ static void* video_thread( void* arg )
 	while(1) {
 		int is_stop = 0;
 		render_entry_t* entry = rget_queue_entry(&local->video_queue,&is_stop);
+		if (entry == NULL)
+			break;
 		frame_props = mlt_frame_properties(entry->frame);
 		position = mlt_properties_get_position(frame_props, "_position");
 		mlt_frame_get_image(entry->frame,&image_raw,&fmt,&image_w,&image_h,0);
@@ -306,6 +316,14 @@ static void* video_thread( void* arg )
 			write(local->video_info_fd, info_buf, sz);
 		}
 
+#ifdef DEBUG
+		int win_w = ANativeWindow_getWidth(g_testAWindow);
+		int win_h = ANativeWindow_getHeight(g_testAWindow);
+		int win_fmt = ANativeWindow_getFormat(g_testAWindow);
+
+
+#endif
+
 		mlt_frame_close(entry->frame);
 		if ( is_stop)
 			break;
@@ -314,13 +332,13 @@ static void* video_thread( void* arg )
 	render_entry_t* entry;
 	do {
 		entry = rget_queue_entry(queue, NULL);
-		mlt_frame_close(entry->frame);
+		if(entry)mlt_frame_close(entry->frame);
 	}while (entry != NULL);
 
 	pthread_mutex_lock(&queue->mutex);
 	queue->status_stop = 1;
-	pthread_mutex_unlock(&queue->mutex);
 	pthread_cond_signal(&queue->cond);
+	pthread_mutex_unlock(&queue->mutex);
 	return NULL;
 }
 
@@ -339,6 +357,8 @@ static void* audio_thread( void* arg )
 	while(1) {
 		int is_stop = 0;
 		render_entry_t* entry = rget_queue_entry(&local->audio_queue,&is_stop);
+		if (entry == NULL)
+			break;
 
 		mlt_frame_get_audio(entry->frame,&audio_raw, &fmt, &freqs,&chnls,&samples);
 		frame_props = mlt_frame_properties(entry->frame);
@@ -360,16 +380,17 @@ static void* audio_thread( void* arg )
 	render_entry_t* entry;
 	do {
 		entry = rget_queue_entry(queue, NULL);
-		mlt_frame_close(entry->frame);
+		if(entry)mlt_frame_close(entry->frame);
 	}while (entry != NULL);
 
 	pthread_mutex_lock(&queue->mutex);
 	queue->status_stop = 1;
-	pthread_mutex_unlock(&queue->mutex);
 	pthread_cond_signal(&queue->cond);
+	pthread_mutex_unlock(&queue->mutex);
 	return NULL;
 }
 
+/**
 int mlt_apreview_consumer_vout_created(mlt_consumer obj, JNIEnv* env, jobject out)
 {
 	if (obj == NULL || out == NULL)
@@ -409,7 +430,8 @@ int mlt_apreview_consumer_vout_destroyed(mlt_consumer obj)
 	local_obj->native_vout = NULL;
 	pthread_mutex_unlock(&local_obj->window_lock);
 	return 0;
-}
+}*/
+
 
 static int consumer_start(mlt_consumer consumer)
 {
@@ -435,6 +457,7 @@ static int consumer_start(mlt_consumer consumer)
 
 	int render_prepared = 0;
 	pthread_mutex_lock(&local->window_lock);
+	local->native_vout = g_testAWindow;
 	if ( local->native_vout )
 		render_prepared = 1;
 	pthread_mutex_unlock(&local->window_lock);
@@ -501,8 +524,12 @@ static void consumer_close(mlt_consumer consumer)
 
 	pthread_mutex_destroy(&local->run_lock);
 	pthread_cond_destroy(&local->run_cond);
+	mlt_consumer_close(&local->parent);
+	free(local);
 
-	mlt_apreview_consumer_vout_destroyed(consumer);
+	ANativeWindow_release(g_testAWindow);
+
+	//mlt_apreview_consumer_vout_destroyed(consumer);
 }
 
 mlt_consumer consumer_apreview_init( mlt_profile profile, mlt_service_type type, const char *id, char *arg )

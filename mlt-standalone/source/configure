@@ -75,7 +75,7 @@ build_config()
 		echo "SSE2_FLAGS=-DUSE_SSE2"
 
 		[ "$debug" = "true" ] && 
-		echo "DEBUG_FLAGS=-g -O0"
+		echo "DEBUG_FLAGS=-g -O0 -DDEBUG"
 
 		echo "LARGE_FILE=-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE"
 
@@ -116,7 +116,8 @@ build_config()
 		echo "CFLAGS+=-fPIC -pthread $extracflags"
 		echo "SHFLAGS=-shared"
 		echo "RDYNAMIC=-rdynamic"
-		echo "LDFLAGS+=-Wl,--no-undefined -Wl,--as-needed $extraldflags"
+		#echo "LDFLAGS+=-Wl,--no-undefined -Wl,--as-needed $extraldflags"
+		echo "LDFLAGS+=-Wl,--as-needed $extraldflags"
 		;;
 		FreeBSD)
 		[ "$optimisations" = "true" ] &&

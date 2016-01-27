@@ -12,9 +12,7 @@
 #include <android/log.h>
 #include <framework/mlt_log.h>
 #include <framework/mlt_android_env.h>
-
-int mlt_apreview_consumer_vout_created(mlt_consumer obj, JNIEnv* env, jobject out);
-int mlt_apreview_consumer_vout_destroyed(mlt_consumer obj);
+#include <android/native_window_jni.h>
 
 typedef struct YkopMltHookInfo {
 	jclass clazz;
@@ -25,6 +23,9 @@ static YkopMltHookInfo gHook;
 static jboolean FactoryInit(JNIEnv* env,jclass clazz, jobjectArray plugins, jstring jlogTag, jint jlogLevel,
 		jstring filesRoot, jobject assetMgr);
 static void FactoryClose(JNIEnv* env, jobject thiz);
+
+//static jboolean regist_surface(JNIEnv* env, jclass clazz, jobject surface, jstring id);
+//static jboolean detach_surface(JNIEnv* env, jclass class, jobject surface, jstring id);
 
 #ifdef DEBUG
 
@@ -39,19 +40,6 @@ typedef struct test_context_S {
 }test_context_t;
 
 static test_context_t gTestCtx = {NULL,NULL,NULL,-1,0};
-
-static void testSetSurface(JNIEnv* env, jclass clazz, jobject vSurface)
-{
-	if (gTestCtx.init == 0) return;
-	if (gTestCtx.run == 1)return;
-	if (gTestCtx.consumer == NULL)return;
-	mlt_apreview_consumer_vout_created(gTestCtx.consumer, env, vSurface);
-}
-
-static void testUnsetSurface(JNIEnv* env, jclass clazz, jobject vSurface)
-{
-	mlt_apreview_consumer_vout_destroyed(gTestCtx.consumer);
-}
 
 static void testAvformatStop(JNIEnv* env, jclass clazz)
 {
@@ -78,7 +66,7 @@ static void testAvformatStop(JNIEnv* env, jclass clazz)
 
 static jstring testAvformatStatus(JNIEnv* env, jclass clazz)
 {
-	if (gTestCtx.run == 0) return "";
+	if (gTestCtx.run == 0) return NULL;
 	int length = mlt_producer_get_length(gTestCtx.producer);
 	int played =  mlt_consumer_position(gTestCtx.consumer);
 	char buf[256];
@@ -117,7 +105,7 @@ static void testAvformatInit(JNIEnv* env,jclass clazz, jstring mediaFile, jstrin
 	if (infoFile ) {
 		const char* infoPath =  (*env)->GetStringUTFChars(env,infoFile, NULL);
 		char temp[1024];
-		snprintf(temp, "%s_v", infoPath);
+		snprintf(temp,sizeof(temp), "%s_v", infoPath);
 		gTestCtx.vinfoFd = open(temp, O_CREAT|O_TRUNC|O_WRONLY, S_IRWXU);
 
 		if (gTestCtx.vinfoFd == -1) {
@@ -125,7 +113,7 @@ static void testAvformatInit(JNIEnv* env,jclass clazz, jstring mediaFile, jstrin
 			return;
 		}
 
-		snprintf(temp, "%s_a", infoPath);
+		snprintf(temp, sizeof(temp), "%s_a", infoPath);
 		gTestCtx.ainfoFd = open(temp, O_CREAT|O_TRUNC|O_WRONLY, S_IRWXU);
 
 		if (gTestCtx.ainfoFd == -1) {
@@ -175,19 +163,28 @@ static void testAvformatInit(JNIEnv* env,jclass clazz, jstring mediaFile, jstrin
 	gTestCtx.init = 1;
 	return;
 }
+
+static void testSetSurface(JNIEnv* env, jclass clazz, jobject jsurf)
+{
+	ANativeWindow* obj = ANativeWindow_fromSurface(env, jsurf);
+	ANativeWindow_acquire(obj);
+	g_testAWindow = obj;
+}
+
 #endif
 
 static JNINativeMethod gMethods[] = {
 		{"init", "([Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Landroid/content/res/AssetManager;)Z", (void*)FactoryInit},
-		{"close", "()V", (void*)FactoryClose}
+		{"close", "()V", (void*)FactoryClose}/**,
+		{"regist_surface","(Landroid/view/Surface;Ljava/lang/String;)Z", (void*)regist_surface},
+		{"detach_surface","(Landroid/view/Surface;Ljava/lang/String;)Z", (void*)detach_surface}*/
 #ifdef DEBUG
 		,
 		{"_initTestAvformat","(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V", (void*)testAvformatInit},
 		{"_startTestAvformat","()V", (void*)testAvformatStart},
 		{"_stopTestAvformat","()V", (void*)testAvformatStop},
 		{"_statusTestAvformat","()Ljava/lang/String;", (void*)testAvformatStatus},
-		{"_setTestSurface","(Landroid/view/Surface;)Z", (void*)testSetSurface},
-		{"_unsetTestSurface","(Landroid/view/Surface;)Z", (void*)testUnsetSurface},
+		{"_setTestSurface","(Landroid/view/Surface;)V", (void*)testSetSurface}
 #endif
 };
 
@@ -243,10 +240,10 @@ static void MltLogCallback( void* ptr, int level, const char* fmt, va_list vl )
 	switch(level)
 	{
 	case MLT_LOG_DEBUG:
-		aLevel = ANDROID_LOG_DEBUG;
+		aLevel = ANDROID_LOG_VERBOSE;
 		break;
 	case MLT_LOG_VERBOSE:
-		aLevel = ANDROID_LOG_VERBOSE;
+		aLevel = ANDROID_LOG_DEBUG;
 		break;
 	case MLT_LOG_INFO:
 		aLevel = ANDROID_LOG_INFO;
@@ -288,10 +285,10 @@ static jboolean FactoryInit(JNIEnv* env,jclass clazz, jobjectArray plugins, jstr
 		mltLogLevel = MLT_LOG_INFO;
 		switch (jlogLevel) {
 		case ANDROID_LOG_VERBOSE:
-			mltLogLevel = MLT_LOG_VERBOSE;
+			mltLogLevel = MLT_LOG_DEBUG;
 			break;
 		case ANDROID_LOG_DEBUG:
-			mltLogLevel = MLT_LOG_DEBUG;
+			mltLogLevel = MLT_LOG_VERBOSE;
 			break;
 		case ANDROID_LOG_INFO:
 			mltLogLevel = MLT_LOG_INFO;
@@ -383,4 +380,20 @@ static void FactoryClose(JNIEnv* env, jclass clazz)
 	}
 	pthread_mutex_unlock(&g_repository_lock);
 }
+
+/**
+static jboolean regist_surface(JNIEnv* env, jclass clazz, jobject surface, jstring id)
+{
+	if(!surface || !id) return false;
+	ANativeWindow* obj = ANativeWindow_fromSurface(env, surface);
+	const char* _id = (*env)->GetStringUTFChars(env, id, NULL);
+	return mlt_android_surface_regist(obj, _id);
+}
+static jboolean detach_surface(JNIEnv* env, jclass class, jobject surface, jstring id)
+{
+	if(!surface || !id) return false;
+	ANativeWindow* obj = ANativeWindow_fromSurface(env, surface);
+	const char* _id = (*env)->GetStringUTFChars(env, id, NULL);
+	return mlt_android_surface_detach(obj, _id);
+}**/
 
