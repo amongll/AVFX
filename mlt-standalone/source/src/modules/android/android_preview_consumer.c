@@ -17,6 +17,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 #define __MAGIC_LOCAL__ 0xace8761d
 #define LOG_TAG "android_surface_consumer"
@@ -294,11 +295,27 @@ static void* video_thread( void* arg )
 	queue_thread_startup(&local->video_queue);
 	render_queue_t* queue = &local->video_queue;
 
+#ifdef DEBUG
+	int win_w = ANativeWindow_getWidth(g_testAWindow);
+	int win_h = ANativeWindow_getHeight(g_testAWindow);
+	int win_fmt = ANativeWindow_getFormat(g_testAWindow);
+
+	if ( win_fmt != 20 ) {
+		assert(0);
+	}
+
+	mlt_log_info(NULL, "NativeWindow:%x %dx%d", win_fmt, win_w, win_h);
+
+#endif
+
 	uint8_t* image_raw;
-	mlt_image_format fmt;
+	mlt_image_format fmt = mlt_image_yuv420p;
 	int image_w,image_h;
 	int position;
 	mlt_properties frame_props;
+
+	ARect *p_rect = NULL;
+	ARect video_rect = {0,0,0,0}, io_rect={0,0,0,0};
 	while(1) {
 		int is_stop = 0;
 		render_entry_t* entry = rget_queue_entry(&local->video_queue,&is_stop);
@@ -306,22 +323,65 @@ static void* video_thread( void* arg )
 			break;
 		frame_props = mlt_frame_properties(entry->frame);
 		position = mlt_properties_get_position(frame_props, "_position");
-		mlt_frame_get_image(entry->frame,&image_raw,&fmt,&image_w,&image_h,0);
+		mlt_image_format infmt = mlt_image_yuv420p;
+		mlt_frame_get_image(entry->frame,&image_raw,&infmt,&image_w,&image_h,0);
 
 		if ( local->video_info_fd != -1 ) {
 			char info_buf[1024];
-			size_t sz = snprintf(info_buf,sizeof(info_buf),"img frame:%d raw:%p fmt:%d %dx%d\n",
-				position, image_raw, fmt, image_w, image_h);
+			size_t sz = snprintf(info_buf,sizeof(info_buf),"img frame:%d raw:%p fmt:%d->%d %dx%d\n",
+				position, image_raw, infmt, fmt, image_w, image_h);
 
 			write(local->video_info_fd, info_buf, sz);
 		}
-
 #ifdef DEBUG
-		int win_w = ANativeWindow_getWidth(g_testAWindow);
-		int win_h = ANativeWindow_getHeight(g_testAWindow);
-		int win_fmt = ANativeWindow_getFormat(g_testAWindow);
+#define ALIGN(x, align) ((( x ) + (align) - 1) / (align) * (align))
+		if ( p_rect == NULL ) {
+			int test_heigth = (int)((double)win_w/image_w)*image_h;
+			if (test_heigth > win_h ) {
+				//ÊúÏòÕ¼Âú
+				video_rect.top = 0;
+				video_rect.bottom = win_h;
+				video_rect.left = (win_w - image_w) / 2;
+				video_rect.right = video_rect.left + image_w;
+			}
+			else {
+				video_rect.left = 0;
+				video_rect.right = win_w;
+				video_rect.top = (win_h - image_h) /2;
+				video_rect.bottom = video_rect.top + image_h;
+			}
+			p_rect = &io_rect;
+		}
 
+		memcpy(&io_rect, &video_rect, sizeof(ARect));
 
+		ANativeWindow_Buffer render_buf;
+
+		ANativeWindow_lock(g_testAWindow,&render_buf, NULL);
+		ANativeWindow_setBuffersGeometry(g_testAWindow, image_w, image_h, win_fmt);
+		/**
+		int i;
+		size_t sz;
+		int y_size = render_buf.stride * render_buf.height;
+		int c_stride = ALIGN(render_buf.stride/2,16);
+		int c_size = c_stride * render_buf.height /2;
+
+		size_t plain_off[3] = {
+				0,
+			y_size,
+			y_size + c_size
+		};
+		memcpy(render_buf.bits, image_raw, y_size);
+		memcpy(render_buf.bits, image_raw + y_size + c_size, c_size);
+		memcpy(render_buf.bits, image_raw + y_size , c_size);
+		//memset(render_buf.bits, 0xa0, y_size);
+		//memset(render_buf.bits + y_size, 0x00, c_size);
+		//memset(render_buf.bits + y_size + c_size, 0x00, c_size);
+		 *
+		 */
+		mlt_log_info(NULL, "ANativeWindowInfo: stride:%d w:%d h:%d", render_buf.stride, render_buf.width, render_buf.height);
+		memcpy(render_buf.bits, image_raw, mlt_image_format_size(mlt_image_yuv422,image_w,image_h-1,NULL));
+		ANativeWindow_unlockAndPost(g_testAWindow);
 #endif
 
 		mlt_frame_close(entry->frame);
