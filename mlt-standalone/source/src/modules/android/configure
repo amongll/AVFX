@@ -1,0 +1,59 @@
+#!/bin/sh
+
+# Determine whether to recommend/use the HEAD revision of FFmpeg (unreleased)
+# or a specific revision based upon whether the last digit of our version
+# is even or odd. An odd MLT version number always represents unreleased.
+ffmpeg_ver="1.2"
+libav_ver="0.8.7"
+micro_version=$(echo $version | cut -d . -f 3)
+odd_version=$(($micro_version % 2))
+[ "$odd_version" -eq "1" ] && ffmpeg_ver="HEAD" && libav_ver="HEAD"
+
+if [ "$help" = "1" ]
+then
+	cat << EOF
+FFmpeg/avformat options:
+
+  --avformat-shared=path  - Link against a shared installation of libavformat (default)
+  --avformat-static=path  - Link against a static build of libavformat
+  --avformat-ldextra=libs - Provide additional libs to link with
+  --avformat-suffix=suff  - Specify a custom suffix
+  --avformat-no-codecs    - Disable the producer and consumer to avoid the codecs
+  --avformat-no-filters   - Disable the filters to make a codecs+muxers-only plugin
+  --avformat-no-devices   - Disable support for libavdevice
+  --avformat-vdpau        - Enable support for NVIDIA VDPAU
+
+  NOTE: The recommended version of FFmpeg is $ffmpeg_ver or libav $libav_ver.
+
+EOF
+
+else
+	if [ $targetos = "Android" ];then
+		for i in "$@"
+		do
+       		 case $i in
+                --arch=* )                      arch="${i#--arch=}" ;;
+                --cpu=* )                       cpu="${i#--cpu=}" ;;
+                --target-os=* )                 targetos="${i#--target-os=}" ;;
+                --target-arch=* )               targetarch="${i#--target-arch=}" ;;
+                --ff-root=* )               ffmpegcross="${i#--ff-root=}" ;;
+                --ff-libname=* )               ffmpegcrosslib="${i#--ff-libname=}" ;;
+                --ff-arch=* )               FF_ARCH="${i#--ff-arch=}" ;;
+        	esac
+		done
+		export LIBSUF=.so	
+
+				
+		ffmpegroot=$ffmpegcross/ffmpeg-${FF_ARCH}/output
+		echo > config.${FF_ARCH}.mak	
+		echo "CFLAGS+=-I$ffmpegroot/include" >> config.${FF_ARCH}.mak
+		echo "LDFLAGS+=-L$ffmpegroot -l${ffmpegcrosslib}" >> config.${FF_ARCH}.mak
+cat <<EOF  >> config.${FF_ARCH}.mak
+EXTRA_LIBS=
+CODECS=1
+FILTERS=1
+DEVICES=0
+EOF
+		exit 0
+	fi    
+fi

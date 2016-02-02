@@ -32,6 +32,7 @@ static void FactoryClose(JNIEnv* env, jobject thiz);
 typedef struct test_context_S {
 	mlt_consumer consumer;
 	mlt_producer producer;
+	mlt_playlist playlist;
 	mlt_profile profile;
 	int vinfoFd;
 	int ainfoFd;
@@ -39,7 +40,7 @@ typedef struct test_context_S {
 	int run:1;
 }test_context_t;
 
-static test_context_t gTestCtx = {NULL,NULL,NULL,-1,0};
+static test_context_t gTestCtx = {NULL,NULL,NULL,NULL,-1,0};
 
 static void testAvformatStop(JNIEnv* env, jclass clazz)
 {
@@ -58,6 +59,7 @@ static void testAvformatStop(JNIEnv* env, jclass clazz)
 	if (gTestCtx.profile)mlt_profile_close(gTestCtx.profile);
 	if (gTestCtx.producer)mlt_producer_close(gTestCtx.producer);
 	if (gTestCtx.consumer)mlt_consumer_close(gTestCtx.consumer);
+	if (gTestCtx.playlist)mlt_playlist_close(gTestCtx.playlist);
 	memset(&gTestCtx,0x00,sizeof(gTestCtx));
 	gTestCtx.vinfoFd = -1;
 	gTestCtx.ainfoFd = -1;
@@ -81,12 +83,13 @@ static void testAvformatStart(JNIEnv* env, jclass clazz)
 		return;
 	if (gTestCtx.init == 0)
 		return;
-	mlt_consumer_connect(gTestCtx.consumer, mlt_producer_service(gTestCtx.producer));
+	mlt_consumer_connect(gTestCtx.consumer, mlt_playlist_service(gTestCtx.playlist));
 	if (mlt_consumer_start(gTestCtx.consumer)) {
 		mlt_log_error(NULL, "prepare test producer/consumer failed");
 		if (gTestCtx.profile)mlt_profile_close(gTestCtx.profile);
 		if (gTestCtx.producer)mlt_producer_close(gTestCtx.producer);
 		if (gTestCtx.consumer)mlt_consumer_close(gTestCtx.consumer);
+		if (gTestCtx.playlist)mlt_playlist_close(gTestCtx.playlist);
 		if(gTestCtx.ainfoFd != -1)close(gTestCtx.ainfoFd);
 		if(gTestCtx.vinfoFd != -1)close(gTestCtx.vinfoFd);
 		gTestCtx.ainfoFd = -1;
@@ -126,16 +129,42 @@ static void testAvformatInit(JNIEnv* env,jclass clazz, jstring mediaFile, jstrin
 		consumer_id = (*env)->GetStringUTFChars(env,jConsumerId,NULL);
 	}
 
-	mlt_profile profile = mlt_profile_init("hd_720_25p");
-	mlt_producer producer = mlt_factory_producer(profile, "avformat", inputPath);
+	mlt_profile profile = mlt_profile_init("small_640_25p");
+	mlt_producer producer = mlt_factory_producer(profile, "loader", inputPath);
+	//mlt_profile profile2 = mlt_profile_init(NULL);
+	//mlt_profile_from_producer(profile2, producer);
+	mlt_profile_from_producer(profile, producer);
 	//mlt_profile_close(profile);
 	//mlt_profile_from_producer(profile,producer);
 	mlt_consumer consumer = mlt_factory_consumer(profile, consumer_id, NULL);
-	if (!profile || !producer || !consumer) {
+
+	mlt_playlist playlist = mlt_playlist_new(profile);
+	mlt_playlist_blank(playlist, 200);
+	mlt_playlist_append_io(playlist,producer, 5000,6000);
+	mlt_producer clip = mlt_playlist_get_clip(playlist, 1);
+	char buf[1024];
+	mlt_filter filter ;
+	filter = mlt_factory_filter(profile, "brightness", NULL);
+	snprintf(buf,sizeof(buf),"5000~=0;5100~=1");
+	mlt_properties_set(mlt_filter_properties(filter),"level", buf);
+	mlt_service_attach(mlt_producer_service(clip),filter);
+	mlt_filter_close(filter);
+
+	filter = mlt_factory_filter(profile, "brightness", NULL);
+	snprintf(buf, sizeof(buf), "5800~=1;6000~=0");
+	mlt_properties_set(mlt_filter_properties(filter),"level", buf);
+	mlt_service_attach(mlt_producer_service(clip),filter);
+	mlt_filter_close(filter);
+
+	mlt_playlist_append_io(playlist,producer, 3500,5000);
+	mlt_playlist_append_io(playlist,producer, 13500,25000);
+	mlt_playlist_blank(playlist, 200);
+	if (!profile || !producer || !consumer || !playlist) {
 		mlt_log_error(NULL, "prepare test producer/consumer failed");
 		if (profile)mlt_profile_close(profile);
 		if (producer)mlt_producer_close(producer);
 		if (consumer)mlt_consumer_close(consumer);
+		if (playlist)mlt_playlist_close(playlist);
 		close(gTestCtx.vinfoFd);
 		gTestCtx.vinfoFd = -1;
 		close(gTestCtx.ainfoFd);
@@ -145,6 +174,7 @@ static void testAvformatInit(JNIEnv* env,jclass clazz, jstring mediaFile, jstrin
 
 	mlt_properties consumer_properties = mlt_consumer_properties(consumer);
 	mlt_properties_set_int(consumer_properties,"terminate_on_pause",1);
+	mlt_properties_set_int(consumer_properties,"real_time", 1);
 	if (gTestCtx.vinfoFd != -1) {
 		mlt_properties_set_int(consumer_properties, "detail_fd", gTestCtx.vinfoFd );
 		mlt_properties_set_int(consumer_properties, "video_info_fd", gTestCtx.vinfoFd);
@@ -159,7 +189,10 @@ static void testAvformatInit(JNIEnv* env,jclass clazz, jstring mediaFile, jstrin
 	gTestCtx.consumer = consumer;
 	gTestCtx.producer = producer;
 	gTestCtx.profile = profile;
-	mlt_log_info(NULL, "test producer/consumer started");
+	gTestCtx.playlist = playlist;
+	mlt_log_info(NULL, "test producer/consumer started.  ");
+	mlt_log_verbose(NULL, "test producer/consumer started.  ");
+	mlt_log_debug(NULL, "test producer/consumer started.  ");
 	gTestCtx.init = 1;
 	return;
 }
@@ -240,11 +273,7 @@ static void MltLogCallback( void* ptr, int level, const char* fmt, va_list vl )
 	switch(level)
 	{
 	case MLT_LOG_DEBUG:
-		aLevel = ANDROID_LOG_VERBOSE;
-		break;
 	case MLT_LOG_VERBOSE:
-		aLevel = ANDROID_LOG_DEBUG;
-		break;
 	case MLT_LOG_INFO:
 		aLevel = ANDROID_LOG_INFO;
 		break;
@@ -285,10 +314,10 @@ static jboolean FactoryInit(JNIEnv* env,jclass clazz, jobjectArray plugins, jstr
 		mltLogLevel = MLT_LOG_INFO;
 		switch (jlogLevel) {
 		case ANDROID_LOG_VERBOSE:
-			mltLogLevel = MLT_LOG_DEBUG;
+			mltLogLevel = MLT_LOG_INFO;
 			break;
 		case ANDROID_LOG_DEBUG:
-			mltLogLevel = MLT_LOG_VERBOSE;
+			mltLogLevel = MLT_LOG_INFO;
 			break;
 		case ANDROID_LOG_INFO:
 			mltLogLevel = MLT_LOG_INFO;
