@@ -1,6 +1,7 @@
 include ../../../config.mak
 
 ifeq ($(targetos),Android)
+include config.$(arch).mak
 LDFLAGS += -L../../framework -lmlt -lm -landroid
 else
 LDFLAGS += -L../../framework -lmlt -lpthread -lm

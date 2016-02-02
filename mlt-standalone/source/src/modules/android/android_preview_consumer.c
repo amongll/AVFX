@@ -12,12 +12,16 @@
 #include "framework/mlt_consumer.h"
 #include "framework/mlt_deque.h"
 #include "framework/mlt_consumer.h"
+#include "framework/mlt_service.h"
+#include "framework/mlt_types.h"
+#include "framework/mlt_profile.h"
 #include "framework/mlt_log.h"
 #include "framework/mlt_frame.h"
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <libavutil/imgutils.h>
 
 #define __MAGIC_LOCAL__ 0xace8761d
 #define LOG_TAG "android_surface_consumer"
@@ -94,7 +98,7 @@ static render_entry_t* rget_queue_entry(render_queue_t* queue, int* stopped)
 			tm.tv_sec = tv.tv_sec;
 			tm.tv_nsec = (tv.tv_usec + 200000) * 1000;
 		}
-		mlt_log_info(NULL, "read queue wait");
+		//mlt_log_info(NULL, "read queue wait");
 		pthread_cond_timedwait(&queue->cond,&queue->mutex,&tm);
 	}
 
@@ -136,7 +140,7 @@ static void wqueue_entry(render_queue_t* queue, mlt_frame frame, int audio)
 				tm.tv_sec = tv.tv_sec;
 				tm.tv_nsec = (tv.tv_usec + 200000) * 1000;
 			}
-			mlt_log_info(NULL, "write queue:%d wait",audio);
+			//mlt_log_info(NULL, "write queue:%d wait",audio);
 			pthread_cond_timedwait(&queue->cond,&queue->mutex,&tm);
 			if (try_cnt >= 5) {
 				pthread_mutex_unlock(&queue->mutex);
@@ -149,9 +153,11 @@ static void wqueue_entry(render_queue_t* queue, mlt_frame frame, int audio)
 
 			if (audio) {
 				wo->frame = mlt_frame_clone_audio(frame);
+				wo->frame->convert_audio = frame->convert_audio;
 			}
 			else {
 				wo->frame = mlt_frame_clone_video(frame);
+				wo->frame->convert_image = frame->convert_image;
 			}
 			pthread_cond_signal(&queue->cond);
 			pthread_mutex_unlock(&queue->mutex);
@@ -241,8 +247,11 @@ static void* consumer_thread( void *arg )
 	int stop = 0;
 	uint64_t next_time = 0;
 	while(1) {
+		struct timeval curtv ;
 		pthread_mutex_lock(&local->run_lock);
-		if (next_time != 0) {
+		gettimeofday(&curtv, NULL);
+		uint64_t curtm = gettime(&curtv);
+		if (next_time != 0 && curtm <= next_time ) {
 			struct timespec tmw = {next_time/1000000,
 					(next_time%1000000)*1000};
 			pthread_cond_timedwait(&local->run_cond,&local->run_lock, &tmw);
@@ -255,13 +264,12 @@ static void* consumer_thread( void *arg )
 		}
 
 		mlt_frame frame = mlt_consumer_rt_frame(&local->parent);
+		if (!frame)continue;
 		is_last = mlt_properties_get_double(MLT_FRAME_PROPERTIES(frame),
 			"_speed") == 0.0;
 		mlt_properties frame_props = MLT_FRAME_PROPERTIES(frame);
 		mlt_position _position = mlt_properties_get_position(frame_props,"_position");
-		struct timeval curtv ;
-		gettimeofday(&curtv, NULL);
-		uint64_t curtm = gettime(&curtv);
+
 		if (local->start_position==0xffffffff) {
 			local->start_position = _position;
 			local->start_time = curtm;
@@ -270,10 +278,23 @@ static void* consumer_thread( void *arg )
 			local->elapse_time = curtm - local->start_time;
 		}
 
-		mlt_log_info(&local->parent, "consumer get frame:%d",_position );
+		mlt_log_info(&local->parent, "consumer get frame:%d colorspace:%d trc:%d fmt:%d w:%d h:%d aspect:%d test:%d",_position,
+				mlt_properties_get_int(frame_props,"colorspace"),
+				mlt_properties_get_int(frame_props, "color_trc"),
+				mlt_properties_get_int(frame_props, "format"),
+				mlt_properties_get_int(frame_props, "width"),
+				mlt_properties_get_int(frame_props, "height"),
+				mlt_properties_get_int(frame_props, "aspect_ratio"),
+				mlt_frame_is_test_card(frame));
 		wqueue_entry(&local->audio_queue,frame,1);
 		wqueue_entry(&local->video_queue,frame,0);
-		next_time = curtm + (1000000/fps)/local->play_speed;
+		mlt_frame_close(frame);
+		if (next_time == 0) {
+			gettimeofday(&curtv, NULL);
+			curtm = gettime(&curtv);
+			next_time = curtm;
+		}
+		next_time = next_time + (1000000/fps)/local->play_speed;
 	}
 
 	queue_stop(&local->video_queue);
@@ -289,6 +310,63 @@ static void* consumer_thread( void *arg )
 	return NULL;
 }
 
+static int android_render_yuv420p_on_yv12(ANativeWindow_Buffer *out_buffer, const uint8_t *raw, int w, int h)
+{
+#define IJKMIN(a, b)    ((a) < (b) ? (a) : (b) )
+#ifndef IJKALIGN
+#define IJKALIGN(x, align) ((( x ) + (align) - 1) / (align) * (align))
+#endif
+
+    int min_height = IJKMIN(out_buffer->height, h);
+    int dst_y_stride = out_buffer->stride;
+    int dst_c_stride = IJKALIGN(out_buffer->stride / 2, 16);
+    int dst_y_size = dst_y_stride * out_buffer->height;
+    int dst_c_size = dst_c_stride * out_buffer->height / 2;
+
+    // ALOGE("stride:%d/%d, size:%d/%d", dst_y_stride, dst_c_stride, dst_y_size, dst_c_size);
+
+    uint8_t *dst_pixels_array[] = {
+        out_buffer->bits,
+        out_buffer->bits + dst_y_size,
+        out_buffer->bits + dst_y_size + dst_c_size,
+    };
+    int dst_line_height[] = { min_height, min_height / 2, min_height / 2 };
+    int dst_line_size_array[] = { dst_y_stride, dst_c_stride, dst_c_stride };
+
+    int linesize[4] = {0};
+    uint8_t* datas[4] = {0};
+    av_image_fill_linesizes(linesize, AV_PIX_FMT_YUV420P, w);
+    av_image_fill_pointers(datas, AV_PIX_FMT_YUV420P, h, raw, linesize);
+    uint8_t* tmp = datas[1];
+    datas[1] = datas[2];
+    datas[2] = tmp;
+    //mlt_log_info(NULL, "linesize:%d %d %d", linesize[0],linesize[1],linesize[2]);
+
+    int i;
+    for (i = 0; i < 3; ++i) {
+        int dst_line_size = dst_line_size_array[i];
+        int src_line_size = linesize[i];
+        int line_height = dst_line_height[i];
+        uint8_t *dst_pixels = dst_pixels_array[i];
+        const uint8_t *src_pixels = datas[i];
+
+        if (dst_line_size == src_line_size) {
+            int plane_size = src_line_size * line_height;
+
+            // ALOGE("sdl_image_copy_plane %p %p %d", dst_pixels, src_pixels, dst_plane_size);
+            memcpy(dst_pixels, src_pixels, plane_size);
+        } else {
+            // TODO: 9 padding
+            int bytewidth = IJKMIN(dst_line_size, src_line_size);
+
+            // ALOGE("av_image_copy_plane %p %d %p %d %d %d", dst_pixels, dst_line_size, src_pixels, src_line_size, bytewidth, line_height);
+            av_image_copy_plane(dst_pixels, dst_line_size, src_pixels, src_line_size, bytewidth, line_height);
+        }
+    }
+
+    return 0;
+}
+
 static void* video_thread( void* arg )
 {
 	consumer_local_t* local = (consumer_local_t*)arg;
@@ -300,11 +378,13 @@ static void* video_thread( void* arg )
 	int win_h = ANativeWindow_getHeight(g_testAWindow);
 	int win_fmt = ANativeWindow_getFormat(g_testAWindow);
 
-	if ( win_fmt != 20 ) {
+	//if ( win_fmt != 20 ) {
+	if ( win_fmt != 842094169 ) {
+
 		assert(0);
 	}
 
-	mlt_log_info(NULL, "NativeWindow:%x %dx%d", win_fmt, win_w, win_h);
+	mlt_log_warning(NULL, "NativeWindow:%x %dx%d", win_fmt, win_w, win_h);
 
 #endif
 
@@ -325,31 +405,26 @@ static void* video_thread( void* arg )
 		position = mlt_properties_get_position(frame_props, "_position");
 		mlt_image_format infmt = mlt_image_yuv420p;
 		mlt_frame_get_image(entry->frame,&image_raw,&infmt,&image_w,&image_h,0);
+		int img_sz = mlt_image_format_size(mlt_image_yuv420p, image_w, image_h, NULL);
 
 		if ( local->video_info_fd != -1 ) {
 			char info_buf[1024];
-			size_t sz = snprintf(info_buf,sizeof(info_buf),"img frame:%d raw:%p fmt:%d->%d %dx%d\n",
-				position, image_raw, infmt, fmt, image_w, image_h);
+			size_t sz = snprintf(info_buf,sizeof(info_buf),"img frame:%d raw:%p size:%d fmt:%d->%d %dx%d\n",
+				position, image_raw, img_sz, infmt, fmt, image_w, image_h);
 
 			write(local->video_info_fd, info_buf, sz);
 		}
 #ifdef DEBUG
 #define ALIGN(x, align) ((( x ) + (align) - 1) / (align) * (align))
 		if ( p_rect == NULL ) {
-			int test_heigth = (int)((double)win_w/image_w)*image_h;
-			if (test_heigth > win_h ) {
-				//ÊúÏòÕ¼Âú
-				video_rect.top = 0;
-				video_rect.bottom = win_h;
-				video_rect.left = (win_w - image_w) / 2;
-				video_rect.right = video_rect.left + image_w;
-			}
-			else {
-				video_rect.left = 0;
-				video_rect.right = win_w;
-				video_rect.top = (win_h - image_h) /2;
-				video_rect.bottom = video_rect.top + image_h;
-			}
+			mlt_profile profile = mlt_service_profile(mlt_consumer_service(&local->parent));
+			video_rect.top = 0;
+			video_rect.bottom =  win_w/profile->width * profile->height;
+			video_rect.left = 0;
+			video_rect.right = win_w;
+
+			ANativeWindow_setBuffersGeometry(g_testAWindow, profile->width, profile->height, win_fmt);
+
 			p_rect = &io_rect;
 		}
 
@@ -357,8 +432,8 @@ static void* video_thread( void* arg )
 
 		ANativeWindow_Buffer render_buf;
 
-		ANativeWindow_lock(g_testAWindow,&render_buf, NULL);
-		ANativeWindow_setBuffersGeometry(g_testAWindow, image_w, image_h, win_fmt);
+		ANativeWindow_lock(g_testAWindow,&render_buf, /*p_rect*/NULL);
+		android_render_yuv420p_on_yv12(&render_buf, image_raw, image_w, image_h);
 		/**
 		int i;
 		size_t sz;
@@ -379,8 +454,8 @@ static void* video_thread( void* arg )
 		//memset(render_buf.bits + y_size + c_size, 0x00, c_size);
 		 *
 		 */
-		mlt_log_info(NULL, "ANativeWindowInfo: stride:%d w:%d h:%d", render_buf.stride, render_buf.width, render_buf.height);
-		memcpy(render_buf.bits, image_raw, mlt_image_format_size(mlt_image_yuv422,image_w,image_h-1,NULL));
+		//mlt_log_info(NULL, "ANativeWindowInfo: stride:%d w:%d h:%d", render_buf.stride, render_buf.width, render_buf.height);
+		//memcpy(render_buf.bits, image_raw, mlt_image_format_size(mlt_image_yuv422,image_w,image_h-1,NULL));
 		ANativeWindow_unlockAndPost(g_testAWindow);
 #endif
 
