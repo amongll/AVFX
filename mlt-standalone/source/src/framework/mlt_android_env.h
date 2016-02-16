@@ -19,14 +19,16 @@
 #include <unistd.h>
 #include <string.h>
 #include "mlt_properties.h"
-extern JavaVM* mlt_android_global_javavm;
 
 extern mlt_properties mlt_properties_load_AAsset(AAssetManager* mgr, const char *assetName );
 extern int mlt_properties_preset_AAsset(AAssetManager* mgr, mlt_properties self, const char *assetName );
 extern bool mlt_android_check_data(AAssetManager* mgr, const char* files_path, char *err, size_t err_size);
 
-extern void mlt_android_env_init();
+extern bool mlt_android_env_init(JavaVM* vm);
 extern void mlt_android_env_destroy();
+extern JNIEnv* mlt_android_get_jnienv();
+extern void mlt_android_jnienv_thrclean();
+extern int mlt_android_sdk_version();
 
 #ifdef DEBUG
 extern ANativeWindow* g_testAWindow;

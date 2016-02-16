@@ -9,6 +9,7 @@
 #include <android/native_window.h>
 #include <android/native_window_jni.h>
 #include "framework/mlt_android_env.h"
+#include "framework/mlt_android_audiotrack.h"
 #include "framework/mlt_consumer.h"
 #include "framework/mlt_deque.h"
 #include "framework/mlt_consumer.h"
@@ -132,13 +133,13 @@ static void wqueue_entry(render_queue_t* queue, mlt_frame frame, int audio)
 			struct timeval tv;
 			gettimeofday(&tv,NULL);
 			try_cnt++;
-			if ( tv.tv_usec + 200000 >= 1000000 ) {
+			if ( tv.tv_usec + 200 >= 1000000 ) {
 				tm.tv_sec = tv.tv_sec + 1;
-				tm.tv_nsec = (tv.tv_usec + 200000 - 1000000) * 1000;
+				tm.tv_nsec = (tv.tv_usec + 200 - 1000000) * 1000;
 			}
 			else {
 				tm.tv_sec = tv.tv_sec;
-				tm.tv_nsec = (tv.tv_usec + 200000) * 1000;
+				tm.tv_nsec = (tv.tv_usec + 200) * 1000;
 			}
 			//mlt_log_info(NULL, "write queue:%d wait",audio);
 			pthread_cond_timedwait(&queue->cond,&queue->mutex,&tm);
@@ -252,8 +253,8 @@ static void* consumer_thread( void *arg )
 		gettimeofday(&curtv, NULL);
 		uint64_t curtm = gettime(&curtv);
 		if (next_time != 0 && curtm <= next_time ) {
-			struct timespec tmw = {next_time/1000000,
-					(next_time%1000000)*1000};
+			struct timespec tmw = {(next_time-2000)/1000000,
+					((next_time-2000)%1000000)*1000};
 			pthread_cond_timedwait(&local->run_cond,&local->run_lock, &tmw);
 		}
 		stop = local->ctrl_stop;
@@ -483,11 +484,34 @@ static void* audio_thread( void* arg )
 	queue_thread_startup(&local->audio_queue);
 	render_queue_t* queue = &local->audio_queue;
 
-	void* audio_raw;
-	mlt_audio_format fmt;
-	int freqs,chnls,samples;
+	mlt_properties self_properties = mlt_consumer_properties(&local->parent);
+
+	mlt_android_audiotrack_spec spec;
+	memset(&spec, 0x00,sizeof(mlt_android_audiotrack_spec));
+	spec.stream_type = STREAM_MUSIC;
+	spec.channel_config = CHANNEL_OUT_STEREO;
+	spec.audio_format = ENCODING_PCM_16BIT;
+	spec.mode = MODE_STREAM;
+
+	JNIEnv* env = mlt_android_get_jnienv();
+	mlt_android_audiotrack* play_track = mlt_android_audiotrack_new(env, &spec);
+
+	if ( !play_track ) {
+		mlt_log_error(&local->parent, "open audio track failed");
+		spec.sample_rate_in_hz = mlt_android_audiotrack_get_native_output_sample_rate(env, STREAM_MUSIC);
+	}
+	else {
+		mlt_android_audiotrack_play(env, play_track);
+	}
+
+	uint16_t* audio_raw;
+	mlt_audio_format fmt = mlt_audio_s16;
+	int freqs = spec.sample_rate_in_hz,chnls = 2, samples=0;
 	int position;
 	mlt_properties frame_props;
+
+	size_t audio_rawsz = 0;
+	static uint32_t counter = 0;
 
 	while(1) {
 		int is_stop = 0;
@@ -495,9 +519,16 @@ static void* audio_thread( void* arg )
 		if (entry == NULL)
 			break;
 
-		mlt_frame_get_audio(entry->frame,&audio_raw, &fmt, &freqs,&chnls,&samples);
 		frame_props = mlt_frame_properties(entry->frame);
 		position = mlt_properties_get_position(frame_props, "_position");
+		samples = mlt_sample_calculator( mlt_properties_get_double( self_properties, "fps" ), freqs, counter++ );
+
+		mlt_frame_get_audio(entry->frame,(void**)&audio_raw, &fmt, &freqs,&chnls,&samples);
+		audio_rawsz = samples * chnls * 2;
+
+		if (play_track) {
+			mlt_android_audiotrack_write(env, play_track, (uint8_t*)audio_raw, audio_rawsz);
+		}
 
 		if ( local->audio_info_fd != -1 ) {
 			char info_buf[1024];
@@ -517,6 +548,13 @@ static void* audio_thread( void* arg )
 		entry = rget_queue_entry(queue, NULL);
 		if(entry)mlt_frame_close(entry->frame);
 	}while (entry != NULL);
+
+	if (play_track) {
+		mlt_android_audiotrack_stop(env, play_track);
+		mlt_android_audiotrack_release(env, play_track);
+	}
+
+	mlt_android_jnienv_thrclean();
 
 	pthread_mutex_lock(&queue->mutex);
 	queue->status_stop = 1;

@@ -4,16 +4,17 @@
  *  Created on: 2016Äê1ÔÂ18ÈÕ
  *      Author: L-F000000-PC
  */
-
+#ifdef ANDROID
 #include "mlt_android_env.h"
 #include "mlt_factory.h"
 #include <libgen.h>
 #include <errno.h>
 #include "mlt_log.h"
 #include <pthread.h>
-#ifdef ANDROID
+#include "mlt_android_jni_util.h"
+#include "mlt_android_audiotrack.h"
 
-JavaVM *mlt_android_global_javavm = NULL;
+static JavaVM *android_global_javavm = NULL;
 
 typedef enum property_parse_status_E {
 	status_start=0,
@@ -567,14 +568,47 @@ failed:
 static mlt_properties g_aenv = NULL;
 static pthread_mutex_t g_aenv_lock = PTHREAD_MUTEX_INITIALIZER;
 
-void mlt_android_env_init()
+static pthread_key_t g_aenv_key = PTHREAD_ONCE_INIT;
+
+static struct ASDKBuildInfo {
+	jclass clazz;
+	jfieldID jfid_SDK_INT;
+} gASDK ;
+
+static void aenv_thr_spec_key_clean(void* value)
+{
+    JNIEnv *env = (JNIEnv*) value;
+    if (env != NULL) {
+        (*android_global_javavm)->DetachCurrentThread(android_global_javavm);
+        pthread_setspecific(g_aenv_key, NULL);
+    }
+}
+static void aenv_thr_spec_key_create()
+{
+	pthread_key_create(&g_aenv_key, aenv_thr_spec_key_clean);
+}
+
+bool mlt_android_env_init(JavaVM* vm)
 {
 	if ( g_aenv == NULL) {
 		pthread_mutex_lock(&g_aenv_lock);
-		if (g_aenv == NULL)
+		if (g_aenv == NULL) {
 			g_aenv = mlt_properties_new();
+			android_global_javavm = vm;
+			JNIEnv* env = NULL;
+			if ( (*vm)->GetEnv(vm, (void**)&env,JNI_VERSION_1_4) != JNI_OK )
+				return false;
+
+		    FIND_JAVA_CLASS( env, gASDK.clazz, "android/os/Build$VERSION", false);
+		    FIND_JAVA_STATIC_FIELD(env, gASDK.jfid_SDK_INT,   gASDK.clazz,
+		        "SDK_INT",   "I", false);
+
+		    if ( ! mlt_android_audiotrack_jni_init() ) return false;
+		}
 		pthread_mutex_unlock(&g_aenv_lock);
 	}
+	pthread_once(&g_aenv_key, aenv_thr_spec_key_create);
+	return true;
 }
 
 void mlt_android_env_destroy()
@@ -585,6 +619,41 @@ void mlt_android_env_destroy()
 		g_aenv = NULL;
 	}
 	pthread_mutex_unlock(&g_aenv_lock);
+}
+
+JNIEnv* mlt_android_get_jnienv()
+{
+	JNIEnv* ret = (JNIEnv*)pthread_getspecific(g_aenv_key);
+	if (ret) return ret;
+
+    if ((*android_global_javavm)->AttachCurrentThread(android_global_javavm, &ret, NULL) == JNI_OK) {
+        pthread_setspecific(g_aenv_key, ret);
+        return ret;
+    }
+    return NULL;
+}
+
+void mlt_android_jnienv_thrclean()
+{
+    (*android_global_javavm)->DetachCurrentThread(android_global_javavm);
+    pthread_setspecific(g_aenv_key, NULL);
+}
+
+int mlt_android_sdk_version()
+{
+	static jint _ASDK_NUM = 0;
+	if (_ASDK_NUM) return _ASDK_NUM;
+	JNIEnv* env = mlt_android_get_jnienv();
+	if (!env) return -1;
+
+    jint sdk_int = (*env)->GetStaticIntField(env, gASDK.clazz, gASDK.jfid_SDK_INT);
+    if (JNI_RethrowJVMException(env)) {
+        return -1;
+    }
+    _ASDK_NUM = sdk_int;
+
+    return sdk_int;
+
 }
 
 /**

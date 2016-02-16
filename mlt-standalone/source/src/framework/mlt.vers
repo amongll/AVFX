@@ -482,10 +482,24 @@ MLT_0.9.8 {
 MLT_0.9.10 {
   global:
   	g_testAWindow;
+  	mlt_android_audiotrack_getAudioSessionId;
+  	mlt_android_audiotrack_get_min_buffer_size;
+  	mlt_android_audiotrack_get_native_output_sample_rate;
+  	mlt_android_audiotrack_flush;
+  	mlt_android_audiotrack_free;
+  	mlt_android_audiotrack_new;
+  	mlt_android_audiotrack_pause;
+  	mlt_android_audiotrack_play;
+  	mlt_android_audiotrack_release;
+  	mlt_android_audiotrack_set_volume;
+  	mlt_android_audiotrack_stop;
+  	mlt_android_audiotrack_write;
     mlt_android_check_data;
     mlt_android_env_init;
     mlt_android_env_destroy;
-    mlt_android_global_javavm;
+    mlt_android_get_jnienv;
+    mlt_android_jnienv_thrclean;
+    mlt_android_sdk_version;
     mlt_factory_repository;
     mlt_frame_clone_audio;
     mlt_frame_clone_video;
