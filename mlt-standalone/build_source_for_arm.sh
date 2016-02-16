@@ -39,7 +39,7 @@ compile_for_abi()
     esac
 
     COMMON_MY_CFG_FLAGS=
-    MY_EXTRA_CFLAGS="-DANDROID"
+    MY_EXTRA_CFLAGS="-DANDROID -D__ANDROID__ -std=c99"
     MY_EXTRA_LDFLAGS=
     source ./module.sh
     
