@@ -14,13 +14,13 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved)
 		return -1;
 
 	if ( !YkopMltFactoryBind(env) ) return -1;
+	if ( !mlt_android_env_init(vm) ) return -1;
 
-	mlt_android_global_javavm = vm;
 	return JNI_VERSION_1_4;
 }
 
 JNIEXPORT void JNI_OnUnload(JavaVM* vm, void* reserved)
 {
-	mlt_android_global_javavm = NULL;
+	mlt_android_env_destroy();
 	return;
 }

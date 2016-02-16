@@ -183,8 +183,8 @@ static void testAvformatInit(JNIEnv* env,jclass clazz, jstring mediaFile, jstrin
 		mlt_properties_set_int(consumer_properties, "audio_info_fd", gTestCtx.ainfoFd);
 	}
 
-	//mlt_properties_set_int(consumer_properties, "buffer", 200);
-	//mlt_properties_set_int(consumer_properties, "prefill", 100);
+	mlt_properties_set_int(consumer_properties, "buffer", 5);
+	mlt_properties_set_int(consumer_properties, "prefill", 5);
 
 	gTestCtx.consumer = consumer;
 	gTestCtx.producer = producer;
