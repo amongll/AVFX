@@ -279,16 +279,31 @@ static void* consumer_thread( void *arg )
 			local->elapse_time = curtm - local->start_time;
 		}
 
-		mlt_log_info(&local->parent, "consumer get frame:%d colorspace:%d trc:%d fmt:%d w:%d h:%d aspect:%d test:%d",_position,
+		mlt_log_info(&local->parent, "consumer get frame:%d colorspace:%d trc:%d fmt:%d w:%d h:%d aspect:%d test:%d v:%p a:%p cvtimg:%p cvtaudio:%p",_position,
 				mlt_properties_get_int(frame_props,"colorspace"),
 				mlt_properties_get_int(frame_props, "color_trc"),
 				mlt_properties_get_int(frame_props, "format"),
 				mlt_properties_get_int(frame_props, "width"),
 				mlt_properties_get_int(frame_props, "height"),
 				mlt_properties_get_int(frame_props, "aspect_ratio"),
-				mlt_frame_is_test_card(frame));
+				mlt_frame_is_test_card(frame),
+				mlt_properties_get_data(frame_props, "image", NULL),
+				mlt_properties_get_data(frame_props, "audio", NULL),
+				frame->convert_image,
+				frame->convert_audio);
 		wqueue_entry(&local->audio_queue,frame,1);
 		wqueue_entry(&local->video_queue,frame,0);
+		/*{
+			static uint32_t counter;
+			uint8_t* raw;
+			mlt_image_format fmt = mlt_image_yuv420p;
+			mlt_audio_format afmt = mlt_audio_s16;
+			int w=0,h=0, freqs=48000, chnls = 2;
+
+			int samples = mlt_sample_calculator( mlt_properties_get_double( mlt_consumer_properties(&local->parent), "fps" ), freqs, counter++ );
+			mlt_frame_get_image(frame, &raw, &fmt, &w, &h, 0);
+			mlt_frame_get_audio(frame, &raw, &afmt, &freqs, &chnls, &samples);
+		}*/
 		mlt_frame_close(frame);
 		if (next_time == 0) {
 			gettimeofday(&curtv, NULL);
@@ -405,13 +420,16 @@ static void* video_thread( void* arg )
 		frame_props = mlt_frame_properties(entry->frame);
 		position = mlt_properties_get_position(frame_props, "_position");
 		mlt_image_format infmt = mlt_image_yuv420p;
+		//if ( mlt_frame_is_test_card(entry->frame) && mlt_properties_get_data(frame_props, "image", NULL) ) {
+		//	mlt_properties_set_data(frame_props, "image", NULL, 0, NULL, NULL);
+		//}
 		mlt_frame_get_image(entry->frame,&image_raw,&infmt,&image_w,&image_h,0);
 		int img_sz = mlt_image_format_size(mlt_image_yuv420p, image_w, image_h, NULL);
 
 		if ( local->video_info_fd != -1 ) {
 			char info_buf[1024];
-			size_t sz = snprintf(info_buf,sizeof(info_buf),"img frame:%d raw:%p size:%d fmt:%d->%d %dx%d\n",
-				position, image_raw, img_sz, infmt, fmt, image_w, image_h);
+			size_t sz = snprintf(info_buf,sizeof(info_buf),"img frame:%d raw:%p size:%d fmt:%d->%d %dx%d cvtimg:%p\n",
+				position, image_raw, img_sz, infmt, fmt, image_w, image_h, entry->frame->convert_image);
 
 			write(local->video_info_fd, info_buf, sz);
 		}
@@ -532,8 +550,8 @@ static void* audio_thread( void* arg )
 
 		if ( local->audio_info_fd != -1 ) {
 			char info_buf[1024];
-			size_t sz = snprintf(info_buf,sizeof(info_buf),"audio frame:%d raw:%p fmt:%d freq:%d ch:%d samples:%d\n",
-				position, audio_raw, fmt, freqs, chnls, samples);
+			size_t sz = snprintf(info_buf,sizeof(info_buf),"audio frame:%d raw:%p fmt:%d freq:%d ch:%d samples:%d cvtaudio:%p\n",
+				position, audio_raw, fmt, freqs, chnls, samples, entry->frame->convert_audio);
 
 			write(local->audio_info_fd, info_buf, sz);
 		}

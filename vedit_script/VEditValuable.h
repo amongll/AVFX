@@ -15,31 +15,37 @@ NMSP_BEGIN(vedit)
 class Evaluable
 {
 public:
-	enum EValueMask
+	enum EValueReplaceType
 	{
-		EValueLiteral = 0x00,
-		EValueProducerInResolve = 0x01, //mlt service的in/out属性必须先求值
-		EValueProducerOutResolve = 0x02,
-		EValuePositionResolve = 0x04, //在mlt service的in/out确定的后， 特效作用于的时间段的位置值可以求职
-		EValueScalarResolve = 0x08,
-		EValueMltPropResolve = 0x10
+		EValueNotParsed = 0,
+		EValueNoReplace = 1, //字面值，不需要替换
+		EValuePositionReplace, //只包含单独的位置类参数
+		EValueScalarReplace, // 字符串只包含单独的 参数
+		EValueStringCtxReplace // 字符串字面值中包含若干参数
 	};
 
-	enum EValueCtxType
-	{
-		EValueNoReplace, //字面值，不需要替换
-		EValuePositionReplace, //位置类参数替换
-		EValueScalarReplace, // 字符串只包含单独的 参数或者mlt属性变量
-		EValueStringCtxReplace // 参数 或者 mlt属性变量 作为 字符串的一部分
-	};
+	virtual void expand_scalar(const char* nm, const json_t* v) throw(Exception);
+	virtual void expand_position(const char* nm, const int& frame_in, const int& frame_out,
+			int frame_seq) throw(Exception);
 
-	const EValueCtxType ctx_type;
-	const uint32_t evalue_mask;
-	const json_t* const value;
+	bool finished() const {
+		return evalued != NULL;
+	}
 
 protected:
+	void parse(Script& script, json_t* detail) throw (Exception);
+
+	Evaluable();
+	virtual ~Evaluable();
 	std::string temp; //计算中间值
-	uint32_t evalued_mask;
+
+	EValueReplaceType replace_type;
+	json_t* evalued;
+	hash_multimap<string,int> param_idxes;
+	vector<string> segments;
+
+private:
+	json_t* original;
 };
 
 NMSP_END(vedit)

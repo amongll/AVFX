@@ -27,7 +27,7 @@ vedit::ScriptParams::Param::Param(const char* nm, json_t* detail,
 	try {
 		parse(script);
 	}
-	catch(Exception &e) {
+	catch( const Exception &e) {
 		json_decref(detail);
 		throw;
 	}
@@ -190,7 +190,7 @@ vedit::ScriptParams::ScriptParams(Script& script) throw(Exception):
 		try {
 			this->parse_param_defines();
 		}
-		catch(Exception& e) {
+		catch( const Exception& e) {
 			json_decref(defines);
 			defines = NULL;
 			throw;

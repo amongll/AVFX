@@ -174,7 +174,7 @@ static void testAvformatInit(JNIEnv* env,jclass clazz, jstring mediaFile, jstrin
 
 	mlt_properties consumer_properties = mlt_consumer_properties(consumer);
 	mlt_properties_set_int(consumer_properties,"terminate_on_pause",1);
-	mlt_properties_set_int(consumer_properties,"real_time", 1);
+	mlt_properties_set_int(consumer_properties,"real_time", -2);
 	if (gTestCtx.vinfoFd != -1) {
 		mlt_properties_set_int(consumer_properties, "detail_fd", gTestCtx.vinfoFd );
 		mlt_properties_set_int(consumer_properties, "video_info_fd", gTestCtx.vinfoFd);
@@ -183,7 +183,7 @@ static void testAvformatInit(JNIEnv* env,jclass clazz, jstring mediaFile, jstrin
 		mlt_properties_set_int(consumer_properties, "audio_info_fd", gTestCtx.ainfoFd);
 	}
 
-	mlt_properties_set_int(consumer_properties, "buffer", 5);
+	mlt_properties_set_int(consumer_properties, "buffer", 20);
 	mlt_properties_set_int(consumer_properties, "prefill", 5);
 
 	gTestCtx.consumer = consumer;

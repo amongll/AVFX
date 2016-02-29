@@ -20,7 +20,7 @@ ScriptEnums::ScriptEnums(Script& script):
 		try {
 			parse_enums();
 
-		} catch( Exception &e) {
+		} catch( const Exception &e) {
 			json_decref(defines);
 			defines = NULL;
 			throw;
@@ -37,11 +37,19 @@ void ScriptEnums::parse_enums() throw (Exception)
 		enm = json_object_iter_key(eit);
 		se = json_object_iter_value(eit);
 
+		if ( is_valid_identifier(enm) == false ) {
+			throw Exception(ErrorEnumDefineError, "enum name :%s invalid", enm);
+		}
+
 		if ( json_is_object(se) && json_object_size(se) ) {
 			void* ii = json_object_iter(se);
 			do {
 				const char* snm = json_object_iter_key(ii);
 				sse = json_object_iter_value(sse);
+
+				if ( is_valid_identifier(enm) == false ) {
+					throw Exception(ErrorEnumDefineError, "enum select %s->%s invalid", enm, snm);
+				}
 
 				JsonWrap* sobj = new JsonWrap(sse);
 				enums[enm][snm].reset(sobj);

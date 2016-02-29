@@ -16,14 +16,18 @@ enum ErrorCode
 {
 	Success,
 	ErrorUnknown,
+	ErrorScriptFmtError,
 	ErrorFeatureNotImpl,
 	ErrorInvalidParam,
 	ErrorParamDefineError,
 	ErrorParamNotFount,
 	ErrorEnumDefineError,
+	ErrorMacroDefineError,
 	ErrorMacroNotFound,
 	ErrorEnumTypeNotFound,
 	ErrorEnumSelectNotFound,
+	ErrorScriptArgInvalid,
+	ErrorImplError
 };
 
 const char* error_desc(ErrorCode code);

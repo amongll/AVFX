@@ -28,7 +28,6 @@ public:
 	const char* const desc;
 
 	void applie_params(const json_t* param_values) throw(Exception);
-	void applie_properties(const mlt_properties* properties) throw(Exception);
 
 	const json_t* get_params_define()const;
 	const json_t* get_macros_define()const;
@@ -56,35 +55,58 @@ protected:
 		proc_name(NULL),
 		proc_type(NULL),
 		desc(NULL),
-		defines(NULL)
+		defines(NULL),
+		compiled(NULL),
+		frame_in(0),
+		frame_out(-1),
+		args(NULL)
 	{
 		throw Exception(ErrorFeatureNotImpl);//todo: script define feature
 	}
 
+	Script(const json_t* detail) throw (Exception);
 	virtual ~Script();
 
+	virtual void parse_specific() throw (Exception) = 0;
+
 	json_t* defines;
+	json_t* compiled;
 
 	ScriptParamsPtr params;
 	ScriptMacrosPtr macros;
 	ScriptEnumsPtr enums;
 
-	ScriptPropsPtr	proc_spec_props; //特定proctype所持有的特定属性
+	ScriptPropsPtr  type_spec_props;
 	ScriptPropsPtr	mlt_props; //最终应用于mlt service部件的属性
 
 	void regist_macro_usage(const char* macro, MacroExpandable* obj) throw (Exception);
 	void regist_enum_selector_usage(const char* enmae, const char* sname, EnumExpandable* obj) throw (Exception);
 	void regist_enum_param_usage(const char* param, EnumExpandable* obj) throw (Exception);
 	void regist_scalar_param_usage(const char* param, Evaluable* obj) throw (Exception);
-	void regist_mlt_property_usage(const char* property, Evaluable* obj) throw (Exception);
 
+	json_t* get_arg_value(const char* nm) throw (Exception);
+	void set_frame_range(int in, int out) throw (Exception);
+
+	int frame_in;
+	int frame_out;
 private:
 
+	json_t* args;
+
+	void parse_impl() throw (Exception);
+	void parse_mlt_props(json_t* detail) throw (Exception);
+
+	void applies_selectors() throw (Exception); //子类解析之后，首先应用脚本中出现的#(enum:selector)常量
+	void applies_macros() throw (Exception);  //再应用#(macro)常量
+
+	void check_evaluables() ;
+
+
 	hash_multimap<string, shared_ptr<EnumExpandable> > selector_enum_presents;
-	hash_multimap<string, shared_ptr<EnumExpandable> > param_enum_presents;
 	hash_multimap<string, shared_ptr<MacroExpandable> > macro_presents;
+
+	hash_multimap<string, shared_ptr<EnumExpandable> > param_enum_presents;
 	hash_multimap<string, shared_ptr<Evaluable> > param_evalue_presents;
-	hash_multimap<string, shared_ptr<Evaluable> > mlt_evalue_presents;
 
 	typedef hash_multimap<string, shared_ptr<EnumExpandable> >::iterator EnumExpandableIter;
 	typedef hash_multimap<string, shared_ptr<MacroExpandable> >::iterator MacroExpandableIter;

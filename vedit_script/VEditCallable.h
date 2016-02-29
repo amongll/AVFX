@@ -15,7 +15,10 @@ NMSP_BEGIN(vedit)
 class ScriptCallable
 {
 public:
+	json_t* call();
+
 private:
+
 	ScriptPropsPtr params;
 };
 

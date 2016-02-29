@@ -29,7 +29,7 @@ ScriptMacros::ScriptMacros(const json_t& script) throw (Exception):
 		define_copy = json_deep_copy(t);
 		try {
 			parse_macros();
-		}catch(Exception& e) {
+		}catch( const Exception& e) {
 			json_decref(define_copy);
 			define_copy = NULL;
 			throw;
@@ -45,6 +45,9 @@ void ScriptMacros::parse_macros() throw (Exception) {
 
 		if ( json_is_object(se) || json_is_array(se) )
 			continue;
+
+		if ( is_valid_identifier(nm) == false)
+			throw Exception(ErrorMacroDefineError, "macro indentifier:%s invalid", nm);
 
 		JsonWrap* mobj = new JsonWrap(se);
 		macros[nm].reset(mobj);
