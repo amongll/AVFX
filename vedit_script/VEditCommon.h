@@ -12,12 +12,14 @@
 #include <tr1/memory>
 #include <vector>
 #include <deque>
+#include <set>
 #include <hash_map>
 #include <hash_set>
 #include <jansson.h>
 #include <cassert>
 #include <cstring>
 #include <framework/mlt.h>
+#include <pthread.h>
 
 using namespace __gnu_cxx;
 using namespace std::tr1;
@@ -35,7 +37,11 @@ bool is_valid_identifier(const char* check);
 
 bool is_macro_only(const char* str);
 bool is_selector_only(const char* str);
-void parse_selector(const char* str, string& ename, string& sname);
+
+bool is_call(const char* str, string& procnm);
+
+void parse_macros(const char* str, hash_multimap<string, int>& idxes, vector<string>& segments);
+void parse_selector(const char* str, string& enm, string& snm);
 void parse_params(const char* str, vector<string>& params);
 
 void parse_params(const char* str, hash_multimap<string, int>& idxes, vector<string>& segments);

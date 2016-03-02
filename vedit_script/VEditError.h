@@ -27,6 +27,7 @@ enum ErrorCode
 	ErrorEnumTypeNotFound,
 	ErrorEnumSelectNotFound,
 	ErrorScriptArgInvalid,
+	ErrorStreamFileInvalid,
 	ErrorImplError
 };
 

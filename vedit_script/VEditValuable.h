@@ -12,9 +12,11 @@
 
 NMSP_BEGIN(vedit)
 
+class ScriptProps::PropertyAgent;
 class Evaluable
 {
 public:
+	friend class ScriptProps::PropertyAgent;
 	enum EValueReplaceType
 	{
 		EValueNotParsed = 0,
@@ -27,6 +29,11 @@ public:
 	virtual void expand_scalar(const char* nm, const json_t* v) throw(Exception);
 	virtual void expand_position(const char* nm, const int& frame_in, const int& frame_out,
 			int frame_seq) throw(Exception);
+
+	void replace_asis(const char* nm, const string& v) throw (Exception);
+	void replace_asis(const char* nm, int v) throw (Exception);
+	void replace_asis(const char* nm, double v) throw (Exception);
+	void replace_asis(const char* nm, bool v) throw (Exception);
 
 	bool finished() const {
 		return evalued != NULL;
@@ -41,6 +48,8 @@ protected:
 
 	EValueReplaceType replace_type;
 	json_t* evalued;
+
+	typedef  hash_multimap<string,int>::iterator MapIter;
 	hash_multimap<string,int> param_idxes;
 	vector<string> segments;
 

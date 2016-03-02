@@ -31,7 +31,7 @@ void EnumExpandable::expand_enum(const char* ename, const char* sname,
 
 	json_t* jvs = const_cast<json_t*>(value);
 	void *ji = json_object_iter(jvs);
-	do {
+	while(ji) {
 		const char* k = json_object_iter_key(ji);
 		json_t* kv = json_object_iter_value(ji);
 		if (json_is_object(kv) || json_is_array(kv)) {
@@ -45,7 +45,7 @@ void EnumExpandable::expand_enum(const char* ename, const char* sname,
 		}
 
 		ji = json_object_iter_next(jvs,ji);
-	} while(ji);
+	}
 
 	enum_ctx_tags.erase(tag);
 }
@@ -59,27 +59,32 @@ EnumExpandable::EnumExpandable(Script& s, json_t* ctx, const char* oper_name) th
 	}
 
 	json_t* enums = json_object_get(ctx, oper_name);
-	if ( ! json_is_array(enums) ) {
+	if ( enums && !json_is_array(enums) ) {
 		throw Exception(ErrorImplError, "script enum context problem %s:%d", __FILE__,__LINE__);
 	}
 
-	if ( json_array_size(enums) == 0)
-		return;
+	if ( enums ) {
+		if ( json_array_size(enums) == 0)
+			return;
 
-	parse(enums);
+		parse(enums);
 
-	expand_context = json_copy(ctx);
-	json_object_del(expand_context, oper_name);
+		expand_context = json_copy(ctx);
+		json_object_del(expand_context, oper_name);
 
-	void* it = json_object_iter(expand_context);
-	do {
-		const char* k = json_object_iter_key(it);
-		json_t* v = json_object_iter_value(it);
+		void* it = json_object_iter(expand_context);
+		while( it ) {
+			const char* k = json_object_iter_key(it);
+			json_t* v = json_object_iter_value(it);
 
-		value_max_tag[k] = -1;
+			value_max_tag[k] = -1;
 
-		it = json_object_iter_next(expand_context, it);
-	} while(it);
+			it = json_object_iter_next(expand_context, it);
+		}
+	}
+	else {
+		expand_context = json_copy(ctx);
+	}
 }
 
 EnumExpandable::~EnumExpandable()
@@ -134,6 +139,30 @@ void EnumExpandable::parse(json_t* values) throw (Exception)
 	}
 }
 
+EnumExpandable::EnumExpandable(Script& s, json_t* ctx,
+		const vector<string>& props) throw (Exception):
+	script(s),
+	expand_context(NULL)
+{
+	if ( !json_is_object(ctx) ) {
+		throw Exception(ErrorImplError, "Some Script sub class specific fmt error");
+	}
+	vector<string>::const_iterator it;
+	expand_context = json_object();
+	for (it = props.begin(); it!=props.end(); it++) {
+		json_t* se = json_object_get(ctx, it->c_str());
+		if ( se ) {
+			if ( json_is_object(se) || json_is_array(se) ) {
+				throw Exception(ErrorImplError, "Some Script sub class specific fmt error");
+			}
+			else {
+				json_object_set(expand_context, it->c_str(), se);
+			}
+		}
+	}
+}
+
 
 NMSP_END(vedit)
+
 

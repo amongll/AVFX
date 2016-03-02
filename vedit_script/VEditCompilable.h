@@ -17,8 +17,7 @@ NMSP_BEGIN(vedit)
 class Compilable
 {
 public:
-	virtual json_t* compile()const throw (Exception) = 0;
-	virtual MltRuntimePtr compile_runtime() throw (Exception) = 0;
+	virtual json_t* compile() throw (Exception) = 0;
 protected:
 	Compilable() {} ;
 	virtual ~Compilable() {};

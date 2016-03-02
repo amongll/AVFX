@@ -204,7 +204,7 @@ void vedit::ScriptParams::parse_param_defines() throw (Exception)
 	void* it = json_object_iter(defines);
 	json_t* se;
 
-	do {
+	while(it) {
 		const char* nm = json_object_iter_key(it);
 		se = json_object_iter_value(it);
 
@@ -214,7 +214,7 @@ void vedit::ScriptParams::parse_param_defines() throw (Exception)
 		}
 
 		it = json_object_iter_next(defines,it);
-	} while(it);
+	}
 
 }
 

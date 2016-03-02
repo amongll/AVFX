@@ -568,7 +568,8 @@ failed:
 static mlt_properties g_aenv = NULL;
 static pthread_mutex_t g_aenv_lock = PTHREAD_MUTEX_INITIALIZER;
 
-static pthread_key_t g_aenv_key = PTHREAD_ONCE_INIT;
+static pthread_key_t g_aenv_key  ;
+static pthread_once_t g_aevn_once = PTHREAD_ONCE_INIT;
 
 static struct ASDKBuildInfo {
 	jclass clazz;
@@ -607,7 +608,7 @@ bool mlt_android_env_init(JavaVM* vm)
 		}
 		pthread_mutex_unlock(&g_aenv_lock);
 	}
-	pthread_once(&g_aenv_key, aenv_thr_spec_key_create);
+	pthread_once(&g_aevn_once, aenv_thr_spec_key_create);
 	return true;
 }
 

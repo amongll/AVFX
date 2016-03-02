@@ -16,10 +16,12 @@
 #include "VEditScriptMacros.h"
 #include "VEditScriptProps.h"
 #include "VEditException.h"
+#include "VEditCallable.h"
 #include <framework/mlt.h>
 
 NMSP_BEGIN(vedit)
 
+class Vm;
 class Script : public Definable, public Compilable
 {
 public:
@@ -27,7 +29,17 @@ public:
 	const char* const proc_type;
 	const char* const desc;
 
-	void applie_params(const json_t* param_values) throw(Exception);
+	void call(json_t* param_values) throw(Exception);
+	void apply_filter(const string& id, int start_pos, int end_pos,
+		const char* filterproc,
+		json_t* other_args) throw (Exception);
+	void erase_filter(const string& id);
+
+	json_t* get_mlt_serialize() throw (Exception);
+
+	const ScriptParam* get_param_info(const char* nm)const {
+		return params->get_param(nm);
+	}
 
 	const json_t* get_params_define()const;
 	const json_t* get_macros_define()const;
@@ -42,24 +54,38 @@ public:
 	const json_t* get_macro(const char* macro_name) const {
 		return macros->get_macro(macro_name);
 	}
+
 	const json_t* get_selector(const char* enum_name, const char* sel_name)const {
 		return enums->get_selector(enum_name,sel_name);
 	}
+
 	bool has_enum(const char* ename) const {
 		return enums->has_enum(ename);
 	}
 
+	int get_frame_in()const {
+		return frame_in;
+	}
+	int get_frame_out()const {
+		return frame_out;
+	}
+	int get_frame_length() const {
+		return frame_out - frame_in;
+	}
+
 protected:
 	friend class shared_ptr<Script>;
+	friend class ScriptProps;
+	friend class Vm;
 	Script() throw (Exception):
 		proc_name(NULL),
 		proc_type(NULL),
 		desc(NULL),
 		defines(NULL),
-		compiled(NULL),
 		frame_in(0),
 		frame_out(-1),
-		args(NULL)
+		args(NULL),
+		compiled(NULL)
 	{
 		throw Exception(ErrorFeatureNotImpl);//todo: script define feature
 	}
@@ -69,8 +95,9 @@ protected:
 
 	virtual void parse_specific() throw (Exception) = 0;
 
+	void parse_specific_props(const vector<string>& prop_nms) throw (Exception);
+
 	json_t* defines;
-	json_t* compiled;
 
 	ScriptParamsPtr params;
 	ScriptMacrosPtr macros;
@@ -89,18 +116,34 @@ protected:
 
 	int frame_in;
 	int frame_out;
+
 private:
 
 	json_t* args;
 
+	json_t* compile(int dummy) throw (Exception);
+
 	void parse_impl() throw (Exception);
 	void parse_mlt_props(json_t* detail) throw (Exception);
+	void parse_filter_scriptcall() throw (Exception);
 
 	void applies_selectors() throw (Exception); //子类解析之后，首先应用脚本中出现的#(enum:selector)常量
 	void applies_macros() throw (Exception);  //再应用#(macro)常量
 
-	void check_evaluables() ;
+	void check_evaluables();
 
+	json_t* compiled;
+
+	struct FilterWrap
+	{
+		string id;
+		JsonWrap serialize;
+		shared_ptr<ScriptCallable> call;
+	};
+
+	typedef hash_map<string, FilterWrap>::iterator FilterIter;
+	hash_map<string, FilterWrap> filters;
+	json_t* filters_serialize() throw (Exception);
 
 	hash_multimap<string, shared_ptr<EnumExpandable> > selector_enum_presents;
 	hash_multimap<string, shared_ptr<MacroExpandable> > macro_presents;
@@ -114,6 +157,7 @@ private:
 
 	hash_map<Evaluable*, shared_ptr<Evaluable> > all_pendings;
 	typedef hash_map<Evaluable*, shared_ptr<Evaluable> >::iterator EvaluableCheckIter;
+
 };
 
 typedef shared_ptr<Script> ScriptPtr;

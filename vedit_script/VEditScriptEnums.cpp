@@ -33,7 +33,7 @@ void ScriptEnums::parse_enums() throw (Exception)
 	void* eit = json_object_iter(defines);
 	const char* enm = NULL;
 	json_t* se = NULL, *sse;
-	do {
+	while(eit) {
 		enm = json_object_iter_key(eit);
 		se = json_object_iter_value(eit);
 
@@ -43,7 +43,7 @@ void ScriptEnums::parse_enums() throw (Exception)
 
 		if ( json_is_object(se) && json_object_size(se) ) {
 			void* ii = json_object_iter(se);
-			do {
+			while(ii) {
 				const char* snm = json_object_iter_key(ii);
 				sse = json_object_iter_value(sse);
 
@@ -55,11 +55,11 @@ void ScriptEnums::parse_enums() throw (Exception)
 				enums[enm][snm].reset(sobj);
 
 				ii = json_object_iter_next(se, ii);
-			} while(ii);
+			}
 		}
 
 		eit = json_object_iter_next(defines, eit);
-	} while(eit);
+	}
 }
 
 ScriptEnums::JsonWrap::JsonWrap(json_t* detail) throw (Exception) : js(NULL)
@@ -70,7 +70,7 @@ ScriptEnums::JsonWrap::JsonWrap(json_t* detail) throw (Exception) : js(NULL)
 		void* it = json_object_iter(detail);
 		char* k;
 		json_t* se;
-		do {
+		while(it) {
 			k = json_object_iter_key(it);
 			se = json_object_iter_value(it);
 
@@ -80,8 +80,7 @@ ScriptEnums::JsonWrap::JsonWrap(json_t* detail) throw (Exception) : js(NULL)
 
 			json_object_set(js, k, se);
 			it = json_object_iter_next(detail, it);
-		} while(it);
-
+		}
 	}
 	else {
 		throw Exception(ErrorEnumDefineError);

@@ -9,6 +9,25 @@
 #define VEDITFILTERSCRIPT_H_
 
 
+#include "VEditScript.h"
+
+NMSP_BEGIN(vedit)
+
+class FilterScript : public Script
+{
+public:
+	FilterScript(json_t* text):
+		Script(text)
+	{}
+
+	virtual ~FilterScript();
+	virtual json_t* compile() throw(Exception);
+	virtual void parse_specific() throw (Exception);
+};
+
+
+NMSP_END(vedit)
+
 
 
 

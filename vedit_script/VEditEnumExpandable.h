@@ -20,11 +20,20 @@ public:
 		const char* param_tag,
 		const json_t* value) throw (Exception);
 
-	json_t* get_expanded_value();
+	json_t* get_expanded_value() {
+		if (finished())
+			return expand_context;
+		else {
+			throw Exception(ErrorImplError, "enum expand incomplete");
+		}
+	}
+
 	void register_self() throw (Exception);
 protected:
 	friend class shared_ptr<EnumExpandable>;
 	EnumExpandable(Script& script, json_t* ctx, const char* oper_name)throw(Exception);
+	EnumExpandable(Script& script, json_t* ctx, const vector<string>& props)throw(Exception);
+
 	virtual ~EnumExpandable();
 
 	json_t* expand_context;

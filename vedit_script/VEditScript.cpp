@@ -10,17 +10,22 @@
 
 NMSP_BEGIN(vedit)
 
-void Script::applie_params(const json_t* args_value) throw (Exception)
+void Script::call(json_t* args_value) throw (Exception)
 {
 	mlt_props.reset();
 	type_spec_props.reset();
-	json_decref(compiled);
 	selector_enum_presents.clear();
 	macro_presents.clear();
 	param_enum_presents.clear();
 	param_evalue_presents.clear();
 
-	args = const_cast<json_t*>(args_value);
+	if (args) json_decref(args);
+	if (compiled) {
+		json_decref(compiled);
+		compiled = NULL;
+	}
+
+	args = json_incref(args_value);
 	json_t* t = args;
 
 	json_t* se = json_object_get(defines,"props");
@@ -66,8 +71,6 @@ void Script::applie_params(const json_t* args_value) throw (Exception)
 	}
 
 	applies_macros();
-
-	args = NULL;
 
 	for ( it = params->params.begin(); it != params->params.end(); it++ ) {
 		if ( it->second->param_style == ScriptParams::EnumParam ) continue;
@@ -166,7 +169,58 @@ void Script::applie_params(const json_t* args_value) throw (Exception)
 		}
 	}
 
+}
+
+void Script::apply_filter(const string& id, int start_pos, int end_pos,
+		const char* filterproc,
+		json_t* other_args) throw (Exception)
+{
+	if ( start_pos < 0 || end_pos < 0 || start_pos > end_pos ) {
+		throw Exception(ErrorInvalidParam, "Script::apply_filter frame pos invalid");
+	}
+	if ( frame_out < 0) {
+		throw Exception(ErrorImplError, "script length not determinated");
+	}
+
+	FilterIter it = filters.find(id);
+	if (it != filters.end()) {
+		throw Exception(ErrorImplError, "filter %s already exists", id.c_str());
+	}
+
+	int len = frame_out - frame_in;
+	if ( start_pos > len ) start_pos = len;
+	if ( end_pos > len) end_pos = len;
+
+	json_object_set(other_args,"in", json_integer(start_pos));
+	json_object_set(other_args,"out", json_integer(end_pos));
+
+	json_t* seri = Vm::call_script(filterproc, Vm::FILTER_SCRIPT, other_args);
+	FilterWrap& obj = filters[id];
+	obj.id = id;
+	obj.serialize = seri;
+	json_decref(seri);
+
+	if (compiled) {
+		json_decref(compiled);
+		compiled = NULL;
+	}
+}
+
+void Script::erase_filter(const string& id)
+{
+	filters.erase(id);
+	if (compiled) {
+		json_decref(compiled);
+		compiled = NULL;
+	}
+}
+
+json_t* Script::get_mlt_serialize() throw (Exception)
+{
+	if (compiled) return json_incref(compiled);
+
 	check_evaluables();
+	return compiled = compile(0);
 }
 
 const json_t* Script::get_params_define() const
@@ -211,6 +265,7 @@ bool Script::add_enums(ScriptEnumsPtr enums) throw (Exception) {
 
 Script::~Script() {
 	if (defines) json_decref(defines);
+	if (args) json_decref(args);
 }
 
 void Script::regist_macro_usage(const char* macro, MacroExpandable* obj)
@@ -305,11 +360,10 @@ Script::Script(const json_t* detail) throw (Exception):
 		proc_type(NULL),
 		desc(NULL),
 		defines(NULL),
-		compiled(NULL),
 		frame_in(0),
 		frame_out(-1),
-		args(NULL)
-
+		args(NULL),
+		compiled(NULL)
 {
 	json_t* t = const_cast<json_t*>(detail);
 	if ( !json_is_object(t) || json_object_size(t)==0 ) {
@@ -390,11 +444,135 @@ void Script::applies_macros() throw (Exception)
 	}
 }
 
+json_t* Script::get_arg_value(const char* nm) throw (Exception)
+{
+	if (args == NULL) {
+		throw Exception(ErrorImplError, "Script::get_arg_value can used only in parse_specfic");
+	}
+
+	return json_object_get(args, nm);
+}
+
+void Script::set_frame_range(int in, int out) throw (Exception)
+{
+	assert( in >= 0 && out >= 0 && out >= in);
+	frame_in = in;
+	frame_out = out;
+}
+
+json_t* Script::compile(int dummy)  throw (Exception)
+{
+	json_t* subdetail = Compilable::compile();
+	json_t* ret = json_object();
+
+	json_object_set_new(ret, "proctype", json_string(proc_type));
+	json_object_set_new(ret, "procname", json_string(proc_name));
+	json_object_set_new(ret, "desc", json_string(desc));
+
+	if ( type_spec_props.get()) {
+		try {
+			json_t* spec_props =  type_spec_props->compile();
+			void* it = json_object_iter(spec_props);
+			while ( it ) {
+				const char* k = json_object_iter_key(it);
+				json_t* se = json_object_iter_value(it);
+
+				json_object_set(ret, k, se);
+
+				it = json_object_iter_next(spec_props, it);
+			}
+
+			json_decref(spec_props);
+		}
+		catch(const Exception& e) {
+			json_decref(ret);
+			throw;
+		}
+	}
+
+	if ( mlt_props.get()) {
+		try {
+			json_t* cpl = mlt_props->compile();
+			json_object_set(ret,"props", cpl);
+			json_decref(cpl);
+		}
+		catch(const Exception& e) {
+			json_decref(ret);
+			throw;
+		}
+	}
+
+	try{
+		json_t* filter_seris = filters_serialize();
+		json_object_set_new(ret, "effects", filter_seris);
+	}
+	catch(const Exception& e){
+		json_decref(ret);
+		throw;
+	}
+
+	return ret;
+}
+
+void Script::parse_specific_props(const vector<string>& prop_nms)
+		throw (Exception)
+{
+	ScriptProps* props = new ScriptProps(*this, prop_nms);
+	type_spec_props.reset(props);
+}
+
+void Script::parse_filter_scriptcall() throw (Exception)
+{
+	json_t* filter_defines = json_object_get(defines,"effects");
+	if ( !filter_defines )
+		return;
+	if ( !json_is_object(filter_defines)) {
+		throw Exception(ErrorScriptFmtError, "effects should be filter script calls");
+	}
+	if ( json_object_size(filter_defines) == 0) return;
+
+	void *it = json_object_iter(filter_defines);
+	while ( it  ) {
+		const char* k = json_object_iter_key(it);
+		json_t* call_detail = json_object_iter_value(it);
+
+		ScriptCallable* call = new ScriptCallable(*this, call_detail);
+		FilterWrap& o = filters[k];
+		o.id = k;
+		o.call.reset(call);
+
+		it = json_object_iter_next(filter_defines, it);
+	}
+}
+
+
+
+json_t* Script::filters_serialize() throw (Exception)
+{
+	json_t* ret = json_object();
+	JsonWrap wrap(ret);
+	json_decref(ret);
+
+	FilterIter it;
+	for ( it = filters.begin(); it != filters.end(); it++ ) {
+		if (it->second.serialize) {
+			json_object_set(wrap.h, it->first.c_str(), it->second.serialize.h);
+		}
+		else {
+			json_t* seri = it->second.call->compile(Vm::FILTER_SCRIPT);
+			it->second.serialize = seri;
+			json_object_set_new(wrap.h, it->first.c_str(), seri);
+		}
+	}
+
+	return json_incref(wrap.h);
+}
+
 void Script::check_evaluables()
 {
 	EvaluableCheckIter it = all_pendings.begin(), tit;
 	while ( it != all_pendings.end() ) {
-		if ( it->first->is_done( ) ) {
+		if ( it->first->finished( ) ) {
 			tit = it++;
 			all_pendings.erase(tit);
 		}
@@ -405,3 +583,5 @@ void Script::check_evaluables()
 }
 
 NMSP_END(vedit)
+
+

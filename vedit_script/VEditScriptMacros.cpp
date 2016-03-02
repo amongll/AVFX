@@ -14,11 +14,12 @@ ScriptMacros::~ScriptMacros()
 	if (define_copy)json_decref(define_copy);
 }
 
+/*
 ScriptMacros::JsonWrap::JsonWrap(json_t* detail) throw (Exception) :
 	js(NULL)
 {
 	js = json_incref(detail);
-}
+}*/
 
 ScriptMacros::ScriptMacros(const json_t& script) throw (Exception):
 	parent(script),
@@ -39,7 +40,7 @@ ScriptMacros::ScriptMacros(const json_t& script) throw (Exception):
 
 void ScriptMacros::parse_macros() throw (Exception) {
 	void* it = json_object_iter(define_copy);
-	do {
+	while(it) {
 		const char* nm = json_object_iter_key(it);
 		json_t* se = json_object_iter_value(it);
 
@@ -49,10 +50,11 @@ void ScriptMacros::parse_macros() throw (Exception) {
 		if ( is_valid_identifier(nm) == false)
 			throw Exception(ErrorMacroDefineError, "macro indentifier:%s invalid", nm);
 
-		JsonWrap* mobj = new JsonWrap(se);
-		macros[nm].reset(mobj);
+		//JsonWrap* mobj = new JsonWrap(se);
+		//macros[nm].reset(mobj);
+		macros[nm] = se;
 		it = json_object_iter_next(define_copy, it);
-	} while(it);
+	}
 }
 
 NMSP_END(vedit)

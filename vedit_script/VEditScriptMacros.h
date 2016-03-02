@@ -19,7 +19,7 @@ public:
 	const json_t* get_macro(const char* nm) const {
 		if (!nm || strlen(nm) ) return NULL;
 		MapCIter it = macros.find(nm);
-		return it == macros.end() ? NULL : it->second->js;
+		return it == macros.end() ? NULL : it->second.h;
 	}
 protected:
 	friend class shared_ptr<ScriptMacros>;
@@ -27,6 +27,7 @@ protected:
 
 private:
 
+	/**
 	struct JsonWrap {
 		JsonWrap( json_t* detail) throw (Exception);
 		~JsonWrap() {
@@ -41,12 +42,15 @@ private:
 			return *this;
 		}
 		json_t* js;
-	};
+	};*/
 
 	friend class vedit::Script;
-	hash_map<string,shared_ptr<JsonWrap> >	macros;
-	typedef hash_map<string, shared_ptr<JsonWrap> >::iterator MapIter;
-	typedef hash_map<string, shared_ptr<JsonWrap> >::const_iterator MapCIter;
+	//hash_map<string,shared_ptr<JsonWrap> >	macros;
+	//typedef hash_map<string, shared_ptr<JsonWrap> >::iterator MapIter;
+	//typedef hash_map<string, shared_ptr<JsonWrap> >::const_iterator MapCIter;
+	hash_map<string,JsonWrap>	macros;
+	typedef hash_map<string, JsonWrap>::iterator MapIter;
+	typedef hash_map<string, JsonWrap>::const_iterator MapCIter;
 
 	ScriptMacros(const json_t& script) throw (Exception);
 	void parse_macros() throw(Exception);

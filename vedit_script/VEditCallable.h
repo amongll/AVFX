@@ -9,20 +9,24 @@
 #define VEDITCALLABLE_H_
 #include "VEditCommon.h"
 #include "VEditScriptProps.h"
+#include "VEditVm.h"
 
 NMSP_BEGIN(vedit)
-
+class Script;
 class ScriptCallable
 {
 public:
-	json_t* call();
+	ScriptCallable(Script& caller, json_t* call_detail) throw(Exception);
 
+	json_t* compile() throw(Exception);
+	json_t* compile(Vm::ScriptType type) throw(Exception);
 private:
-
-	ScriptPropsPtr params;
+	Script& script;
+	void parse(json_t* call_detail) throw(Exception);
+	string name;
+	ScriptPropsPtr args;
 };
 
 NMSP_END(vedit)
-
 
 #endif /* VEDITCALLABLE_H_ */
