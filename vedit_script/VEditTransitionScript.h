@@ -1,7 +1,7 @@
 /*
  * VEditTransitionScript.h
  *
- *  Created on: 2016Äê2ÔÂ22ÈÕ
+ *  Created on: 2016ï¿½ï¿½2ï¿½ï¿½22ï¿½ï¿½
  *      Author: li.lei@youku.com
  */
 
@@ -16,7 +16,7 @@ class TransitionScript : public Script
 {
 public:
 	TransitionScript(json_t* text):
-		SingleResourceScript(text)
+		Script(text)
 	{}
 
 	virtual ~TransitionScript();

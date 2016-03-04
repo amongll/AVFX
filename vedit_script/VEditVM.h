@@ -20,21 +20,8 @@ NMSP_BEGIN(vedit)
 class Vm
 {
 public:
-	enum ScriptType {
-		UNKNOWN_SCRIPT,
-		AUDIO_RESOURCE_SCRIPT,
-		VIDEO_RESOURCE_SCRIPT,
-		IMAGE_RESOURCE_SCRIPT,
-		GIF_RESOURCE_SCRIPT,
-		FILTER_SCRIPT,
-		PLAYLIST_SCRIPT,
-		MULTITRACK_SCRIPT,
-		TRANSITION_SCRIPT,
-		INVALID_SCRIPT //ռλ��
-	};
-
 	static json_t* call_script(const char* procname, json_t* args) throw(Exception);
-	static json_t* call_script(const char* procname, ScriptType type, json_t* args)throw(Exception);
+	static json_t* call_script(const char* procname, vedit::ScriptType type, json_t* args)throw(Exception);
 	static shared_ptr<Script> get_script(const char* procname)throw(Exception);
 
 	static shared_ptr<VideoScript> get_video_script(const char* procname)

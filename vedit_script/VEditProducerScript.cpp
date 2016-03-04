@@ -6,6 +6,7 @@
  */
 
 #include "VEditProducerScript.h"
+#include "VEditVM.h"
 
 NMSP_BEGIN(vedit)
 
@@ -62,12 +63,12 @@ void VideoScript::pre_judge() throw (Exception)
 	if ( !inparam || inparam->param_style != ScriptParams::PosParam ||
 		!outparam || outparam->param_style != ScriptParams::PosParam) {
 		throw Exception(ErrorScriptArgInvalid, "in/out position param is required for %s script",
-			Vm::proc_type_names[Vm::VIDEO_RESOURCE_SCRIPT]);
+			Vm::proc_type_names[VIDEO_RESOURCE_SCRIPT]);
 	}
 
 	if ( !resparam || resparam->param_style != ScriptParams::ScalarParam ) {
 		throw Exception(ErrorScriptArgInvalid, "resource scalar param is required for %s script",
-			Vm::proc_type_names[Vm::VIDEO_RESOURCE_SCRIPT]);
+			Vm::proc_type_names[VIDEO_RESOURCE_SCRIPT]);
 	}
 
 	json_t* res_arg = get_arg_value("resource");
@@ -76,17 +77,17 @@ void VideoScript::pre_judge() throw (Exception)
 
 	if (!res_arg || !json_is_string(res_arg) || !strlen(json_string_value(res_arg))) {
 		throw Exception(ErrorScriptArgInvalid, "resource arg is required for %s script",
-			Vm::proc_type_names[Vm::VIDEO_RESOURCE_SCRIPT]);
+			Vm::proc_type_names[VIDEO_RESOURCE_SCRIPT]);
 	}
 
 	if ( !in || !json_is_integer(in) ) {
 		throw Exception(ErrorScriptArgInvalid, "in arg is required for %s script",
-			Vm::proc_type_names[Vm::VIDEO_RESOURCE_SCRIPT]);
+			Vm::proc_type_names[VIDEO_RESOURCE_SCRIPT]);
 	}
 
 	if ( !out || !json_is_integer(out) ) {
 		throw Exception(ErrorScriptArgInvalid, "out arg is required for %s script",
-			Vm::proc_type_names[Vm::VIDEO_RESOURCE_SCRIPT]);
+			Vm::proc_type_names[VIDEO_RESOURCE_SCRIPT]);
 	}
 
 	string path(json_string_value(res_arg));
@@ -158,12 +159,12 @@ void AudioScript::pre_judge() throw (Exception)
 	if ( !inparam || inparam->param_style != ScriptParams::PosParam ||
 		!outparam || outparam->param_style != ScriptParams::PosParam) {
 		throw Exception(ErrorScriptArgInvalid, "in/out position param is required for %s script",
-			Vm::proc_type_names[Vm::VIDEO_RESOURCE_SCRIPT]);
+			Vm::proc_type_names[VIDEO_RESOURCE_SCRIPT]);
 	}
 
 	if ( !resparam || resparam->param_style != ScriptParams::ScalarParam ) {
 		throw Exception(ErrorScriptArgInvalid, "resource scalar param is required for %s script",
-			Vm::proc_type_names[Vm::VIDEO_RESOURCE_SCRIPT]);
+			Vm::proc_type_names[VIDEO_RESOURCE_SCRIPT]);
 	}
 
 	json_t* res_arg = get_arg_value("resource");
@@ -172,17 +173,17 @@ void AudioScript::pre_judge() throw (Exception)
 
 	if (!res_arg || !json_is_string(res_arg) || !strlen(json_string_value(res_arg))) {
 		throw Exception(ErrorScriptArgInvalid, "resource arg is required for %s script",
-			Vm::proc_type_names[Vm::VIDEO_RESOURCE_SCRIPT]);
+			Vm::proc_type_names[VIDEO_RESOURCE_SCRIPT]);
 	}
 
 	if ( !in || !json_is_integer(in) ) {
 		throw Exception(ErrorScriptArgInvalid, "in arg is required for %s script",
-			Vm::proc_type_names[Vm::VIDEO_RESOURCE_SCRIPT]);
+			Vm::proc_type_names[VIDEO_RESOURCE_SCRIPT]);
 	}
 
 	if ( !out || !json_is_integer(out) ) {
 		throw Exception(ErrorScriptArgInvalid, "out arg is required for %s script",
-			Vm::proc_type_names[Vm::VIDEO_RESOURCE_SCRIPT]);
+			Vm::proc_type_names[VIDEO_RESOURCE_SCRIPT]);
 	}
 
 	string path(json_string_value(res_arg));

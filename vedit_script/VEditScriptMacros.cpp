@@ -1,11 +1,12 @@
 /*
  * VEditScriptMacros.cpp
  *
- *  Created on: 2016Äê2ÔÂ25ÈÕ
+ *  Created on: 2016ï¿½ï¿½2ï¿½ï¿½25ï¿½ï¿½
  *      Author: li.lei@youku.com
  */
 
 #include "VEditScriptMacros.h"
+#include "VEditScript.h"
 
 NMSP_BEGIN(vedit)
 
@@ -21,7 +22,7 @@ ScriptMacros::JsonWrap::JsonWrap(json_t* detail) throw (Exception) :
 	js = json_incref(detail);
 }*/
 
-ScriptMacros::ScriptMacros(const json_t& script) throw (Exception):
+ScriptMacros::ScriptMacros(Script& script) throw (Exception):
 	parent(script),
 	define_copy(NULL)
 {

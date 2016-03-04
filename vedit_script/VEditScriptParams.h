@@ -16,7 +16,7 @@
 #include "VEditException.h"
 
 NMSP_BEGIN(vedit)
-class vedit::Script;
+class Script;
 class ScriptParams : public Definable
 {
 public:
@@ -96,9 +96,9 @@ public:
 			throw Exception(ErrorFeatureNotImpl);
 		}
 
-		~Param();
 
 	public:
+		~Param();
 		const char* const name;
 		const ParamStyle param_style;
 		const ParamPosType pos_type;
@@ -123,7 +123,6 @@ public:
 		throw Exception(ErrorFeatureNotImpl); //todo: script define feature
 	}
 
-protected:
 	virtual ~ScriptParams();
 private:
 	friend class vedit::Script;

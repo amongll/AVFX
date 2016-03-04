@@ -19,7 +19,7 @@ json_t* Vm::call_script(const char* procname, json_t* args) throw (Exception)
 	return script->get_mlt_serialize();
 }
 
-json_t* Vm::call_script(const char* procname, ScriptType type, json_t* args)
+json_t* Vm::call_script(const char* procname, vedit::ScriptType type, json_t* args)
 	throw (Exception)
 {
 	shared_ptr<Script> script = get_script(procname, type);

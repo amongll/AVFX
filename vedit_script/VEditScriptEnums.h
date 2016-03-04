@@ -1,7 +1,7 @@
 /*
  * VEditScriptEnums.h
  *
- *  Created on: 2016Äê2ÔÂ22ÈÕ
+ *  Created on: 2016ï¿½ï¿½2ï¿½ï¿½22ï¿½ï¿½
  *      Author: li.lei@youku.com
  */
 
@@ -21,9 +21,9 @@ public:
 	const json_t* get_selector(const char* enum_name, const char* sel_name) const {
 		if (!enum_name || !strlen(enum_name) || !sel_name || !strlen(sel_name))
 			return NULL;
-		MapCIter it = enums.find(enum_name);
+		MapCIter it = enums.find(string(enum_name));
 		if (it == enums.end() ) return NULL;
-		EnumCIter it2 = it->second.find(sel_name);
+		EnumCIter it2 = it->second.find(string(sel_name));
 		return it2 == it->second.end() ? NULL : it2->second->js;
 	}
 
@@ -34,11 +34,10 @@ public:
 		return true;
 	}
 
+	virtual ~ScriptEnums() ;
 private:
 	friend class Script;
-	friend class shared_ptr<ScriptEnums>;
 	ScriptEnums(Script& script) throw (Exception);
-	virtual ~ScriptEnums() ;
 
 	void parse_enums() throw (Exception);
 
@@ -62,7 +61,7 @@ private:
 	Script& parent;
 	typedef hash_map<string, shared_ptr<JsonWrap> > Enum;
 	typedef Enum::iterator EnumIter;
-	typedef Enum::const_pointer EnumCIter;
+	typedef Enum::const_iterator EnumCIter;
 	hash_map<string, Enum>  enums;
 	typedef hash_map<string, Enum >::iterator MapIter;
 	typedef hash_map<string, Enum >::const_iterator MapCIter;

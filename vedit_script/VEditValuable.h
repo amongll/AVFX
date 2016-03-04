@@ -11,6 +11,8 @@
 #include "VEditCommon.h"
 #include "VEditException.h"
 
+
+
 NMSP_BEGIN(vedit)
 
 class Script;
@@ -42,11 +44,11 @@ public:
 		return evalued != NULL;
 	}
 
+	virtual ~Evaluable();
 protected:
 	void parse(Script& script, json_t* detail) throw (Exception);
 
 	Evaluable();
-	virtual ~Evaluable();
 	std::string temp; //�����м�ֵ
 
 	EValueReplaceType replace_type;
@@ -61,6 +63,18 @@ private:
 };
 
 NMSP_END(vedit)
+
+namespace __gnu_cxx {
+template<>
+struct hash<vedit::Evaluable*>
+{
+	size_t operator()(vedit::Evaluable* const& obj)const
+	{
+		return reinterpret_cast<size_t>(obj);
+	}
+};
+
+}
 
 
 #endif /* VEDITVALUE_H_ */

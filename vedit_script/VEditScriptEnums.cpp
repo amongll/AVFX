@@ -1,16 +1,17 @@
 /*
  * VEditScriptEnums.cpp
  *
- *  Created on: 2016Äê2ÔÂ25ÈÕ
+ *  Created on: 2016ï¿½ï¿½2ï¿½ï¿½25ï¿½ï¿½
  *      Author: li.lei@youku.com
  */
 
 
 #include "VEditScriptEnums.h"
+#include "VEditScript.h"
 
 NMSP_BEGIN(vedit)
 
-ScriptEnums::ScriptEnums(Script& script):
+ScriptEnums::ScriptEnums(Script& script) throw (Exception):
 	parent(script),
 	defines(NULL)
 {
@@ -68,7 +69,7 @@ ScriptEnums::JsonWrap::JsonWrap(json_t* detail) throw (Exception) : js(NULL)
 		js = json_object();
 
 		void* it = json_object_iter(detail);
-		char* k;
+		const char* k;
 		json_t* se;
 		while(it) {
 			k = json_object_iter_key(it);

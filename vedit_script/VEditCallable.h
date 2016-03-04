@@ -1,7 +1,7 @@
 /*
  * VEditCallable.h
  *
- *  Created on: 2016Äê2ÔÂ24ÈÕ
+ *  Created on: 2016ï¿½ï¿½2ï¿½ï¿½24ï¿½ï¿½
  *      Author: li.lei@youku.com
  */
 
@@ -9,7 +9,6 @@
 #define VEDITCALLABLE_H_
 #include "VEditCommon.h"
 #include "VEditScriptProps.h"
-#include "VEditVM.h"
 
 NMSP_BEGIN(vedit)
 class Script;
@@ -19,7 +18,7 @@ public:
 	ScriptCallable(Script& caller, json_t* call_detail) throw(Exception);
 
 	json_t* compile() throw(Exception);
-	json_t* compile(Vm::ScriptType type) throw(Exception);
+	json_t* compile(vedit::ScriptType type) throw(Exception);
 private:
 	Script& script;
 	void parse(json_t* call_detail) throw(Exception);

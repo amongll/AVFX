@@ -1,11 +1,12 @@
 /*
  * VEditMacroExpandable.cpp
  *
- *  Created on: 2016Äê2ÔÂ29ÈÕ
+ *  Created on: 2016ï¿½ï¿½2ï¿½ï¿½29ï¿½ï¿½
  *      Author: li.lei@youku.com
  */
 
 #include "VEditMacroExpandable.h"
+#include "VEditScript.h"
 
 NMSP_BEGIN(vedit)
 void MacroExpandable::expand_macro(const char* nm, const json_t* value)
@@ -114,7 +115,7 @@ void MacroExpandable::parse_tokens() throw (Exception)
 						segments.push_back(v.substr(pend_pos, ps1 - pend_pos));
 						chk_pos = pend_pos =  ps2 + 1;
 						segments.push_back(nm);
-						macro_idxes[nm] = segments.size() - 1;
+						macro_idxes.insert(make_pair(nm, segments.size() - 1));
 					}
 					else {
 						chk_pos = ps2 + 1;

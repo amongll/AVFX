@@ -22,7 +22,6 @@ public:
 	class PropertyAgent
 	{
 	public:
-		class Property;
 		friend class Property;
 
 		PropertyAgent(const set<string>& delgs);
@@ -31,7 +30,6 @@ public:
 		virtual void expand_position(Evaluable& e, const char* nm, const int& frame_in, const int& frame_out,
 				int frame_seq) throw(Exception)=0;
 
-	private:
 		set<string> delegates;
 	};
 
@@ -59,9 +57,9 @@ public:
 			}
 			return json_incref(Evaluable::evalued);
 		}
+		virtual ~Property();
 	private:
 		Property(ScriptProps& p, const char* nm, json_t* detail) throw (Exception);
-		virtual ~Property();
 
 		shared_ptr<PropertyAgent> agent;
 		ScriptProps& parent;
@@ -84,7 +82,6 @@ private:
 	friend class shared_ptr<ScriptProps>;
 	friend class ScriptProps::Property;
 	friend class Script;
-
 
 	Script& get_script() {
 		return script;

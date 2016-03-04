@@ -1,7 +1,7 @@
 /*
  * VEditEnumExpandable.h
  *
- *  Created on: 2016Äê2ÔÂ24ÈÕ
+ *  Created on: 2016ï¿½ï¿½2ï¿½ï¿½24ï¿½ï¿½
  *      Author: li.lei@youku.com
  */
 
@@ -12,7 +12,7 @@
 #include "VEditException.h"
 
 NMSP_BEGIN(vedit)
-
+class Script;
 class EnumExpandable
 {
 public:
@@ -29,12 +29,11 @@ public:
 	}
 
 	void register_self() throw (Exception);
+	virtual ~EnumExpandable();
 protected:
-	friend class shared_ptr<EnumExpandable>;
 	EnumExpandable(Script& script, json_t* ctx, const char* oper_name)throw(Exception);
 	EnumExpandable(Script& script, json_t* ctx, const vector<string>& props)throw(Exception);
 
-	virtual ~EnumExpandable();
 
 	json_t* expand_context;
 	Script& script;
