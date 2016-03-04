@@ -1,7 +1,7 @@
 /*
  * VEditMacroExpandable.cpp
  *
- *  Created on: 2016��2��29��
+ *  Created on: 2016-2-29
  *      Author: li.lei@youku.com
  */
 
@@ -30,7 +30,7 @@ void MacroExpandable::expand_macro(const char* nm, const json_t* value)
 				segments[oit->second] = json_string_value(t);
 			}
 			else if ( json_is_integer(t) ) {
-				sprintf(buf, "%d", json_integer_value(t));
+				sprintf(buf, "%lld", json_integer_value(t));
 				segments[oit->second] = buf;
 			}
 			else if ( json_is_real(t) ) {
