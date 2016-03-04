@@ -9,15 +9,14 @@
 #define VEDITVALUE_H_
 
 #include "VEditCommon.h"
+#include "VEditException.h"
 
 NMSP_BEGIN(vedit)
 
 class Script;
-class ScriptProps::PropertyAgent;
 class Evaluable
 {
 public:
-	friend class ScriptProps::PropertyAgent;
 	enum EValueReplaceType
 	{
 		EValueNotParsed = 0,

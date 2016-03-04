@@ -1,0 +1,1 @@
+framework	-I/opt/lilei/AVFX/mlt-standalone/output/armeabi/build/include -I/opt/lilei/AVFX/mlt-standalone/output/armeabi/build/include/mlt -D_REENTRANT	-L/opt/lilei/AVFX/mlt-standalone/output/armeabi/build/lib -lmlt

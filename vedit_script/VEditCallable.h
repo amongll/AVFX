@@ -9,7 +9,7 @@
 #define VEDITCALLABLE_H_
 #include "VEditCommon.h"
 #include "VEditScriptProps.h"
-#include "VEditVm.h"
+#include "VEditVM.h"
 
 NMSP_BEGIN(vedit)
 class Script;

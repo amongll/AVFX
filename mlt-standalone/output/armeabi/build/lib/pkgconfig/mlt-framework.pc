@@ -1,0 +1,19 @@
+prefix=/opt/lilei/AVFX/mlt-standalone/output/armeabi/build
+exec_prefix=/opt/lilei/AVFX/mlt-standalone/output/armeabi/build
+libdir=/opt/lilei/AVFX/mlt-standalone/output/armeabi/build/lib
+includedir=/opt/lilei/AVFX/mlt-standalone/output/armeabi/build/include
+datadir=/opt/lilei/AVFX/mlt-standalone/output/armeabi/build/share
+mandir=/opt/lilei/AVFX/mlt-standalone/output/armeabi/build/share/man
+version=0.9.9
+cflags=-I/opt/lilei/AVFX/mlt-standalone/output/armeabi/build/include -I/opt/lilei/AVFX/mlt-standalone/output/armeabi/build/include/mlt -D_REENTRANT
+libs=-L/opt/lilei/AVFX/mlt-standalone/output/armeabi/build/lib -lmlt
+moduledir=/opt/lilei/AVFX/mlt-standalone/output/armeabi/build/lib/mlt
+mltdatadir=/opt/lilei/AVFX/mlt-standalone/output/armeabi/build/share/mlt
+meltbin=/opt/lilei/AVFX/mlt-standalone/output/armeabi/build/bin/melt
+
+Name: mlt-framework
+Description: MLT multimedia framework
+Version: ${version}
+Requires:
+Libs: -L${libdir} ${libs}
+Cflags: ${cflags}

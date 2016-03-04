@@ -1,0 +1,5 @@
+
+USE_FFTW=1
+CFLAGS += -DUSE_FFTW
+CFLAGS +=  
+LDFLAGS += -lfftw3  

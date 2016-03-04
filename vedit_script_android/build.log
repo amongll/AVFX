@@ -1,0 +1,1058 @@
+++ MY_TOOLCHAIN_ROOT=/opt/lilei/android_compile_toolchain
++ MY_PLATFORM=android-16
++ for arg in '$@'
++ case $arg in
++ MY_ABI=arm
++ for arg in '$@'
++ case $arg in
++ MY_PROJ=vedit_script
++ for arg in '$@'
++ case $arg in
++ MY_DEBUG=1
++ SAVE_PATH=/usr/bin:/home/lilei/apache-ant-1.9.6/bin:/opt/android-studio/bin:/opt/lilei/Android/Sdk/ndk-bundle:/opt/lilei/Android/Sdk/platform-tools:/opt/lilei/Android/Sdk/tools:/opt/jdk1.7.0_79/bin:/opt/android-studio/bin:/opt/lilei/Android/Sdk/ndk-bundle:/opt/lilei/Android/Sdk/platform-tools:/opt/lilei/Android/Sdk/tools:/opt/jdk1.7.0_79/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
++ case "$MY_PLATFORM" in
++ platform_ver=-16
++ '[' -16 -ge 16 -o -16 -le 23 ']'
++ echo AA
+AA
++ case "$MY_ABI" in
++ make_toolchain_for_abi arm
++ unset TOOLCHAIN_TOUCH
++ LOCAL_ABI=arm
++ MY_TOOLCHAIN_BUILD_FLAGS=' --install-dir=/opt/lilei/android_compile_toolchain/arm'
++ TOOLCHAIN_TOUCH=/opt/lilei/android_compile_toolchain/arm_touch
++ LOCAL_PLATFORM=android-16
++ TOOLCHAIN_NAME=arm-linux-androideabi-4.8
++ CROSS_PREFIX=arm-linux-androideabi
++ '[' arm = arm64 ']'
++ export CC=/opt/lilei/android_compile_toolchain/arm/
++ CC=/opt/lilei/android_compile_toolchain/arm/
++ '[' '!' -f /opt/lilei/android_compile_toolchain/arm_touch ']'
++ unset TOLLCHAIN_TOUCH
+++ pwd
++ MY_ROOT=/opt/lilei/AVFX/vedit_script_android
++ MY_OUTPUT_ROOT=/opt/lilei/AVFX/vedit_script_android/output
++ compile_spec vedit_script
++ spec=vedit_script
++ case "$MY_ABI" in
++ compile_for_abi arm vedit_script
++ SOURCE_DIR=vedit_script
++ LOCAL_ABI=arm
++ CROSS_PREFIX=arm-linux-androideabi
++ '[' arm = arm64 ']'
++ export PATH=/opt/lilei/android_compile_toolchain/arm/bin:/usr/bin:/home/lilei/apache-ant-1.9.6/bin:/opt/android-studio/bin:/opt/lilei/Android/Sdk/ndk-bundle:/opt/lilei/Android/Sdk/platform-tools:/opt/lilei/Android/Sdk/tools:/opt/jdk1.7.0_79/bin:/opt/android-studio/bin:/opt/lilei/Android/Sdk/ndk-bundle:/opt/lilei/Android/Sdk/platform-tools:/opt/lilei/Android/Sdk/tools:/opt/jdk1.7.0_79/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
++ PATH=/opt/lilei/android_compile_toolchain/arm/bin:/usr/bin:/home/lilei/apache-ant-1.9.6/bin:/opt/android-studio/bin:/opt/lilei/Android/Sdk/ndk-bundle:/opt/lilei/Android/Sdk/platform-tools:/opt/lilei/Android/Sdk/tools:/opt/jdk1.7.0_79/bin:/opt/android-studio/bin:/opt/lilei/Android/Sdk/ndk-bundle:/opt/lilei/Android/Sdk/platform-tools:/opt/lilei/Android/Sdk/tools:/opt/jdk1.7.0_79/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
++ export CC=arm-linux-androideabi-gcc
++ CC=arm-linux-androideabi-gcc
++ export LD=arm-linux-androideabi-ld
++ LD=arm-linux-androideabi-ld
++ export AR=arm-linux-androideabi-ar
++ AR=arm-linux-androideabi-ar
++ export STRIP=arm-linux-androideabi-strip
++ STRIP=arm-linux-androideabi-strip
++ export CXX=arm-linux-androideabi-g++
++ CXX=arm-linux-androideabi-g++
++ my_sysroot=/opt/lilei/android_compile_toolchain/arm/sysroot
++ CAN_ABI=armeabi
++ case "$LOCAL_ABI" in
++ mkdir -p /opt/lilei/AVFX/vedit_script_android/output/armeabi/build/vedit_script
++ cd /opt/lilei/AVFX/vedit_script_android/output/armeabi/build/vedit_script
++ PKG_CONFIG_PATH=/opt/lilei/AVFX/vedit_script_android/output/armeabi/install/lib/pkgconfig
++ case "$LOCAL_ABI" in
++ CROSS_HOST=arm-linux-android
++ echo /opt/lilei/android_compile_toolchain/arm/bin:/usr/bin:/home/lilei/apache-ant-1.9.6/bin:/opt/android-studio/bin:/opt/lilei/Android/Sdk/ndk-bundle:/opt/lilei/Android/Sdk/platform-tools:/opt/lilei/Android/Sdk/tools:/opt/jdk1.7.0_79/bin:/opt/android-studio/bin:/opt/lilei/Android/Sdk/ndk-bundle:/opt/lilei/Android/Sdk/platform-tools:/opt/lilei/Android/Sdk/tools:/opt/jdk1.7.0_79/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+/opt/lilei/android_compile_toolchain/arm/bin:/usr/bin:/home/lilei/apache-ant-1.9.6/bin:/opt/android-studio/bin:/opt/lilei/Android/Sdk/ndk-bundle:/opt/lilei/Android/Sdk/platform-tools:/opt/lilei/Android/Sdk/tools:/opt/jdk1.7.0_79/bin:/opt/android-studio/bin:/opt/lilei/Android/Sdk/ndk-bundle:/opt/lilei/Android/Sdk/platform-tools:/opt/lilei/Android/Sdk/tools:/opt/jdk1.7.0_79/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
++ echo arm-linux-androideabi-gcc
+arm-linux-androideabi-gcc
++ echo arm-linux-androideabi-ld
+arm-linux-androideabi-ld
++ echo arm-linux-androideabi-ar
+arm-linux-androideabi-ar
++ echo arm-linux-androideabi-strip
+arm-linux-androideabi-strip
++ echo /opt/lilei/AVFX/vedit_script_android/vedit_script/configure --prefix=/opt/lilei/AVFX/vedit_script_android/output/armeabi/install --host=arm-linux-android --with-sysroot=/opt/lilei/android_compile_toolchain/arm/sysroot
+/opt/lilei/AVFX/vedit_script_android/vedit_script/configure --prefix=/opt/lilei/AVFX/vedit_script_android/output/armeabi/install --host=arm-linux-android --with-sysroot=/opt/lilei/android_compile_toolchain/arm/sysroot
++ /opt/lilei/AVFX/vedit_script_android/vedit_script/configure --prefix=/opt/lilei/AVFX/vedit_script_android/output/armeabi/install --host=arm-linux-android --with-sysroot=/opt/lilei/android_compile_toolchain/arm/sysroot
+checking for a BSD-compatible install... /usr/bin/install -c
+checking whether build environment is sane... yes
+checking for arm-linux-android-strip... arm-linux-androideabi-strip
+checking for a thread-safe mkdir -p... /bin/mkdir -p
+checking for gawk... no
+checking for mawk... mawk
+checking whether make sets $(MAKE)... yes
+checking whether make supports nested variables... yes
+checking for style of include used by make... GNU
+checking for arm-linux-android-gcc... arm-linux-androideabi-gcc
+checking whether the C compiler works... yes
+checking for C compiler default output file name... a.out
+checking for suffix of executables... 
+checking whether we are cross compiling... yes
+checking for suffix of object files... o
+checking whether we are using the GNU C compiler... yes
+checking whether arm-linux-androideabi-gcc accepts -g... yes
+checking for arm-linux-androideabi-gcc option to accept ISO C89... none needed
+checking whether arm-linux-androideabi-gcc understands -c and -o together... yes
+checking dependency style of arm-linux-androideabi-gcc... gcc3
+checking for arm-linux-android-ar... arm-linux-androideabi-ar
+checking the archiver (arm-linux-androideabi-ar) interface... ar
+checking whether we are using the GNU C++ compiler... yes
+checking whether arm-linux-androideabi-g++ accepts -g... yes
+checking dependency style of arm-linux-androideabi-g++... gcc3
+checking for arm-linux-android-gcc... (cached) arm-linux-androideabi-gcc
+checking whether we are using the GNU C compiler... (cached) yes
+checking whether arm-linux-androideabi-gcc accepts -g... (cached) yes
+checking for arm-linux-androideabi-gcc option to accept ISO C89... (cached) none needed
+checking whether arm-linux-androideabi-gcc understands -c and -o together... (cached) yes
+checking dependency style of arm-linux-androideabi-gcc... (cached) gcc3
+checking build system type... x86_64-unknown-linux-gnu
+checking host system type... arm-unknown-linux-android
+checking how to print strings... printf
+checking for a sed that does not truncate output... /bin/sed
+checking for grep that handles long lines and -e... /bin/grep
+checking for egrep... /bin/grep -E
+checking for fgrep... /bin/grep -F
+checking for ld used by arm-linux-androideabi-gcc... arm-linux-androideabi-ld
+checking if the linker (arm-linux-androideabi-ld) is GNU ld... yes
+checking for BSD- or MS-compatible name lister (nm)... no
+checking for arm-linux-android-dumpbin... no
+checking for arm-linux-android-link... no
+checking for dumpbin... no
+checking for link... link -dump
+configure: WARNING: using cross tools not prefixed with host triplet
+checking the name lister (nm) interface... BSD nm
+checking whether ln -s works... yes
+checking the maximum length of command line arguments... 1572864
+checking whether the shell understands some XSI constructs... yes
+checking whether the shell understands "+="... yes
+checking how to convert x86_64-unknown-linux-gnu file names to arm-unknown-linux-android format... func_convert_file_noop
+checking how to convert x86_64-unknown-linux-gnu file names to toolchain format... func_convert_file_noop
+checking for arm-linux-androideabi-ld option to reload object files... -r
+checking for arm-linux-android-objdump... no
+checking for objdump... objdump
+checking how to recognize dependent libraries... pass_all
+checking for arm-linux-android-dlltool... no
+checking for dlltool... no
+checking how to associate runtime and link libraries... printf %s\n
+checking for arm-linux-android-ar... (cached) arm-linux-androideabi-ar
+checking for archiver @FILE support... @
+checking for arm-linux-android-strip... (cached) arm-linux-androideabi-strip
+checking for arm-linux-android-ranlib... no
+checking for ranlib... ranlib
+checking command to parse nm output from arm-linux-androideabi-gcc object... ok
+checking for sysroot... /opt/lilei/android_compile_toolchain/arm/sysroot
+checking for arm-linux-android-mt... no
+checking for mt... mt
+checking if mt is a manifest tool... no
+checking how to run the C preprocessor... arm-linux-androideabi-gcc -E
+checking for ANSI C header files... yes
+checking for sys/types.h... yes
+checking for sys/stat.h... yes
+checking for stdlib.h... yes
+checking for string.h... yes
+checking for memory.h... yes
+checking for strings.h... yes
+checking for inttypes.h... yes
+checking for stdint.h... yes
+checking for unistd.h... yes
+checking for dlfcn.h... yes
+checking for objdir... .libs
+checking if arm-linux-androideabi-gcc supports -fno-rtti -fno-exceptions... no
+checking for arm-linux-androideabi-gcc option to produce PIC... -fPIC -DPIC
+checking if arm-linux-androideabi-gcc PIC flag -fPIC -DPIC works... yes
+checking if arm-linux-androideabi-gcc static flag -static works... yes
+checking if arm-linux-androideabi-gcc supports -c -o file.o... yes
+checking if arm-linux-androideabi-gcc supports -c -o file.o... (cached) yes
+checking whether the arm-linux-androideabi-gcc linker (arm-linux-androideabi-ld) supports shared libraries... yes
+checking whether -lc should be explicitly linked in... no
+checking dynamic linker characteristics... GNU/Linux ld.so
+checking how to hardcode library paths into programs... immediate
+checking whether stripping libraries is possible... yes
+checking if libtool supports shared libraries... yes
+checking whether to build shared libraries... yes
+checking whether to build static libraries... yes
+checking how to run the C++ preprocessor... arm-linux-androideabi-g++ -E
+checking for ld used by arm-linux-androideabi-g++... arm-linux-androideabi-ld
+checking if the linker (arm-linux-androideabi-ld) is GNU ld... yes
+checking whether the arm-linux-androideabi-g++ linker (arm-linux-androideabi-ld) supports shared libraries... yes
+checking for arm-linux-androideabi-g++ option to produce PIC... -fPIC -DPIC
+checking if arm-linux-androideabi-g++ PIC flag -fPIC -DPIC works... yes
+checking if arm-linux-androideabi-g++ static flag -static works... yes
+checking if arm-linux-androideabi-g++ supports -c -o file.o... yes
+checking if arm-linux-androideabi-g++ supports -c -o file.o... (cached) yes
+checking whether the arm-linux-androideabi-g++ linker (arm-linux-androideabi-ld) supports shared libraries... yes
+checking dynamic linker characteristics... (cached) GNU/Linux ld.so
+checking how to hardcode library paths into programs... immediate
+checking for arm-linux-android-pkg-config... no
+checking for pkg-config... /usr/bin/pkg-config
+checking pkg-config is at least version 0.9.0... yes
+checking for jansson... yes
+checking for mlt... yes
+checking for unistd.h... (cached) yes
+checking for stdbool.h that conforms to C99... yes
+checking for _Bool... yes
+checking for size_t... yes
+checking for getcwd... yes
+checking for strcasecmp... yes
+checking for strdup... yes
+checking that generated files are newer than configure... done
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: creating config.h
+config.status: config.h is unchanged
+config.status: executing depfiles commands
+config.status: executing libtool commands
++ make clean
+test -z "libvedit_script.la" || rm -f libvedit_script.la
+rm -f ./so_locations
+rm -rf .libs _libs
+rm -f *.o
+rm -f *.lo
++ make uninstall
+ /bin/bash ./libtool   --mode=uninstall rm -f '/opt/lilei/AVFX/vedit_script_android/output/armeabi/install/lib/libvedit_script.la'
++ make
+make  all-am
+make[1]: Entering directory `/opt/lilei/AVFX/vedit_script_android/output/armeabi/build/vedit_script'
+/bin/bash ./libtool  --tag=CXX   --mode=compile arm-linux-androideabi-g++ -DHAVE_CONFIG_H -I. -I/opt/lilei/AVFX/vedit_script_android/vedit_script  -I/opt/lilei/AVFX/vedit_script_android/output/armeabi/install/include   -D_REENTRANT -I/opt/lilei/AVFX/vedit_script_android/output/armeabi/install/include -I/opt/lilei/AVFX/vedit_script_android/output/armeabi/install/include/mlt    -Wno-deprecated -g -O2 -MT libvedit_script_la-VEditCallable.lo -MD -MP -MF .deps/libvedit_script_la-VEditCallable.Tpo -c -o libvedit_script_la-VEditCallable.lo `test -f 'VEditCallable.cpp' || echo '/opt/lilei/AVFX/vedit_script_android/vedit_script/'`VEditCallable.cpp
+libtool: compile:  arm-linux-androideabi-g++ -DHAVE_CONFIG_H -I. -I/opt/lilei/AVFX/vedit_script_android/vedit_script -I/opt/lilei/AVFX/vedit_script_android/output/armeabi/install/include -D_REENTRANT -I/opt/lilei/AVFX/vedit_script_android/output/armeabi/install/include -I/opt/lilei/AVFX/vedit_script_android/output/armeabi/install/include/mlt -Wno-deprecated -g -O2 -MT libvedit_script_la-VEditCallable.lo -MD -MP -MF .deps/libvedit_script_la-VEditCallable.Tpo -c /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp  -fPIC -DPIC -o .libs/libvedit_script_la-VEditCallable.o
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptProps.h:12:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:29:68: error: expected type-specifier before 'Exception'
+  virtual void expand_scalar(const char* nm, const json_t* v) throw(Exception);
+                                                                    ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:29:68: error: expected ')' before 'Exception'
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:29:67: error: expected ';' at end of member declaration
+  virtual void expand_scalar(const char* nm, const json_t* v) throw(Exception);
+                                                                   ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:29:68: error: 'Exception' does not name a type
+  virtual void expand_scalar(const char* nm, const json_t* v) throw(Exception);
+                                                                    ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:31:25: error: expected type-specifier before 'Exception'
+    int frame_seq) throw(Exception);
+                         ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:31:25: error: expected ')' before 'Exception'
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:31:24: error: expected ';' at end of member declaration
+    int frame_seq) throw(Exception);
+                        ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:31:25: error: 'Exception' does not name a type
+    int frame_seq) throw(Exception);
+                         ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:35:60: error: expected type-specifier before 'Exception'
+  void replace_asis(const char* nm, const string& v) throw (Exception);
+                                                            ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:35:60: error: expected ')' before 'Exception'
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:35:59: error: expected ';' at end of member declaration
+  void replace_asis(const char* nm, const string& v) throw (Exception);
+                                                           ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:35:60: error: 'Exception' does not name a type
+  void replace_asis(const char* nm, const string& v) throw (Exception);
+                                                            ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:36:50: error: expected type-specifier before 'Exception'
+  void replace_asis(const char* nm, int v) throw (Exception);
+                                                  ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:36:50: error: expected ')' before 'Exception'
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:36:49: error: expected ';' at end of member declaration
+  void replace_asis(const char* nm, int v) throw (Exception);
+                                                 ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:36:50: error: 'Exception' does not name a type
+  void replace_asis(const char* nm, int v) throw (Exception);
+                                                  ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:37:53: error: expected type-specifier before 'Exception'
+  void replace_asis(const char* nm, double v) throw (Exception);
+                                                     ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:37:53: error: expected ')' before 'Exception'
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:37:52: error: expected ';' at end of member declaration
+  void replace_asis(const char* nm, double v) throw (Exception);
+                                                    ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:37:53: error: 'Exception' does not name a type
+  void replace_asis(const char* nm, double v) throw (Exception);
+                                                     ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:38:51: error: expected type-specifier before 'Exception'
+  void replace_asis(const char* nm, bool v) throw (Exception);
+                                                   ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:38:51: error: expected ')' before 'Exception'
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:38:50: error: expected ';' at end of member declaration
+  void replace_asis(const char* nm, bool v) throw (Exception);
+                                                  ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:38:51: error: 'Exception' does not name a type
+  void replace_asis(const char* nm, bool v) throw (Exception);
+                                                   ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:45:52: error: expected type-specifier before 'Exception'
+  void parse(Script& script, json_t* detail) throw (Exception);
+                                                    ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:45:52: error: expected ')' before 'Exception'
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:45:51: error: expected ';' at end of member declaration
+  void parse(Script& script, json_t* detail) throw (Exception);
+                                                   ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditValuable.h:45:52: error: 'Exception' does not name a type
+  void parse(Script& script, json_t* detail) throw (Exception);
+                                                    ^
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditEnumExpandable.h:12:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptProps.h:13,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditException.h:16:7: error: looser throw specifier for 'virtual vedit::Exception::~Exception()'
+ class Exception : public std::exception
+       ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/new:40:0,
+                 from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/ext/new_allocator.h:33,
+                 from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/arm-linux-androideabi/bits/c++allocator.h:33,
+                 from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/allocator.h:46,
+                 from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/string:41,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/exception:64:13: error:   overriding 'virtual std::exception::~exception() throw ()'
+     virtual ~exception() _GLIBCXX_USE_NOEXCEPT;
+             ^
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h: In member function 'const json_t* vedit::ScriptEnums::get_selector(const char*, const char*) const':
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:26:43: error: cannot convert '__gnu_cxx::hash_map<std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >::const_iterator {aka __gnu_cxx::_Hashtable_const_iterator<std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >, std::basic_string<char>, __gnu_cxx::hash<std::basic_string<char> >, std::_Select1st<std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > >, std::equal_to<std::basic_string<char> >, std::allocator<std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > >}' to 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}' in initialization
+   EnumCIter it2 = it->second.find(sel_name);
+                                           ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:14: error: no match for 'operator==' (operand types are 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}' and '__gnu_cxx::hash_map<std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >::const_iterator {aka __gnu_cxx::_Hashtable_const_iterator<std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >, std::basic_string<char>, __gnu_cxx::hash<std::basic_string<char> >, std::_Select1st<std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > >, std::equal_to<std::basic_string<char> >, std::allocator<std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > >}')
+   return it2 == it->second.end() ? NULL : it2->second->js;
+              ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:14: note: candidates are:
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_algobase.h:67:0,
+                 from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/char_traits.h:39,
+                 from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/string:40,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_iterator.h:805:5: note: template<class _IteratorL, class _IteratorR, class _Container> bool __gnu_cxx::operator==(const __gnu_cxx::__normal_iterator<_IteratorL, _Container>&, const __gnu_cxx::__normal_iterator<_IteratorR, _Container>&)
+     operator==(const __normal_iterator<_IteratorL, _Container>& __lhs,
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_iterator.h:805:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const __gnu_cxx::__normal_iterator<_IteratorL, _Container>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_algobase.h:67:0,
+                 from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/char_traits.h:39,
+                 from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/string:40,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_iterator.h:811:5: note: template<class _Iterator, class _Container> bool __gnu_cxx::operator==(const __gnu_cxx::__normal_iterator<_Iterator, _Container>&, const __gnu_cxx::__normal_iterator<_Iterator, _Container>&)
+     operator==(const __normal_iterator<_Iterator, _Container>& __lhs,
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_iterator.h:811:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const __gnu_cxx::__normal_iterator<_Iterator, _Container>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/arm-linux-androideabi/bits/c++allocator.h:33:0,
+                 from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/allocator.h:46,
+                 from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/string:41,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/ext/new_allocator.h:139:5: note: template<class _Tp> bool __gnu_cxx::operator==(const __gnu_cxx::new_allocator<_Tp>&, const __gnu_cxx::new_allocator<_Tp>&)
+     operator==(const new_allocator<_Tp>&, const new_allocator<_Tp>&)
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/ext/new_allocator.h:139:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const __gnu_cxx::new_allocator<_Tp>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hash_map:64:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:16,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hashtable.h:707:5: note: template<class _Val, class _Key, class _HF, class _Ex, class _Eq, class _All> bool __gnu_cxx::operator==(const __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>&, const __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>&)
+     operator==(const hashtable<_Val, _Key, _HF, _Ex, _Eq, _All>& __ht1,
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hashtable.h:707:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:16:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hash_map:270:5: note: template<class _Key, class _Tp, class _HashFn, class _EqlKey, class _Alloc> bool __gnu_cxx::operator==(const __gnu_cxx::hash_map<_Key, _Tp, _HashFn, _EqlKey, _Alloc>&, const __gnu_cxx::hash_map<_Key, _Tp, _HashFn, _EqlKey, _Alloc>&)
+     operator==(const hash_map<_Key, _Tp, _HashFn, _EqlKey, _Alloc>& __hm1,
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hash_map:270:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const __gnu_cxx::hash_map<_Key, _Tp, _HashFn, _EqlKey, _Alloc>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:16:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hash_map:485:5: note: template<class _Key, class _Tp, class _HF, class _EqKey, class _Alloc> bool __gnu_cxx::operator==(const __gnu_cxx::hash_multimap<_Key, _Tp, _HF, _EqKey, _Alloc>&, const __gnu_cxx::hash_multimap<_Key, _Tp, _HF, _EqKey, _Alloc>&)
+     operator==(const hash_multimap<_Key, _Tp, _HF, _EqKey, _Alloc>& __hm1,
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hash_map:485:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const __gnu_cxx::hash_multimap<_Key, _Tp, _HF, _EqKey, _Alloc>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:17:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hash_set:259:5: note: template<class _Value, class _HashFcn, class _EqualKey, class _Alloc> bool __gnu_cxx::operator==(const __gnu_cxx::hash_set<_Value, _HashFcn, _EqualKey, _Alloc>&, const __gnu_cxx::hash_set<_Value, _HashFcn, _EqualKey, _Alloc>&)
+     operator==(const hash_set<_Value, _HashFcn, _EqualKey, _Alloc>& __hs1,
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hash_set:259:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const __gnu_cxx::hash_set<_Value, _HashFcn, _EqualKey, _Alloc>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:17:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hash_set:453:5: note: template<class _Val, class _HashFcn, class _EqualKey, class _Alloc> bool __gnu_cxx::operator==(const __gnu_cxx::hash_multiset<_Val, _HashFcn, _EqualKey, _Alloc>&, const __gnu_cxx::hash_multiset<_Val, _HashFcn, _EqualKey, _Alloc>&)
+     operator==(const hash_multiset<_Val, _HashFcn, _EqualKey, _Alloc>& __hs1,
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hash_set:453:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const __gnu_cxx::hash_multiset<_Val, _HashFcn, _EqualKey, _Alloc>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/memory:50:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/shared_ptr.h:722:9: note: template<class _Tp1> bool std::tr1::operator==(const std::tr1::__shared_ptr<vedit::ScriptProps::PropertyAgent, (__gnu_cxx::_Lock_policy)1u>&, const std::tr1::__shared_ptr<_Tp>&)
+         operator==(const __shared_ptr& __a, const __shared_ptr<_Tp1, _Lp>& __b)
+         ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/shared_ptr.h:722:9: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   cannot convert 'it2' (type 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}') to type 'const std::tr1::__shared_ptr<vedit::ScriptProps::PropertyAgent, (__gnu_cxx::_Lock_policy)1u>&'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/memory:50:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/shared_ptr.h:722:9: note: template<class _Tp1> bool std::tr1::operator==(const std::tr1::__shared_ptr<vedit::ScriptProps::Property, (__gnu_cxx::_Lock_policy)1u>&, const std::tr1::__shared_ptr<_Tp>&)
+         operator==(const __shared_ptr& __a, const __shared_ptr<_Tp1, _Lp>& __b)
+         ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/shared_ptr.h:722:9: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   cannot convert 'it2' (type 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}') to type 'const std::tr1::__shared_ptr<vedit::ScriptProps::Property, (__gnu_cxx::_Lock_policy)1u>&'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/memory:50:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/shared_ptr.h:722:9: note: template<class _Tp1> bool std::tr1::operator==(const std::tr1::__shared_ptr<vedit::ScriptEnums::JsonWrap, (__gnu_cxx::_Lock_policy)1u>&, const std::tr1::__shared_ptr<_Tp>&)
+         operator==(const __shared_ptr& __a, const __shared_ptr<_Tp1, _Lp>& __b)
+         ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/shared_ptr.h:722:9: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   cannot convert 'it2' (type 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}') to type 'const std::tr1::__shared_ptr<vedit::ScriptEnums::JsonWrap, (__gnu_cxx::_Lock_policy)1u>&'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/iterator:66:0,
+                 from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hashtable.h:63,
+                 from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hash_map:64,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:16,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stream_iterator.h:130:5: note: template<class _Tp, class _CharT, class _Traits, class _Dist> bool std::operator==(const std::istream_iterator<_Tp, _CharT, _Traits, _Dist>&, const std::istream_iterator<_Tp, _CharT, _Traits, _Dist>&)
+     operator==(const istream_iterator<_Tp, _CharT, _Traits, _Dist>& __x,
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stream_iterator.h:130:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const std::istream_iterator<_Tp, _CharT, _Traits, _Dist>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/locale_facets.h:48:0,
+                 from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/basic_ios.h:37,
+                 from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/ios:44,
+                 from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/ostream:38,
+                 from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/iterator:64,
+                 from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hashtable.h:63,
+                 from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hash_map:64,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:16,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/streambuf_iterator.h:204:5: note: template<class _CharT, class _Traits> bool std::operator==(const std::istreambuf_iterator<_CharT, _Traits>&, const std::istreambuf_iterator<_CharT, _Traits>&)
+     operator==(const istreambuf_iterator<_CharT, _Traits>& __a,
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/streambuf_iterator.h:204:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const std::istreambuf_iterator<_CharT, _Traits>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/set:62:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:15,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_multiset.h:739:5: note: template<class _Key, class _Compare, class _Alloc> bool std::operator==(const std::multiset<_Key, _Compare, _Alloc>&, const std::multiset<_Key, _Compare, _Alloc>&)
+     operator==(const multiset<_Key, _Compare, _Alloc>& __x,
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_multiset.h:739:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const std::multiset<_Key, _Compare, _Alloc>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/set:61:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:15,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_set.h:754:5: note: template<class _Key, class _Compare, class _Alloc> bool std::operator==(const std::set<_Key, _Compare, _Alloc>&, const std::set<_Key, _Compare, _Alloc>&)
+     operator==(const set<_Key, _Compare, _Alloc>& __x,
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_set.h:754:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const std::set<_Key, _Compare, _Alloc>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/set:60:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:15,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_tree.h:907:5: note: template<class _Key, class _Val, class _KeyOfValue, class _Compare, class _Alloc> bool std::operator==(const std::_Rb_tree<_Key, _Val, _KeyOfValue, _Compare, _Alloc>&, const std::_Rb_tree<_Key, _Val, _KeyOfValue, _Compare, _Alloc>&)
+     operator==(const _Rb_tree<_Key, _Val, _KeyOfValue, _Compare, _Alloc>& __x,
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_tree.h:907:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const std::_Rb_tree<_Key, _Val, _KeyOfValue, _Compare, _Alloc>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/set:60:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:15,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_tree.h:310:5: note: template<class _Val> bool std::operator==(const std::_Rb_tree_iterator<_Tp>&, const std::_Rb_tree_const_iterator<_Val>&)
+     operator==(const _Rb_tree_iterator<_Val>& __x,
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_tree.h:310:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const std::_Rb_tree_iterator<_Tp>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/deque:64:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_deque.h:1957:5: note: template<class _Tp, class _Alloc> bool std::operator==(const std::deque<_Tp, _Alloc>&, const std::deque<_Tp, _Alloc>&)
+     operator==(const deque<_Tp, _Alloc>& __x,
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_deque.h:1957:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const std::deque<_Tp, _Alloc>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/deque:64:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_deque.h:254:5: note: template<class _Tp, class _RefL, class _PtrL, class _RefR, class _PtrR> bool std::operator==(const std::_Deque_iterator<_Tp, _Ref, _Ptr>&, const std::_Deque_iterator<_Tp, _RefR, _PtrR>&)
+     operator==(const _Deque_iterator<_Tp, _RefL, _PtrL>& __x,
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_deque.h:254:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const std::_Deque_iterator<_Tp, _Ref, _Ptr>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/deque:64:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_deque.h:247:5: note: template<class _Tp, class _Ref, class _Ptr> bool std::operator==(const std::_Deque_iterator<_Tp, _Ref, _Ptr>&, const std::_Deque_iterator<_Tp, _Ref, _Ptr>&)
+     operator==(const _Deque_iterator<_Tp, _Ref, _Ptr>& __x,
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_deque.h:247:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const std::_Deque_iterator<_Tp, _Ref, _Ptr>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/vector:64:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:13,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_vector.h:1404:5: note: template<class _Tp, class _Alloc> bool std::operator==(const std::vector<_Tp, _Alloc>&, const std::vector<_Tp, _Alloc>&)
+     operator==(const vector<_Tp, _Alloc>& __x, const vector<_Tp, _Alloc>& __y)
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_vector.h:1404:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const std::vector<_Tp, _Alloc>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/string:52:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/basic_string.h:2519:5: note: template<class _CharT, class _Traits, class _Alloc> bool std::operator==(const std::basic_string<_CharT, _Traits, _Alloc>&, const _CharT*)
+     operator==(const basic_string<_CharT, _Traits, _Alloc>& __lhs,
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/basic_string.h:2519:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const std::basic_string<_CharT, _Traits, _Alloc>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/string:52:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/basic_string.h:2507:5: note: template<class _CharT, class _Traits, class _Alloc> bool std::operator==(const _CharT*, const std::basic_string<_CharT, _Traits, _Alloc>&)
+     operator==(const _CharT* __lhs,
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/basic_string.h:2507:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   '__gnu_cxx::hash_map<std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >::const_iterator {aka __gnu_cxx::_Hashtable_const_iterator<std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >, std::basic_string<char>, __gnu_cxx::hash<std::basic_string<char> >, std::_Select1st<std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > >, std::equal_to<std::basic_string<char> >, std::allocator<std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > >}' is not derived from 'const std::basic_string<_CharT, _Traits, _Alloc>'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/string:52:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/basic_string.h:2493:5: note: template<class _CharT> typename __gnu_cxx::__enable_if<std::__is_char<_Tp>::__value, bool>::__type std::operator==(const std::basic_string<_CharT>&, const std::basic_string<_CharT>&)
+     operator==(const basic_string<_CharT>& __lhs,
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/basic_string.h:2493:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const std::basic_string<_CharT>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/string:52:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/basic_string.h:2486:5: note: template<class _CharT, class _Traits, class _Alloc> bool std::operator==(const std::basic_string<_CharT, _Traits, _Alloc>&, const std::basic_string<_CharT, _Traits, _Alloc>&)
+     operator==(const basic_string<_CharT, _Traits, _Alloc>& __lhs,
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/basic_string.h:2486:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const std::basic_string<_CharT, _Traits, _Alloc>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/string:41:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/allocator.h:133:5: note: template<class _Tp> bool std::operator==(const std::allocator<_CharT>&, const std::allocator<_CharT>&)
+     operator==(const allocator<_Tp>&, const allocator<_Tp>&)
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/allocator.h:133:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const std::allocator<_CharT>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/string:41:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/allocator.h:128:5: note: template<class _T1, class _T2> bool std::operator==(const std::allocator<_CharT>&, const std::allocator<_T2>&)
+     operator==(const allocator<_T1>&, const allocator<_T2>&)
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/allocator.h:128:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const std::allocator<_CharT>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/char_traits.h:40:0,
+                 from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/string:40,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/postypes.h:216:5: note: template<class _StateT> bool std::operator==(const std::fpos<_StateT>&, const std::fpos<_StateT>&)
+     operator==(const fpos<_StateT>& __lhs, const fpos<_StateT>& __rhs)
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/postypes.h:216:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const std::fpos<_StateT>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_algobase.h:67:0,
+                 from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/char_traits.h:39,
+                 from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/string:40,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_iterator.h:341:5: note: template<class _IteratorL, class _IteratorR> bool std::operator==(const std::reverse_iterator<_Iterator>&, const std::reverse_iterator<_IteratorR>&)
+     operator==(const reverse_iterator<_IteratorL>& __x,
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_iterator.h:341:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const std::reverse_iterator<_Iterator>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_algobase.h:67:0,
+                 from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/char_traits.h:39,
+                 from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/string:40,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_iterator.h:291:5: note: template<class _Iterator> bool std::operator==(const std::reverse_iterator<_Iterator>&, const std::reverse_iterator<_Iterator>&)
+     operator==(const reverse_iterator<_Iterator>& __x,
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_iterator.h:291:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const std::reverse_iterator<_Iterator>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_algobase.h:64:0,
+                 from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/char_traits.h:39,
+                 from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/string:40,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_pair.h:214:5: note: template<class _T1, class _T2> bool std::operator==(const std::pair<_T1, _T2>&, const std::pair<_T1, _T2>&)
+     operator==(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y)
+     ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/bits/stl_pair.h:214:5: note:   template argument deduction/substitution failed:
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:15:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:27:32: note:   mismatched types 'const std::pair<_T1, _T2>' and 'vedit::ScriptEnums::EnumCIter {aka const std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >*}'
+   return it2 == it->second.end() ? NULL : it2->second->js;
+                                ^
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:14:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h: At global scope:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:19:14: warning: declaration 'class vedit::Script' does not declare anything [enabled by default]
+ class vedit::Script;
+              ^
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:16:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptMacros.h:15:14: warning: declaration 'class vedit::Script' does not declare anything [enabled by default]
+ class vedit::Script;
+              ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptMacros.h:51:18: error: 'JsonWrap' was not declared in this scope
+  hash_map<string,JsonWrap> macros;
+                  ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptMacros.h:51:26: error: template argument 2 is invalid
+  hash_map<string,JsonWrap> macros;
+                          ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptMacros.h:51:26: error: template argument 5 is invalid
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptMacros.h:52:27: error: 'JsonWrap' was not declared in this scope
+  typedef hash_map<string, JsonWrap>::iterator MapIter;
+                           ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptMacros.h:52:35: error: template argument 2 is invalid
+  typedef hash_map<string, JsonWrap>::iterator MapIter;
+                                   ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptMacros.h:52:35: error: template argument 5 is invalid
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptMacros.h:52:38: error: expected ';' at end of member declaration
+  typedef hash_map<string, JsonWrap>::iterator MapIter;
+                                      ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptMacros.h:52:47: error: 'MapIter' does not name a type
+  typedef hash_map<string, JsonWrap>::iterator MapIter;
+                                               ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptMacros.h:53:27: error: 'JsonWrap' was not declared in this scope
+  typedef hash_map<string, JsonWrap>::const_iterator MapCIter;
+                           ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptMacros.h:53:35: error: template argument 2 is invalid
+  typedef hash_map<string, JsonWrap>::const_iterator MapCIter;
+                                   ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptMacros.h:53:35: error: template argument 5 is invalid
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptMacros.h:53:38: error: expected ';' at end of member declaration
+  typedef hash_map<string, JsonWrap>::const_iterator MapCIter;
+                                      ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptMacros.h:53:53: error: 'MapCIter' does not name a type
+  typedef hash_map<string, JsonWrap>::const_iterator MapCIter;
+                                                     ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptMacros.h: In member function 'const json_t* vedit::ScriptMacros::get_macro(const char*) const':
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptMacros.h:21:3: error: 'MapCIter' was not declared in this scope
+   MapCIter it = macros.find(nm);
+   ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptMacros.h:21:12: error: expected ';' before 'it'
+   MapCIter it = macros.find(nm);
+            ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptMacros.h:22:10: error: 'it' was not declared in this scope
+   return it == macros.end() ? NULL : it->second.h;
+          ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptMacros.h:22:23: error: request for member 'end' in '((const vedit::ScriptMacros*)this)->vedit::ScriptMacros::macros', which is of non-class type 'const int'
+   return it == macros.end() ? NULL : it->second.h;
+                       ^
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:11:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h: At global scope:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:145:3: error: 'JsonWrap' does not name a type
+   JsonWrap serialize;
+   ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:146:14: error: 'ScriptCallable' was not declared in this scope
+   shared_ptr<ScriptCallable> call;
+              ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:146:28: error: template argument 1 is invalid
+   shared_ptr<ScriptCallable> call;
+                            ^
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:16:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditTransitionScript.h: In constructor 'vedit::TransitionScript::TransitionScript(json_t*)':
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditTransitionScript.h:19:3: error: type 'vedit::SingleResourceScript' is not a direct base of 'vedit::TransitionScript'
+   SingleResourceScript(text)
+   ^
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h: At global scope:
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:122:3: error: 'JsonWrap' does not name a type
+   JsonWrap defines;
+   ^
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h: In constructor 'vedit::Vm::Wrap::Wrap(vedit::Vm::ScriptType, json_t*)':
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:118:4: error: class 'vedit::Vm::Wrap' does not have any field named 'defines'
+    defines(in)
+    ^
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/shared_ptr.h: In instantiation of 'std::tr1::__shared_count<_Lp>::__shared_count(_Ptr) [with _Ptr = vedit::ImageScript*; __gnu_cxx::_Lock_policy _Lp = (__gnu_cxx::_Lock_policy)1u]':
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/shared_ptr.h:553:32:   required from 'std::tr1::__shared_ptr<_Tp, _Lp>::__shared_ptr(_Tp1*) [with _Tp1 = vedit::ImageScript; _Tp = vedit::ImageScript; __gnu_cxx::_Lock_policy _Lp = (__gnu_cxx::_Lock_policy)1u]'
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/shared_ptr.h:995:25:   required from 'std::tr1::shared_ptr<_Tp>::shared_ptr(_Tp1*) [with _Tp1 = vedit::ImageScript; _Tp = vedit::ImageScript]'
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:55:56:   required from here
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:58:10: error: 'virtual vedit::ImageScript::~ImageScript()' is private
+  virtual ~ImageScript();
+          ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/memory:50:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/shared_ptr.h:307:8: error: within this context
+        delete __p;
+        ^
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/shared_ptr.h: In instantiation of 'std::tr1::__shared_count<_Lp>::__shared_count(_Ptr) [with _Ptr = vedit::GifScript*; __gnu_cxx::_Lock_policy _Lp = (__gnu_cxx::_Lock_policy)1u]':
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/shared_ptr.h:553:32:   required from 'std::tr1::__shared_ptr<_Tp, _Lp>::__shared_ptr(_Tp1*) [with _Tp1 = vedit::GifScript; _Tp = vedit::GifScript; __gnu_cxx::_Lock_policy _Lp = (__gnu_cxx::_Lock_policy)1u]'
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/shared_ptr.h:995:25:   required from 'std::tr1::shared_ptr<_Tp>::shared_ptr(_Tp1*) [with _Tp1 = vedit::GifScript; _Tp = vedit::GifScript]'
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:61:54:   required from here
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:69:10: error: 'virtual vedit::GifScript::~GifScript()' is private
+  virtual ~GifScript();
+          ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/memory:50:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/shared_ptr.h:307:8: error: within this context
+        delete __p;
+        ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hash_map:64:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:16,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hashtable.h: In instantiation of '__gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::size_type __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::_M_bkt_num_key(const key_type&, std::size_t) const [with _Val = std::pair<const std::basic_string<char>, __gnu_cxx::hash_map<std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > >; _Key = std::basic_string<char>; _HashFcn = __gnu_cxx::hash<std::basic_string<char> >; _ExtractKey = std::_Select1st<std::pair<const std::basic_string<char>, __gnu_cxx::hash_map<std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > > >; _EqualKey = std::equal_to<std::basic_string<char> >; _Alloc = std::allocator<__gnu_cxx::hash_map<std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > >; __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::size_type = unsigned int; __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::key_type = std::basic_string<char>; std::size_t = unsigned int]':
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hashtable.h:601:55:   required from '__gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::size_type __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::_M_bkt_num_key(const key_type&) const [with _Val = std::pair<const std::basic_string<char>, __gnu_cxx::hash_map<std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > >; _Key = std::basic_string<char>; _HashFcn = __gnu_cxx::hash<std::basic_string<char> >; _ExtractKey = std::_Select1st<std::pair<const std::basic_string<char>, __gnu_cxx::hash_map<std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > > >; _EqualKey = std::equal_to<std::basic_string<char> >; _Alloc = std::allocator<__gnu_cxx::hash_map<std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > >; __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::size_type = unsigned int; __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::key_type = std::basic_string<char>]'
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hashtable.h:536:38:   required from '__gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::const_iterator __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::find(const key_type&) const [with _Val = std::pair<const std::basic_string<char>, __gnu_cxx::hash_map<std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > >; _Key = std::basic_string<char>; _HashFcn = __gnu_cxx::hash<std::basic_string<char> >; _ExtractKey = std::_Select1st<std::pair<const std::basic_string<char>, __gnu_cxx::hash_map<std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > > >; _EqualKey = std::equal_to<std::basic_string<char> >; _Alloc = std::allocator<__gnu_cxx::hash_map<std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > >; __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::const_iterator = __gnu_cxx::_Hashtable_const_iterator<std::pair<const std::basic_string<char>, __gnu_cxx::hash_map<std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > >, std::basic_string<char>, __gnu_cxx::hash<std::basic_string<char> >, std::_Select1st<std::pair<const std::basic_string<char>, __gnu_cxx::hash_map<std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > > >, std::equal_to<std::basic_string<char> >, std::allocator<__gnu_cxx::hash_map<std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > > >; __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::key_type = std::basic_string<char>]'
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hash_map:217:32:   required from '__gnu_cxx::hash_map<_Key, _Tp, _HashFn, _EqualKey, _Alloc>::const_iterator __gnu_cxx::hash_map<_Key, _Tp, _HashFn, _EqualKey, _Alloc>::find(const key_type&) const [with _Key = std::basic_string<char>; _Tp = __gnu_cxx::hash_map<std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >; _HashFn = __gnu_cxx::hash<std::basic_string<char> >; _EqualKey = std::equal_to<std::basic_string<char> >; _Alloc = std::allocator<__gnu_cxx::hash_map<std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > >; __gnu_cxx::hash_map<_Key, _Tp, _HashFn, _EqualKey, _Alloc>::const_iterator = __gnu_cxx::_Hashtable_const_iterator<std::pair<const std::basic_string<char>, __gnu_cxx::hash_map<std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > >, std::basic_string<char>, __gnu_cxx::hash<std::basic_string<char> >, std::_Select1st<std::pair<const std::basic_string<char>, __gnu_cxx::hash_map<std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > > >, std::equal_to<std::basic_string<char> >, std::allocator<__gnu_cxx::hash_map<std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > > >; __gnu_cxx::hash_map<_Key, _Tp, _HashFn, _EqualKey, _Alloc>::key_type = std::basic_string<char>]'
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:24:37:   required from here
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hashtable.h:609:31: error: no match for call to '(const hasher {aka const __gnu_cxx::hash<std::basic_string<char> >}) (const key_type&)'
+       { return _M_hash(__key) % __n; }
+                               ^
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hashtable.h: In instantiation of '__gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::size_type __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::_M_bkt_num_key(const key_type&, std::size_t) const [with _Val = std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >; _Key = std::basic_string<char>; _HashFcn = __gnu_cxx::hash<std::basic_string<char> >; _ExtractKey = std::_Select1st<std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > >; _EqualKey = std::equal_to<std::basic_string<char> >; _Alloc = std::allocator<std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >; __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::size_type = unsigned int; __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::key_type = std::basic_string<char>; std::size_t = unsigned int]':
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hashtable.h:601:55:   required from '__gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::size_type __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::_M_bkt_num_key(const key_type&) const [with _Val = std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >; _Key = std::basic_string<char>; _HashFcn = __gnu_cxx::hash<std::basic_string<char> >; _ExtractKey = std::_Select1st<std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > >; _EqualKey = std::equal_to<std::basic_string<char> >; _Alloc = std::allocator<std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >; __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::size_type = unsigned int; __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::key_type = std::basic_string<char>]'
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hashtable.h:536:38:   required from '__gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::const_iterator __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::find(const key_type&) const [with _Val = std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >; _Key = std::basic_string<char>; _HashFcn = __gnu_cxx::hash<std::basic_string<char> >; _ExtractKey = std::_Select1st<std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > >; _EqualKey = std::equal_to<std::basic_string<char> >; _Alloc = std::allocator<std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >; __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::const_iterator = __gnu_cxx::_Hashtable_const_iterator<std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >, std::basic_string<char>, __gnu_cxx::hash<std::basic_string<char> >, std::_Select1st<std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > >, std::equal_to<std::basic_string<char> >, std::allocator<std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > >; __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::key_type = std::basic_string<char>]'
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hash_map:217:32:   required from '__gnu_cxx::hash_map<_Key, _Tp, _HashFn, _EqualKey, _Alloc>::const_iterator __gnu_cxx::hash_map<_Key, _Tp, _HashFn, _EqualKey, _Alloc>::find(const key_type&) const [with _Key = std::basic_string<char>; _Tp = std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap>; _HashFn = __gnu_cxx::hash<std::basic_string<char> >; _EqualKey = std::equal_to<std::basic_string<char> >; _Alloc = std::allocator<std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >; __gnu_cxx::hash_map<_Key, _Tp, _HashFn, _EqualKey, _Alloc>::const_iterator = __gnu_cxx::_Hashtable_const_iterator<std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> >, std::basic_string<char>, __gnu_cxx::hash<std::basic_string<char> >, std::_Select1st<std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > >, std::equal_to<std::basic_string<char> >, std::allocator<std::tr1::shared_ptr<vedit::ScriptEnums::JsonWrap> > >; __gnu_cxx::hash_map<_Key, _Tp, _HashFn, _EqualKey, _Alloc>::key_type = std::basic_string<char>]'
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptEnums.h:26:43:   required from here
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hashtable.h:609:31: error: no match for call to '(const hasher {aka const __gnu_cxx::hash<std::basic_string<char> >}) (const key_type&)'
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hashtable.h: In instantiation of '__gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::size_type __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::_M_bkt_num_key(const key_type&, std::size_t) const [with _Val = std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptParams::Param> >; _Key = std::basic_string<char>; _HashFcn = __gnu_cxx::hash<std::basic_string<char> >; _ExtractKey = std::_Select1st<std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptParams::Param> > >; _EqualKey = std::equal_to<std::basic_string<char> >; _Alloc = std::allocator<std::tr1::shared_ptr<vedit::ScriptParams::Param> >; __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::size_type = unsigned int; __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::key_type = std::basic_string<char>; std::size_t = unsigned int]':
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hashtable.h:601:55:   required from '__gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::size_type __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::_M_bkt_num_key(const key_type&) const [with _Val = std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptParams::Param> >; _Key = std::basic_string<char>; _HashFcn = __gnu_cxx::hash<std::basic_string<char> >; _ExtractKey = std::_Select1st<std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptParams::Param> > >; _EqualKey = std::equal_to<std::basic_string<char> >; _Alloc = std::allocator<std::tr1::shared_ptr<vedit::ScriptParams::Param> >; __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::size_type = unsigned int; __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::key_type = std::basic_string<char>]'
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hashtable.h:536:38:   required from '__gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::const_iterator __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::find(const key_type&) const [with _Val = std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptParams::Param> >; _Key = std::basic_string<char>; _HashFcn = __gnu_cxx::hash<std::basic_string<char> >; _ExtractKey = std::_Select1st<std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptParams::Param> > >; _EqualKey = std::equal_to<std::basic_string<char> >; _Alloc = std::allocator<std::tr1::shared_ptr<vedit::ScriptParams::Param> >; __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::const_iterator = __gnu_cxx::_Hashtable_const_iterator<std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptParams::Param> >, std::basic_string<char>, __gnu_cxx::hash<std::basic_string<char> >, std::_Select1st<std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptParams::Param> > >, std::equal_to<std::basic_string<char> >, std::allocator<std::tr1::shared_ptr<vedit::ScriptParams::Param> > >; __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::key_type = std::basic_string<char>]'
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hash_map:217:32:   required from '__gnu_cxx::hash_map<_Key, _Tp, _HashFn, _EqualKey, _Alloc>::const_iterator __gnu_cxx::hash_map<_Key, _Tp, _HashFn, _EqualKey, _Alloc>::find(const key_type&) const [with _Key = std::basic_string<char>; _Tp = std::tr1::shared_ptr<vedit::ScriptParams::Param>; _HashFn = __gnu_cxx::hash<std::basic_string<char> >; _EqualKey = std::equal_to<std::basic_string<char> >; _Alloc = std::allocator<std::tr1::shared_ptr<vedit::ScriptParams::Param> >; __gnu_cxx::hash_map<_Key, _Tp, _HashFn, _EqualKey, _Alloc>::const_iterator = __gnu_cxx::_Hashtable_const_iterator<std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptParams::Param> >, std::basic_string<char>, __gnu_cxx::hash<std::basic_string<char> >, std::_Select1st<std::pair<const std::basic_string<char>, std::tr1::shared_ptr<vedit::ScriptParams::Param> > >, std::equal_to<std::basic_string<char> >, std::allocator<std::tr1::shared_ptr<vedit::ScriptParams::Param> > >; __gnu_cxx::hash_map<_Key, _Tp, _HashFn, _EqualKey, _Alloc>::key_type = std::basic_string<char>]'
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScriptParams.h:118:33:   required from here
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hashtable.h:609:31: error: no match for call to '(const hasher {aka const __gnu_cxx::hash<std::basic_string<char> >}) (const key_type&)'
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hashtable.h: In instantiation of '__gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::size_type __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::_M_bkt_num_key(const key_type&, std::size_t) const [with _Val = std::pair<vedit::Evaluable* const, std::tr1::shared_ptr<vedit::Evaluable> >; _Key = vedit::Evaluable*; _HashFcn = __gnu_cxx::hash<vedit::Evaluable*>; _ExtractKey = std::_Select1st<std::pair<vedit::Evaluable* const, std::tr1::shared_ptr<vedit::Evaluable> > >; _EqualKey = std::equal_to<vedit::Evaluable*>; _Alloc = std::allocator<std::tr1::shared_ptr<vedit::Evaluable> >; __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::size_type = unsigned int; __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::key_type = vedit::Evaluable*; std::size_t = unsigned int]':
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hashtable.h:601:55:   required from '__gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::size_type __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::_M_bkt_num_key(const key_type&) const [with _Val = std::pair<vedit::Evaluable* const, std::tr1::shared_ptr<vedit::Evaluable> >; _Key = vedit::Evaluable*; _HashFcn = __gnu_cxx::hash<vedit::Evaluable*>; _ExtractKey = std::_Select1st<std::pair<vedit::Evaluable* const, std::tr1::shared_ptr<vedit::Evaluable> > >; _EqualKey = std::equal_to<vedit::Evaluable*>; _Alloc = std::allocator<std::tr1::shared_ptr<vedit::Evaluable> >; __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::size_type = unsigned int; __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::key_type = vedit::Evaluable*]'
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hashtable.h:884:49:   required from '__gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::size_type __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::erase(const key_type&) [with _Val = std::pair<vedit::Evaluable* const, std::tr1::shared_ptr<vedit::Evaluable> >; _Key = vedit::Evaluable*; _HashFcn = __gnu_cxx::hash<vedit::Evaluable*>; _ExtractKey = std::_Select1st<std::pair<vedit::Evaluable* const, std::tr1::shared_ptr<vedit::Evaluable> > >; _EqualKey = std::equal_to<vedit::Evaluable*>; _Alloc = std::allocator<std::tr1::shared_ptr<vedit::Evaluable> >; __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::size_type = unsigned int; __gnu_cxx::hashtable<_Val, _Key, _HashFcn, _ExtractKey, _EqualKey, _Alloc>::key_type = vedit::Evaluable*]'
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hash_map:237:32:   required from '__gnu_cxx::hash_map<_Key, _Tp, _HashFn, _EqualKey, _Alloc>::size_type __gnu_cxx::hash_map<_Key, _Tp, _HashFn, _EqualKey, _Alloc>::erase(const key_type&) [with _Key = vedit::Evaluable*; _Tp = std::tr1::shared_ptr<vedit::Evaluable>; _HashFn = __gnu_cxx::hash<vedit::Evaluable*>; _EqualKey = std::equal_to<vedit::Evaluable*>; _Alloc = std::allocator<std::tr1::shared_ptr<vedit::Evaluable> >; __gnu_cxx::hash_map<_Key, _Tp, _HashFn, _EqualKey, _Alloc>::size_type = unsigned int; __gnu_cxx::hash_map<_Key, _Tp, _HashFn, _EqualKey, _Alloc>::key_type = vedit::Evaluable*]'
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditScript.h:116:25:   required from here
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/backward/hashtable.h:609:31: error: no match for call to '(const hasher {aka const __gnu_cxx::hash<vedit::Evaluable*>}) (vedit::Evaluable* const&)'
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/shared_ptr.h: In instantiation of 'void std::tr1::_Sp_deleter<_Tp>::operator()(_Tp*) const [with _Tp = vedit::GifScript]':
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/shared_ptr.h:257:9:   required from 'void std::tr1::_Sp_counted_base_impl<_Ptr, _Deleter, _Lp>::_M_dispose() [with _Ptr = vedit::GifScript*; _Deleter = std::tr1::_Sp_deleter<vedit::GifScript>; __gnu_cxx::_Lock_policy _Lp = (__gnu_cxx::_Lock_policy)1u]'
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:76:1:   required from here
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:69:10: error: 'virtual vedit::GifScript::~GifScript()' is private
+  virtual ~GifScript();
+          ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/memory:50:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/shared_ptr.h:285:41: error: within this context
+       void operator()(_Tp* __p) const { delete __p; }
+                                         ^
+In file included from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditVM.h:12:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/shared_ptr.h: In instantiation of 'void std::tr1::_Sp_deleter<_Tp>::operator()(_Tp*) const [with _Tp = vedit::ImageScript]':
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/shared_ptr.h:257:9:   required from 'void std::tr1::_Sp_counted_base_impl<_Ptr, _Deleter, _Lp>::_M_dispose() [with _Ptr = vedit::ImageScript*; _Deleter = std::tr1::_Sp_deleter<vedit::ImageScript>; __gnu_cxx::_Lock_policy _Lp = (__gnu_cxx::_Lock_policy)1u]'
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:76:1:   required from here
+/opt/lilei/AVFX/vedit_script_android/vedit_script/VEditProducerScript.h:58:10: error: 'virtual vedit::ImageScript::~ImageScript()' is private
+  virtual ~ImageScript();
+          ^
+In file included from /opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/memory:50:0,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCommon.h:12,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.h:10,
+                 from /opt/lilei/AVFX/vedit_script_android/vedit_script/VEditCallable.cpp:8:
+/opt/lilei/android_compile_toolchain/arm/include/c++/4.8/tr1/shared_ptr.h:285:41: error: within this context
+       void operator()(_Tp* __p) const { delete __p; }
+                                         ^
+make[1]: *** [libvedit_script_la-VEditCallable.lo] Error 1
+make[1]: Leaving directory `/opt/lilei/AVFX/vedit_script_android/output/armeabi/build/vedit_script'
+make: *** [all] Error 2

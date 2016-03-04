@@ -46,7 +46,7 @@ compile_for_abi()
     rm -rf ${MY_OUTPUT_ROOT}/$CAN_ABI/build
     mkdir -p  ${MY_OUTPUT_ROOT}/$CAN_ABI/build
     rm -fr ${MY_OUTPUT_ROOT}/$CAN_ABI/source
-    cp -r ${MY_ROOT}/source  ${MY_OUTPUT_ROOT}/$CAN_ABI/source
+    cp -Lr ${MY_ROOT}/source  ${MY_OUTPUT_ROOT}/$CAN_ABI/source
     cd ${MY_OUTPUT_ROOT}/$CAN_ABI/source
     
     COMMON_MY_CFG_FLAGS="$COMMON_MY_CFG_FLAGS --target-os=Android --ff-root=/opt/lilei/ijkplayer-master/android/contrib/build \
@@ -95,7 +95,7 @@ compile_for_abi()
     COMMON_MY_CFG_FLAGS="$COMMON_MY_CFG_FLAGS --android-platform=$MY_PLATFORM"
     
     echo \
-    ./configure --prefix=${MY_OUTPUT_ROOT}/$CAN_ABI/build \
+    ./configure --prefix=${MY_OUTPUT_ROOT}/$CAN_ABI/install \
         --host=$CROSS_HOST --with-sysroot=$my_sysroot \
         $COMMON_MY_CFG_FLAGS \
         $MY_CFLAGS \
@@ -103,7 +103,7 @@ compile_for_abi()
         --extra-ldflags="$MY_EXTRA_LDFLAGS"
     
 
-    ./configure --prefix=${MY_OUTPUT_ROOT}/$CAN_ABI/build \
+    ./configure --prefix=${MY_OUTPUT_ROOT}/$CAN_ABI/install \
         --host=$CROSS_HOST --with-sysroot=$my_sysroot \
         $COMMON_MY_CFG_FLAGS \
         $MY_CFLAGS \
