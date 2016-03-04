@@ -13,9 +13,10 @@ NMSP_BEGIN(vedit)
 
 void SingleResourceScript::parse_specific() throw (Exception)
 {
+	/**
 	vector<string> spec_prop_nms;
 	spec_prop_nms.push_back("resource");
-	parse_specific_props(spec_prop_nms);
+	parse_specific_props(spec_prop_nms);*/
 }
 
 VideoScript::~VideoScript()

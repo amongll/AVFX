@@ -18,12 +18,15 @@ libvedit_script_la_SOURCES=\
 	VEditException.h \
 	VEditExport.h \
 	VEditFilterScript.h \
+	VEditFilterScript.cpp \
 	VEditMacroExpandable.cpp \
 	VEditMacroExpandable.h \
 	VEditMltRun.cpp \
 	VEditMltRun.h \
 	VEditMultiTrackScript.h \
+	VEditMultiTrackScript.cpp \
 	VEditPlaylistScript.h \
+	VEditPlaylistScript.cpp \
 	VEditProducerScript.cpp \
 	VEditProducerScript.h \
 	VEditScript.cpp \
@@ -37,6 +40,7 @@ libvedit_script_la_SOURCES=\
 	VEditScriptProps.cpp \
 	VEditScriptProps.h \
 	VEditTransitionScript.h \
+	VEditTransitionScript.cpp \
 	VEditUtil.cpp \
 	VEditUtil.h \
 	VEditValuable.cpp \
@@ -46,5 +50,5 @@ libvedit_script_la_SOURCES=\
     
 libvedit_script_la_CPPFLAGS=@jansson_CFLAGS@ @mlt_CFLAGS@
 libvedit_script_la_CXXFLAGS=-Wno-deprecated
-libvedit_script_la_LIBADD=@jansson_LDFLAGS@ @mlt_LDFLAGS@
+libvedit_script_la_LIBADD=@jansson_LIBS@ @mlt_LIBS@
 

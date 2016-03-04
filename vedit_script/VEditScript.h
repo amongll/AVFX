@@ -73,6 +73,7 @@ public:
 		return frame_out - frame_in;
 	}
 
+	virtual ~Script();
 protected:
 	friend class shared_ptr<Script>;
 	friend class ScriptProps;
@@ -95,7 +96,6 @@ protected:
 	}
 
 	Script(const json_t* detail) throw (Exception);
-	virtual ~Script();
 
 	//返回需要前置求值的spec prop的名字, 按照顺序求值.
 	virtual void parse_specific() throw (Exception) = 0;
