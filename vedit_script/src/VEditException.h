@@ -29,8 +29,8 @@ public:
 		return *this;
 	}
 	virtual ~Exception() throw() ;
-	const ErrorCode code;
-	const std::string detail;
+	ErrorCode code;
+	std::string detail;
 
 	virtual const char* what()const throw();
 };

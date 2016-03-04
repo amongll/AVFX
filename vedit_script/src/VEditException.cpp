@@ -25,7 +25,8 @@ Exception::Exception(ErrorCode x, const char* fmt, ...):
 	va_start(vl,fmt);
 	vsnprintf(buf, sizeof(buf), fmt, vl);
 	va_end(vl);
-	detail += " " += buf;
+	detail += " ";
+    detail += buf;
 }
 
 Exception::~Exception() throw () {
