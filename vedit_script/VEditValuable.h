@@ -1,7 +1,7 @@
 /*
  * VEditValue.h
  *
- *  Created on: 2016Äê2ÔÂ23ÈÕ
+ *  Created on: 2016ï¿½ï¿½2ï¿½ï¿½23ï¿½ï¿½
  *      Author: li.lei@youku.com
  */
 
@@ -12,6 +12,7 @@
 
 NMSP_BEGIN(vedit)
 
+class Script;
 class ScriptProps::PropertyAgent;
 class Evaluable
 {
@@ -20,15 +21,18 @@ public:
 	enum EValueReplaceType
 	{
 		EValueNotParsed = 0,
-		EValueNoReplace = 1, //×ÖÃæÖµ£¬²»ĞèÒªÌæ»»
-		EValuePositionReplace, //Ö»°üº¬µ¥¶ÀµÄÎ»ÖÃÀà²ÎÊı
-		EValueScalarReplace, // ×Ö·û´®Ö»°üº¬µ¥¶ÀµÄ ²ÎÊı
-		EValueStringCtxReplace // ×Ö·û´®×ÖÃæÖµÖĞ°üº¬Èô¸É²ÎÊı
+		EValueNoReplace = 1, //å­—é¢å€¼
+		EValuePositionReplace, //ä»…åŒ…å«ä¸€ä¸ªä½ç½®ç±»å‹å‚æ•°
+		EValueScalarReplace, //ä»…åŒ…å«ä¸€ä¸ªéä½ç½®ç±»å‹å‚æ•°
+		EValueStringCtxReplace, //åŒ…å«å¤šä¸ªéä½ç½®ç±»å‹å‚æ•°
+		EValueStringCtxReplace2 //åŒ…å«å¤šä¸ªå‚æ•°ï¼Œå…¶ä¸­åŒ…å«ä½ç½®ç±»å‹å‚æ•°
 	};
 
 	virtual void expand_scalar(const char* nm, const json_t* v) throw(Exception);
 	virtual void expand_position(const char* nm, const int& frame_in, const int& frame_out,
 			int frame_seq) throw(Exception);
+
+	//void apply_params(Script& script, json_t* args) throw (Exception);
 
 	void replace_asis(const char* nm, const string& v) throw (Exception);
 	void replace_asis(const char* nm, int v) throw (Exception);
@@ -44,7 +48,7 @@ protected:
 
 	Evaluable();
 	virtual ~Evaluable();
-	std::string temp; //¼ÆËãÖĞ¼äÖµ
+	std::string temp; //ï¿½ï¿½ï¿½ï¿½ï¿½Ğ¼ï¿½Öµ
 
 	EValueReplaceType replace_type;
 	json_t* evalued;

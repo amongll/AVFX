@@ -1,7 +1,7 @@
 /*
  * VEditScript.cpp
  *
- *  Created on: 2016Äê2ÔÂ24ÈÕ
+ *  Created on: 2016ï¿½ï¿½2ï¿½ï¿½24ï¿½ï¿½
  *      Author: li.lei@youku.com
  */
 
@@ -68,9 +68,12 @@ void Script::call(json_t* args_value) throw (Exception)
 			eit->second->expand_enum(it->second->enum_name, sel,
 				it->second->name, enum_detail);
 		}
+
+		param_enum_presents.erase(ranges.first, ranges.second);
 	}
 
 	applies_macros();
+	pre_judge();
 
 	for ( it = params->params.begin(); it != params->params.end(); it++ ) {
 		if ( it->second->param_style == ScriptParams::EnumParam ) continue;
@@ -168,7 +171,6 @@ void Script::call(json_t* args_value) throw (Exception)
 			}
 		}
 	}
-
 }
 
 void Script::apply_filter(const string& id, int start_pos, int end_pos,
@@ -220,7 +222,7 @@ json_t* Script::get_mlt_serialize() throw (Exception)
 	if (compiled) return json_incref(compiled);
 
 	check_evaluables();
-	return compiled = compile(0);
+	return compiled = serialize_mlt(0);
 }
 
 const json_t* Script::get_params_define() const
@@ -339,7 +341,8 @@ void Script::regist_scalar_param_usage(const char* param, Evaluable* obj)
 		throw Exception(ErrorParamNotFount, "param:%s", param);
 	}
 
-	if (param_obj->param_style != ScriptParams::ScalarParam ) {
+	if (param_obj->param_style != ScriptParams::ScalarParam ||
+			param_obj->param_style != ScriptParams::PosParam ) {
 		throw Exception(ErrorInvalidParam, "param:%s not scalar", param);
 	}
 
@@ -426,31 +429,79 @@ void Script::parse_mlt_props(json_t* detail) throw (Exception)
 
 void Script::applies_selectors() throw (Exception)
 {
-	EnumExpandableIter it;
+	EnumExpandableIter it = selector_enum_presents.begin(), it2;
+
+	while ( it != selector_enum_presents.end() ) {
+		string enum_nm = it->first.substr(0, it->first.find(":"));
+		string sel_nm = it->first.substr(it->first.find(":") + 1);
+		const json_t* evalue = get_selector(enum_nm.c_str(), sel_nm.c_str());
+		it->second->expand_enum(enum_nm.c_str(), sel_nm.c_str(), NULL, evalue);
+		it2 = it++;
+		selector_enum_presents.erase(it2);
+	}
+
+	/*
 	for ( it = selector_enum_presents.begin(); it != selector_enum_presents.end(); it++ ) {
 		string enum_nm = it->first.substr(0, it->first.find(":"));
 		string sel_nm = it->first.substr(it->first.find(":") + 1);
 		const json_t* evalue = get_selector(enum_nm.c_str(), sel_nm.c_str());
 		it->second->expand_enum(enum_nm.c_str(), sel_nm.c_str(), NULL, evalue);
-	}
+	}*/
 }
 
 void Script::applies_macros() throw (Exception)
 {
-	MacroExpandableIter it;
-	for ( it = macro_presents.begin(); it != macro_presents.end(); it++ ) {
+	MacroExpandableIter it = macro_presents.begin(), it2;
+	while ( it != macro_presents.end() ) {
 		const json_t* macrovalue = get_macro(it->first.c_str());
 		it->second->expand_macro(it->first.c_str(), macrovalue);
+		it2 = it++;
+		macro_presents.erase(it2);
 	}
+
+	//for ( it = macro_presents.begin(); it != macro_presents.end(); it++ ) {
+	//	const json_t* macrovalue = get_macro(it->first.c_str());
+	//	it->second->expand_macro(it->first.c_str(), macrovalue);
+	//}
 }
 
 json_t* Script::get_arg_value(const char* nm) throw (Exception)
 {
-	if (args == NULL) {
-		throw Exception(ErrorImplError, "Script::get_arg_value can used only in parse_specfic");
+	const ScriptParam* param = get_param_info(nm);
+	json_t* arg = NULL;
+	if (args) arg = json_object_get(args, nm);
+	if (args == NULL || arg == NULL) {
+		if ( param == NULL ) {
+			return NULL;
+		}
+		else if (param->param_style == ScriptParams::PosParam ) {
+			return json_integer(param->default_pos);
+		}
+		else if (param->param_style == ScriptParams::ScalarParam ) {
+			if (param->default_scalar)
+				return json_incref((json_t*)param->default_scalar);
+			else
+				return NULL;
+		}
+		else
+			return NULL;
 	}
-
-	return json_object_get(args, nm);
+	else {
+		json_t* _a = json_object_get(args,nm);
+		if ( param->param_style == ScriptParams::PosParam) {
+			if ( !json_is_integer(_a))
+				return NULL;
+			else
+				return json_incref(_a);
+		}
+		else if (param->param_style == ScriptParams::ScalarParam) {
+			if ( json_is_object(_a) || json_is_array(_a))
+				return NULL;
+			else
+				return json_incref(_a);
+		}
+	}
+	return NULL;
 }
 
 void Script::set_frame_range(int in, int out) throw (Exception)
@@ -460,9 +511,8 @@ void Script::set_frame_range(int in, int out) throw (Exception)
 	frame_out = out;
 }
 
-json_t* Script::compile(int dummy)  throw (Exception)
+json_t* Script::serialize_mlt(int dummy)  throw (Exception)
 {
-	json_t* subdetail = Compilable::compile();
 	json_t* ret = json_object();
 
 	json_object_set_new(ret, "proctype", json_string(proc_type));
@@ -511,6 +561,19 @@ json_t* Script::compile(int dummy)  throw (Exception)
 		throw;
 	}
 
+	json_t* subdetail = compile();
+	if (subdetail) {
+		void* it = json_object_iter(subdetail);
+		while(it) {
+			const char* k = json_object_iter_key(it);
+			json_t* se = json_object_iter_value(it);
+
+			json_object_set(ret, k, se);
+
+			it = json_object_iter_next(subdetail, it);
+		}
+		json_decref(subdetail);
+	}
 	return ret;
 }
 
@@ -570,6 +633,12 @@ json_t* Script::filters_serialize() throw (Exception)
 
 void Script::check_evaluables()
 {
+	if (selector_enum_presents.size() != 0 ||
+		param_enum_presents.size() != 0 ||
+		macro_presents.size() !=0 ) {
+		throw Exception(ErrorScriptArgInvalid, "script not compiled completed.");
+	}
+
 	EvaluableCheckIter it = all_pendings.begin(), tit;
 	while ( it != all_pendings.end() ) {
 		if ( it->first->finished( ) ) {

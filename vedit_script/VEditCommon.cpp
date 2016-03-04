@@ -1,7 +1,7 @@
 /*
  * VEditCommon.cpp
  *
- *  Created on: 2016Äê2ÔÂ26ÈÕ
+ *  Created on: 2016ï¿½ï¿½2ï¿½ï¿½26ï¿½ï¿½
  *      Author: li.lei@youku.com
  */
 
@@ -104,7 +104,7 @@ void parse_params(const char* str, hash_multimap<string, int>& idxes,
 						segments.push_back(v.substr(pend_pos, ps1 - pend_pos));
 						chk_pos = pend_pos =  ps2 + 1;
 						segments.push_back(nm);
-						idxes[nm] = segments.size() - 1;
+						idxes.insert(make_pair(nm, segments.size() -1 ));
 					}
 					else {
 						chk_pos = ps2 + 1;
@@ -158,7 +158,8 @@ void parse_macros(const char* str, hash_multimap<string, int>& idxes,
 						segments.push_back(v.substr(pend_pos, ps1 - pend_pos));
 						chk_pos = pend_pos =  ps2 + 1;
 						segments.push_back(nm);
-						idxes[nm] = segments.size() - 1;
+						idxes.insert(make_pair(nm, segments.size() -1 ));
+						//idxes[nm] = segments.size() - 1;
 					}
 					else {
 						chk_pos = ps2 + 1;

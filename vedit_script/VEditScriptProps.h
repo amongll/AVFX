@@ -1,7 +1,7 @@
 /*
  * VEditScriptProps.h
  *
- *  Created on: 2016Äê2ÔÂ23ÈÕ
+ *  Created on: 2016ï¿½ï¿½2ï¿½ï¿½23ï¿½ï¿½
  *      Author: li.lei@youku.com
  */
 
@@ -73,14 +73,16 @@ public:
 
 	json_t* compile() throw (Exception);
 
-	Property& get_property(const char* nm) throw (Exception) ;
+	Property& get_property(const char* nm) throw (Exception);
+
+	Property& add_property(const char* nm, json_t* value) throw (Exception);
 
 	ScriptProps(Script& script, const vector<string>& spec_props) throw(Exception);
 	ScriptProps(Script& script, json_t* detail, const char* enum_apply_tag="$apply_props")
 		throw(Exception);
 private:
 	friend class shared_ptr<ScriptProps>;
-	friend class Property;
+	friend class ScriptProps::Property;
 	friend class Script;
 
 

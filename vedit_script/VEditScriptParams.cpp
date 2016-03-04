@@ -1,7 +1,7 @@
 /*
  * VEditScriptParams.cpp
  *
- *  Created on: 2016Äê2ÔÂ22ÈÕ
+ *  Created on: 2016ï¿½ï¿½2ï¿½ï¿½22ï¿½ï¿½
  *      Author: li.lei@youku.com
  */
 
@@ -56,6 +56,7 @@ void vedit::ScriptParams::Param::parse(const Script& script) throw (Exception)
 			type = "scalar";
 	}
 
+	/***
 	bool is_optional = false;
 	se = json_object_get(define_detail, "optional");
 	if (!se)
@@ -66,11 +67,12 @@ void vedit::ScriptParams::Param::parse(const Script& script) throw (Exception)
 	if (se && json_is_boolean(se)) {
 		is_optional = json_is_true(se);
 	}
+	**/
 
-	json_t* default_define = NULL;
-	if (is_optional) {
-		default_define = json_object_get(define_detail, "default");
-	}
+	json_t* default_define = json_object_get(define_detail, "default");
+	//if (is_optional) {
+	//	default_define = json_object_get(define_detail, "default");
+	//}
 
 	DECLARE_CONST_MEM_MODIFIER(pmodifier, param_style, ParamStyle*);
 	if ( !strcasecmp(type,"scalar") ) {

@@ -1,7 +1,7 @@
 /*
  * VEditVM.h
  *
- *  Created on: 2016年2月22日
+ *  Created on: 2016锟斤拷2锟斤拷22锟斤拷
  *      Author: li.lei@youku.com
  */
 
@@ -30,7 +30,7 @@ public:
 		PLAYLIST_SCRIPT,
 		MULTITRACK_SCRIPT,
 		TRANSITION_SCRIPT,
-		INVALID_SCRIPT //占位符
+		INVALID_SCRIPT //占位锟斤拷
 	};
 
 	static json_t* call_script(const char* procname, json_t* args) throw(Exception);
@@ -89,8 +89,8 @@ public:
 	static void regist_script(int fd)throw(Exception);
 	static void regist_script(FILE* fp)throw(Exception);
 
-	static void get_stream_resource_length(const string& path, int& in, int& out) throw(Exception);
-
+	static mlt_producer get_stream_resource(const string& path) throw(Exception);
+	static const char* proc_type_names[ INVALID_SCRIPT ];
 private:
 	Vm(){};
 	static shared_ptr<Vm> singleton_ptr;
@@ -104,9 +104,8 @@ private:
 	static void thr_spec_cache_key_create();
 
 	static shared_ptr<Script> get_script(const char* procnmae, ScriptType type) throw (Exception);
-	static const char* proc_type_names[ INVALID_SCRIPT ];
 
-	//线程转悠对象
+
 	struct StreamResourceCache
 	{
 		~StreamResourceCache();

@@ -1,7 +1,7 @@
 /*
  * VEditScriptProps.cpp
  *
- *  Created on: 2016Äê2ÔÂ29ÈÕ
+ *  Created on: 2016ï¿½ï¿½2ï¿½ï¿½29ï¿½ï¿½
  *      Author: li.lei@youku.com
  */
 
@@ -94,9 +94,33 @@ ScriptProps::Property& ScriptProps::get_property(const char* nm) throw (Exceptio
 	return *it->second.get();
 }
 
+
 ScriptProps::PropertyAgent::PropertyAgent(const set<string>& delgs):
 	delegates(delgs)
 {
+}
+
+ScriptProps::Property& ScriptProps::add_property(const char* nm, json_t* value)
+		throw (Exception)
+{
+	if (json_is_object(value) || json_is_array(value) ) {
+		throw Exception(ErrorImplError, "Only literal value allowed for added property");
+	}
+	Property* _tmp  = Property(*this, nm, value);
+	if ( _tmp->MacroExpandable::finished() == false ) {
+		throw Exception(ErrorImplError, "Only literal value allowed for added property");
+	}
+	if ( _tmp->Evaluable::finished() == false ) {
+		throw Exception(ErrorImplError, "Only literal value allowed for added property");
+	}
+
+	MapIter it =  props.find(nm);
+	if ( it != props.end() ) {
+		script.unregist_evaluable(it->second.get());
+	}
+
+	props[nm].reset(_tmp);
+	return *_tmp;
 }
 
 ScriptProps::ScriptProps(Script& script, json_t* detail,

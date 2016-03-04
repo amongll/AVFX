@@ -1,23 +1,28 @@
 /*
  * VEditValuable.cpp
  *
- *  Created on: 2016Äê2ÔÂ29ÈÕ
+ *  Created on: 2016ï¿½ï¿½2ï¿½ï¿½29ï¿½ï¿½
  *      Author: li.lei@youku.com
  */
 
 
 #include "VEditValuable.h"
+#include "VEditScriptParams.h"
 
 NMSP_BEGIN(vedit)
 void Evaluable::expand_scalar(const char* nm, const json_t* v) throw (Exception)
 {
 	assert(replace_type == EValueScalarReplace || replace_type == EValueStringCtxReplace);
 	assert( !json_is_object(v) && !json_is_array(v));
+
+	if (evalued)
+		return;
+
 	if (replace_type == EValueScalarReplace) {
 		evalued = json_incref((json_t*)v);
 		return;
 	}
-	else if (replace_type == EValueStringCtxReplace) {
+	else if (replace_type == EValueStringCtxReplace || replace_type == EValueStringCtxReplace) {
 		char buf[50] = {0};
 		const char* str = buf;
 		json_t* t = const_cast<json_t*>(v);
@@ -58,12 +63,14 @@ void Evaluable::expand_position(const char* nm, const int& frame_in,
 {
 	assert(replace_type == EValuePositionReplace || replace_type == EValueStringCtxReplace);
 	assert( frame_out >= 0 && frame_in >= 0 && frame_out >= frame_in && frame_seq >= 0);
+	if (evalued) return;
+
 	int len = frame_out - frame_in;
 	if ( frame_seq >= len ) frame_seq = len - 1;
 	if ( replace_type == EValuePositionReplace) {
 		evalued = json_integer(frame_seq);
 	}
-	else if (replace_type == EValueStringCtxReplace) {
+	else if (replace_type == EValueStringCtxReplace || replace_type == EValueStringCtxReplace) {
 		char buf[50] = {0};
 		sprintf(buf, "%d", frame_seq);
 		pair<MapIter,MapIter> ranges = param_idxes.find(nm);
@@ -104,11 +111,6 @@ void Evaluable::parse(Script& script, json_t* detail) throw (Exception)
 		return;
 	}
 
-	MapIter it;
-	for ( it = param_idxes.begin(); it != param_idxes.end(); it++ ) {
-		script.regist_scalar_param_usage(it->first.c_str(), this);
-	}
-
 	if ( param_idxes.size() == 1 && segments.size() == 1 ) {
 		const ScriptParam* param = script.get_param_info(segments[0].c_str());
 		if ( param->param_style == ScriptParams::PosParam ) {
@@ -117,10 +119,21 @@ void Evaluable::parse(Script& script, json_t* detail) throw (Exception)
 		else if (param->param_style == ScriptParams::ScalarParam ) {
 			replace_type = EValueScalarReplace;
 		}
+		script.regist_scalar_param_usage(segments[0].c_str(), this);
+		return;
 	}
 	else {
 		replace_type =	EValueStringCtxReplace;
+		MapIter it;
+		for ( it = param_idxes.begin(); it != param_idxes.end(); it++ ) {
+			script.regist_scalar_param_usage(it->first.c_str(), this);
+			const ScriptParam* param = script.get_param_info(it->first.c_str());
+			if (param->param_style == ScriptParams::PosParam) {
+				replace_type = EValueStringCtxReplace2;
+			}
+		}
 	}
+
 }
 
 Evaluable::Evaluable():
@@ -142,7 +155,7 @@ void Evaluable::replace_asis(const char* nm, const string& v) throw (Exception)
 		evalued = json_string(v.c_str());
 		return;
 	}
-	else if (replace_type == EValueStringCtxReplace) {
+	else if (replace_type == EValueStringCtxReplace || replace_type == EValueStringCtxReplace) {
 		pair<MapIter,MapIter> ranges = param_idxes.find(nm);
 		MapIter it;
 		for ( it = ranges.first; it != ranges.second; it++ ) {
@@ -171,7 +184,7 @@ void Evaluable::replace_asis(const char* nm, int v) throw (Exception)
 		evalued = json_integer(v);
 		return;
 	}
-	else if (replace_type == EValueStringCtxReplace) {
+	else if (replace_type == EValueStringCtxReplace || replace_type == EValueStringCtxReplace) {
 		pair<MapIter,MapIter> ranges = param_idxes.find(nm);
 		MapIter it;
 		char buf[50];
@@ -202,7 +215,7 @@ void Evaluable::replace_asis(const char* nm, double v) throw (Exception)
 		evalued = json_real(v);
 		return;
 	}
-	else if (replace_type == EValueStringCtxReplace) {
+	else if (replace_type == EValueStringCtxReplace || replace_type == EValueStringCtxReplace) {
 		pair<MapIter,MapIter> ranges = param_idxes.find(nm);
 		MapIter it;
 		char buf[50];
@@ -233,7 +246,7 @@ void Evaluable::replace_asis(const char* nm, bool v) throw (Exception)
 		evalued = json_boolean(v);
 		return;
 	}
-	else if (replace_type == EValueStringCtxReplace) {
+	else if (replace_type == EValueStringCtxReplace || replace_type == EValueStringCtxReplace) {
 		pair<MapIter,MapIter> ranges = param_idxes.find(nm);
 		MapIter it;
 		char buf[50];
@@ -258,5 +271,33 @@ void Evaluable::replace_asis(const char* nm, bool v) throw (Exception)
 	}
 }
 
+/**
+void Evaluable::apply_params(Script& script, json_t* args) throw (Exception)
+{
+	assert(json_is_object(args));
+	if ( evalued ) return;
+	if ( json_object_size(args) == 0 ) return;
+
+	if (replace_type == EValuePositionReplace || replace_type == EValueStringCtxReplace2) {
+		throw Exception(ErrorImplError, "prev evaluable property can't contain position params");
+	}
+
+	void* it = json_object_iter(args);
+	while(it) {
+		const char* k = json_object_iter_key(it);
+		json_t* v = json_object_iter_value(it);
+
+		assert( !json_is_object(v) && !json_is_array(v));
+		const ScriptParam* param = script.get_param_info(k);
+
+		if (param->param_style == ScriptParams::ScalarParam ) {
+			expand_scalar(k, v);
+		}
+
+		it = json_object_iter_next(args, it);
+	}
+}**/
+
 NMSP_END(vedit)
+
 

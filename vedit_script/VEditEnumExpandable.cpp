@@ -1,7 +1,7 @@
 /*
  * VEditEnumExpandable.cpp
  *
- *  Created on: 2016Äê2ÔÂ29ÈÕ
+ *  Created on: 2016ï¿½ï¿½2ï¿½ï¿½29ï¿½ï¿½
  *      Author: li.lei@youku.com
  */
 
@@ -34,9 +34,7 @@ void EnumExpandable::expand_enum(const char* ename, const char* sname,
 	while(ji) {
 		const char* k = json_object_iter_key(ji);
 		json_t* kv = json_object_iter_value(ji);
-		if (json_is_object(kv) || json_is_array(kv)) {
-			assert(0);
-		}
+		assert(!json_is_object(kv) && !json_is_array(kv));
 
 		it = value_max_tag.find(k);
 		if ( it == value_max_tag.end() || it->second < pripty ) {

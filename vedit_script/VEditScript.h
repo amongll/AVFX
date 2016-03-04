@@ -1,7 +1,7 @@
 /*
  * VEditScript.h
  *
- *  Created on: 2016Äê2ÔÂ22ÈÕ
+ *  Created on: 2016ï¿½ï¿½2ï¿½ï¿½22ï¿½ï¿½
  *      Author: li.lei@youku.com
  */
 
@@ -93,7 +93,9 @@ protected:
 	Script(const json_t* detail) throw (Exception);
 	virtual ~Script();
 
+	//è¿”å›éœ€è¦å‰ç½®æ±‚å€¼çš„spec propçš„åå­—, æŒ‰ç…§é¡ºåºæ±‚å€¼.
 	virtual void parse_specific() throw (Exception) = 0;
+	virtual void pre_judge() throw (Exception) = 0;
 
 	void parse_specific_props(const vector<string>& prop_nms) throw (Exception);
 
@@ -104,12 +106,15 @@ protected:
 	ScriptEnumsPtr enums;
 
 	ScriptPropsPtr  type_spec_props;
-	ScriptPropsPtr	mlt_props; //×îÖÕÓ¦ÓÃÓÚmlt service²¿¼şµÄÊôĞÔ
+	ScriptPropsPtr	mlt_props; //ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½mlt serviceï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 	void regist_macro_usage(const char* macro, MacroExpandable* obj) throw (Exception);
 	void regist_enum_selector_usage(const char* enmae, const char* sname, EnumExpandable* obj) throw (Exception);
 	void regist_enum_param_usage(const char* param, EnumExpandable* obj) throw (Exception);
 	void regist_scalar_param_usage(const char* param, Evaluable* obj) throw (Exception);
+	void unregist_evaluable(Evaluable* obj) {
+		all_pendings.erase(obj);
+	}
 
 	json_t* get_arg_value(const char* nm) throw (Exception);
 	void set_frame_range(int in, int out) throw (Exception);
@@ -121,14 +126,14 @@ private:
 
 	json_t* args;
 
-	json_t* compile(int dummy) throw (Exception);
+	json_t* serialize_mlt(int dummy) throw (Exception);
 
 	void parse_impl() throw (Exception);
 	void parse_mlt_props(json_t* detail) throw (Exception);
 	void parse_filter_scriptcall() throw (Exception);
 
-	void applies_selectors() throw (Exception); //×ÓÀà½âÎöÖ®ºó£¬Ê×ÏÈÓ¦ÓÃ½Å±¾ÖĞ³öÏÖµÄ#(enum:selector)³£Á¿
-	void applies_macros() throw (Exception);  //ÔÙÓ¦ÓÃ#(macro)³£Á¿
+	void applies_selectors() throw (Exception); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½Ã½Å±ï¿½ï¿½Ğ³ï¿½ï¿½Öµï¿½#(enum:selector)ï¿½ï¿½ï¿½ï¿½
+	void applies_macros() throw (Exception);  //ï¿½ï¿½Ó¦ï¿½ï¿½#(macro)ï¿½ï¿½ï¿½ï¿½
 
 	void check_evaluables();
 

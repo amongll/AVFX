@@ -1,7 +1,7 @@
 /*
  * VEditVm.cpp
  *
- *  Created on: 2016年3月2日
+ *  Created on: 2016锟斤拷3锟斤拷2锟斤拷
  *      Author: li.lei@youku.com
  */
 
@@ -30,7 +30,7 @@ json_t* Vm::call_script(const char* procname, ScriptType type, json_t* args)
 shared_ptr<Script> Vm::get_script(const char* procname)
 	throw (Exception)
 {
-	if (singleton.get() == NULL)
+	if (singleton == NULL)
 		throw Exception(ErrorImplError, "script %s not registed", procname);
 
 	MapIter it;
@@ -123,7 +123,7 @@ const char* Vm::proc_type_names[] = {
 	NULL
 };
 
-void Vm::get_stream_resource_length(const string& path, int& in, int& out)
+mlt_producer Vm::get_stream_resource(const string& path)
 	throw (Exception)
 {
 	Vm::instance();
@@ -140,7 +140,7 @@ void Vm::get_stream_resource_length(const string& path, int& in, int& out)
 		prod = it->second;
 	}
 	else {
-		//todo: 选择默认的profile 仅fps和aspect_ratio影响producer
+		//todo: 鍙�夋嫨鐨刾rofile锛屽奖鍝峱roducer鐨勫寘鎷琭ps, aspect_ratio
 		string abs_path;
 		get_absolute_path(path, abs_path);
 		if (abs_path.size() == 0) {
@@ -156,9 +156,7 @@ void Vm::get_stream_resource_length(const string& path, int& in, int& out)
 		cache->resources[path] = prod;
 	}
 
-	in = mlt_producer_get_in(prod);
-	out = mlt_producer_get_out(prod);
-	return;
+	return prod;
 }
 
 shared_ptr<Script> Vm::get_script(const char* procname, ScriptType type)
@@ -280,8 +278,6 @@ Vm::StreamResourceCache::~StreamResourceCache()
 		mlt_producer_close(it->second);
 	}
 }
-
-
 
 NMSP_END(vedit)
 

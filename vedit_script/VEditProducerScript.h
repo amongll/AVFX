@@ -1,7 +1,7 @@
 /*
  * VEditProducerScript.h
  *
- *  Created on: 2016Äê2ÔÂ22ÈÕ
+ *  Created on: 2016ï¿½ï¿½2ï¿½ï¿½22ï¿½ï¿½
  *      Author: li.lei@youku.com
  */
 
@@ -17,11 +17,12 @@ class SingleResourceScript: public Script
 public:
 	SingleResourceScript(json_t* text):
 		Script(text)
-	{
+	{}
 
-	}
+	virtual ~SingleResourceScript(){}
+	virtual void parse_specific() throw (Exception);
 
-	virtual ~SingleResourceScript();
+	string path;
 };
 
 class VideoScript : public SingleResourceScript
@@ -33,7 +34,7 @@ public:
 
 	virtual ~VideoScript();
 	virtual json_t* compile() throw (Exception);
-	virtual void parse_specific() throw (Exception);
+	virtual void pre_judge() throw (Exception);
 };
 
 class AudioScript : public SingleResourceScript
@@ -45,7 +46,7 @@ public:
 
 	virtual ~AudioScript();
 	virtual json_t* compile() throw (Exception);
-	virtual void parse_specific() throw (Exception);
+	virtual void pre_judge() throw (Exception);
 };
 
 class ImageScript : public SingleResourceScript
@@ -56,7 +57,7 @@ class ImageScript : public SingleResourceScript
 
 	virtual ~ImageScript();
 	virtual json_t* compile() throw (Exception);
-	virtual void parse_specific() throw (Exception);
+	virtual void pre_judge() throw (Exception);
 };
 
 class GifScript : public SingleResourceScript
@@ -67,7 +68,7 @@ class GifScript : public SingleResourceScript
 
 	virtual ~GifScript();
 	virtual json_t* compile() throw (Exception);
-	virtual void parse_specific() throw (Exception);
+	virtual void pre_judge() throw (Exception);
 };
 
 NMSP_END(vedit)

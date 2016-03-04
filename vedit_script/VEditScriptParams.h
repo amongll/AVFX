@@ -1,9 +1,9 @@
 /*
  * VEditScriptParams.h
  *
- *  Created on: 2016Äê2ÔÂ22ÈÕ
+ *  Created on: 2016ï¿½ï¿½2ï¿½ï¿½22ï¿½ï¿½
  *      Author: li.lei@youku.com
- *      Desc: ½Å±¾µÄÊäÈë²ÎÊı£¬Í¨¹ıÊäÈë²ÎÊıµÄÖ¸¶¨£¬½Å±¾Ìæ»»ÎªÃ»ÓĞĞü¿ÕÖµµÄ°æ±¾¡£
+ *      Desc: ï¿½Å±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½Å±ï¿½ï¿½æ»»ÎªÃ»ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½Ä°æ±¾ï¿½ï¿½
  */
 
 #ifndef VEDITSCRIPTPARAMS_H_
@@ -23,16 +23,16 @@ public:
 	enum ParamStyle
 	{
 		UnknownParamStyle,
-		ScalarParam, //±êÁ¿ÀàĞÍ²ÎÊı£¬×Ö·û´®£¬ÕûĞÍ£¬¸¡µã£¬²¼¶û
-		PosParam, //Î»ÖÃÀàĞÍ²ÎÊı£¬±íÊ¾ÄÚÈİµÄÎ»ÖÃ£¬»òÕß¼ÆËã×÷ÓÃÓÚµÄÎ»ÖÃ
-		EnumParam //ÓÃÓÚ±ê¼ÇÒ»ÀàpropertiesµÄ×éºÏ
+		ScalarParam, //json å­—é¢å€¼æ ‡é‡æ›¿æ¢ çš„å‚æ•°
+		PosParam, // ä½ç½®ç±»å‹å‚æ•°
+		EnumParam // å±æ€§é›†åˆ é€‰æ‹© å‚æ•°
 	};
 	enum ParamPosType
 	{
 		UnknownPosType,
-		FramePos, //Ö¡±àºÅÎ»ÖÃÀàĞÍ
-		TimePos, //Ê±¼ä±í´ïµÄÎ»ÖÃÀàĞÍ
-		PerctPos //°Ù·Ö±È±í´ïµÄÎ»ÖÃÀàĞÍ
+		FramePos, //å¸§ä½ç½®
+		TimePos, //æ—¶é—´ä½ç½®
+		PerctPos //ç™¾åˆ†æ¯”ä½ç½®
 	};
 	class Param
 	{
@@ -44,12 +44,12 @@ public:
 		friend class ScriptParams;
 		friend class shared_ptr<Param>;
 		/**
-		 *	\·´ĞòÁĞ»¯¹¹Ôìº¯Êı
+		 *	\ï¿½ï¿½ï¿½ï¿½ï¿½Ğ»ï¿½ï¿½ï¿½ï¿½ìº¯ï¿½ï¿½
 		 */
 		Param(const char* nm, json_t* detail, const Script& script) throw(Exception);
 
 		/**
-		 * ½Å±¾²ÎÊı¶¨Òå¹¹Ôìº¯Êı¡£todo: script define feature
+		 *todo: script define feature
 		 */
 		Param(const char* nm, ParamPosType pos_type, int dv,
 			bool optional=true,const char* desc=NULL) throw(Exception) :
