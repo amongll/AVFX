@@ -1,7 +1,7 @@
 /*
  * VEditCallable.h
  *
- *  Created on: 2016Äê2ÔÂ24ÈÕ
+ *  Created on: 2016ï¿½ï¿½2ï¿½ï¿½24ï¿½ï¿½
  *      Author: li.lei@youku.com
  */
 
@@ -9,7 +9,7 @@
 #define VEDITCALLABLE_H_
 #include "VEditCommon.h"
 #include "VEditScriptProps.h"
-#include "VEditVm.h"
+#include "VEditVM.h"
 
 NMSP_BEGIN(vedit)
 class Script;
