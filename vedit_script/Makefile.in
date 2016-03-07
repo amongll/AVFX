@@ -130,14 +130,18 @@ am_libvedit_script_la_OBJECTS = libvedit_script_la-VEditCallable.lo \
 	libvedit_script_la-VEditCommon.lo \
 	libvedit_script_la-VEditDefinable.lo \
 	libvedit_script_la-VEditEnumExpandable.lo \
+	libvedit_script_la-VEditFilterScript.lo \
 	libvedit_script_la-VEditMacroExpandable.lo \
 	libvedit_script_la-VEditMltRun.lo \
+	libvedit_script_la-VEditMultiTrackScript.lo \
+	libvedit_script_la-VEditPlaylistScript.lo \
 	libvedit_script_la-VEditProducerScript.lo \
 	libvedit_script_la-VEditScript.lo \
 	libvedit_script_la-VEditScriptEnums.lo \
 	libvedit_script_la-VEditScriptMacros.lo \
 	libvedit_script_la-VEditScriptParams.lo \
 	libvedit_script_la-VEditScriptProps.lo \
+	libvedit_script_la-VEditTransitionScript.lo \
 	libvedit_script_la-VEditUtil.lo \
 	libvedit_script_la-VEditValuable.lo \
 	libvedit_script_la-VEditVM.lo
@@ -392,12 +396,15 @@ libvedit_script_la_SOURCES = \
 	VEditException.h \
 	VEditExport.h \
 	VEditFilterScript.h \
+	VEditFilterScript.cpp \
 	VEditMacroExpandable.cpp \
 	VEditMacroExpandable.h \
 	VEditMltRun.cpp \
 	VEditMltRun.h \
 	VEditMultiTrackScript.h \
+	VEditMultiTrackScript.cpp \
 	VEditPlaylistScript.h \
+	VEditPlaylistScript.cpp \
 	VEditProducerScript.cpp \
 	VEditProducerScript.h \
 	VEditScript.cpp \
@@ -411,6 +418,7 @@ libvedit_script_la_SOURCES = \
 	VEditScriptProps.cpp \
 	VEditScriptProps.h \
 	VEditTransitionScript.h \
+	VEditTransitionScript.cpp \
 	VEditUtil.cpp \
 	VEditUtil.h \
 	VEditValuable.cpp \
@@ -420,7 +428,7 @@ libvedit_script_la_SOURCES = \
 
 libvedit_script_la_CPPFLAGS = @jansson_CFLAGS@ @mlt_CFLAGS@
 libvedit_script_la_CXXFLAGS = -Wno-deprecated
-libvedit_script_la_LIBADD = @jansson_LDFLAGS@ @mlt_LDFLAGS@
+libvedit_script_la_LIBADD = @jansson_LIBS@ @mlt_LIBS@
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -524,14 +532,18 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvedit_script_la-VEditCommon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvedit_script_la-VEditDefinable.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvedit_script_la-VEditEnumExpandable.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvedit_script_la-VEditFilterScript.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvedit_script_la-VEditMacroExpandable.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvedit_script_la-VEditMltRun.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvedit_script_la-VEditMultiTrackScript.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvedit_script_la-VEditPlaylistScript.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvedit_script_la-VEditProducerScript.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvedit_script_la-VEditScript.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvedit_script_la-VEditScriptEnums.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvedit_script_la-VEditScriptMacros.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvedit_script_la-VEditScriptParams.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvedit_script_la-VEditScriptProps.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvedit_script_la-VEditTransitionScript.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvedit_script_la-VEditUtil.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvedit_script_la-VEditVM.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvedit_script_la-VEditValuable.Plo@am__quote@
@@ -585,6 +597,13 @@ libvedit_script_la-VEditEnumExpandable.lo: VEditEnumExpandable.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libvedit_script_la_CPPFLAGS) $(CPPFLAGS) $(libvedit_script_la_CXXFLAGS) $(CXXFLAGS) -c -o libvedit_script_la-VEditEnumExpandable.lo `test -f 'VEditEnumExpandable.cpp' || echo '$(srcdir)/'`VEditEnumExpandable.cpp
 
+libvedit_script_la-VEditFilterScript.lo: VEditFilterScript.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libvedit_script_la_CPPFLAGS) $(CPPFLAGS) $(libvedit_script_la_CXXFLAGS) $(CXXFLAGS) -MT libvedit_script_la-VEditFilterScript.lo -MD -MP -MF $(DEPDIR)/libvedit_script_la-VEditFilterScript.Tpo -c -o libvedit_script_la-VEditFilterScript.lo `test -f 'VEditFilterScript.cpp' || echo '$(srcdir)/'`VEditFilterScript.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libvedit_script_la-VEditFilterScript.Tpo $(DEPDIR)/libvedit_script_la-VEditFilterScript.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='VEditFilterScript.cpp' object='libvedit_script_la-VEditFilterScript.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libvedit_script_la_CPPFLAGS) $(CPPFLAGS) $(libvedit_script_la_CXXFLAGS) $(CXXFLAGS) -c -o libvedit_script_la-VEditFilterScript.lo `test -f 'VEditFilterScript.cpp' || echo '$(srcdir)/'`VEditFilterScript.cpp
+
 libvedit_script_la-VEditMacroExpandable.lo: VEditMacroExpandable.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libvedit_script_la_CPPFLAGS) $(CPPFLAGS) $(libvedit_script_la_CXXFLAGS) $(CXXFLAGS) -MT libvedit_script_la-VEditMacroExpandable.lo -MD -MP -MF $(DEPDIR)/libvedit_script_la-VEditMacroExpandable.Tpo -c -o libvedit_script_la-VEditMacroExpandable.lo `test -f 'VEditMacroExpandable.cpp' || echo '$(srcdir)/'`VEditMacroExpandable.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libvedit_script_la-VEditMacroExpandable.Tpo $(DEPDIR)/libvedit_script_la-VEditMacroExpandable.Plo
@@ -598,6 +617,20 @@ libvedit_script_la-VEditMltRun.lo: VEditMltRun.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='VEditMltRun.cpp' object='libvedit_script_la-VEditMltRun.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libvedit_script_la_CPPFLAGS) $(CPPFLAGS) $(libvedit_script_la_CXXFLAGS) $(CXXFLAGS) -c -o libvedit_script_la-VEditMltRun.lo `test -f 'VEditMltRun.cpp' || echo '$(srcdir)/'`VEditMltRun.cpp
+
+libvedit_script_la-VEditMultiTrackScript.lo: VEditMultiTrackScript.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libvedit_script_la_CPPFLAGS) $(CPPFLAGS) $(libvedit_script_la_CXXFLAGS) $(CXXFLAGS) -MT libvedit_script_la-VEditMultiTrackScript.lo -MD -MP -MF $(DEPDIR)/libvedit_script_la-VEditMultiTrackScript.Tpo -c -o libvedit_script_la-VEditMultiTrackScript.lo `test -f 'VEditMultiTrackScript.cpp' || echo '$(srcdir)/'`VEditMultiTrackScript.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libvedit_script_la-VEditMultiTrackScript.Tpo $(DEPDIR)/libvedit_script_la-VEditMultiTrackScript.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='VEditMultiTrackScript.cpp' object='libvedit_script_la-VEditMultiTrackScript.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libvedit_script_la_CPPFLAGS) $(CPPFLAGS) $(libvedit_script_la_CXXFLAGS) $(CXXFLAGS) -c -o libvedit_script_la-VEditMultiTrackScript.lo `test -f 'VEditMultiTrackScript.cpp' || echo '$(srcdir)/'`VEditMultiTrackScript.cpp
+
+libvedit_script_la-VEditPlaylistScript.lo: VEditPlaylistScript.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libvedit_script_la_CPPFLAGS) $(CPPFLAGS) $(libvedit_script_la_CXXFLAGS) $(CXXFLAGS) -MT libvedit_script_la-VEditPlaylistScript.lo -MD -MP -MF $(DEPDIR)/libvedit_script_la-VEditPlaylistScript.Tpo -c -o libvedit_script_la-VEditPlaylistScript.lo `test -f 'VEditPlaylistScript.cpp' || echo '$(srcdir)/'`VEditPlaylistScript.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libvedit_script_la-VEditPlaylistScript.Tpo $(DEPDIR)/libvedit_script_la-VEditPlaylistScript.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='VEditPlaylistScript.cpp' object='libvedit_script_la-VEditPlaylistScript.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libvedit_script_la_CPPFLAGS) $(CPPFLAGS) $(libvedit_script_la_CXXFLAGS) $(CXXFLAGS) -c -o libvedit_script_la-VEditPlaylistScript.lo `test -f 'VEditPlaylistScript.cpp' || echo '$(srcdir)/'`VEditPlaylistScript.cpp
 
 libvedit_script_la-VEditProducerScript.lo: VEditProducerScript.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libvedit_script_la_CPPFLAGS) $(CPPFLAGS) $(libvedit_script_la_CXXFLAGS) $(CXXFLAGS) -MT libvedit_script_la-VEditProducerScript.lo -MD -MP -MF $(DEPDIR)/libvedit_script_la-VEditProducerScript.Tpo -c -o libvedit_script_la-VEditProducerScript.lo `test -f 'VEditProducerScript.cpp' || echo '$(srcdir)/'`VEditProducerScript.cpp
@@ -640,6 +673,13 @@ libvedit_script_la-VEditScriptProps.lo: VEditScriptProps.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='VEditScriptProps.cpp' object='libvedit_script_la-VEditScriptProps.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libvedit_script_la_CPPFLAGS) $(CPPFLAGS) $(libvedit_script_la_CXXFLAGS) $(CXXFLAGS) -c -o libvedit_script_la-VEditScriptProps.lo `test -f 'VEditScriptProps.cpp' || echo '$(srcdir)/'`VEditScriptProps.cpp
+
+libvedit_script_la-VEditTransitionScript.lo: VEditTransitionScript.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libvedit_script_la_CPPFLAGS) $(CPPFLAGS) $(libvedit_script_la_CXXFLAGS) $(CXXFLAGS) -MT libvedit_script_la-VEditTransitionScript.lo -MD -MP -MF $(DEPDIR)/libvedit_script_la-VEditTransitionScript.Tpo -c -o libvedit_script_la-VEditTransitionScript.lo `test -f 'VEditTransitionScript.cpp' || echo '$(srcdir)/'`VEditTransitionScript.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libvedit_script_la-VEditTransitionScript.Tpo $(DEPDIR)/libvedit_script_la-VEditTransitionScript.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='VEditTransitionScript.cpp' object='libvedit_script_la-VEditTransitionScript.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libvedit_script_la_CPPFLAGS) $(CPPFLAGS) $(libvedit_script_la_CXXFLAGS) $(CXXFLAGS) -c -o libvedit_script_la-VEditTransitionScript.lo `test -f 'VEditTransitionScript.cpp' || echo '$(srcdir)/'`VEditTransitionScript.cpp
 
 libvedit_script_la-VEditUtil.lo: VEditUtil.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libvedit_script_la_CPPFLAGS) $(CPPFLAGS) $(libvedit_script_la_CXXFLAGS) $(CXXFLAGS) -MT libvedit_script_la-VEditUtil.lo -MD -MP -MF $(DEPDIR)/libvedit_script_la-VEditUtil.Tpo -c -o libvedit_script_la-VEditUtil.lo `test -f 'VEditUtil.cpp' || echo '$(srcdir)/'`VEditUtil.cpp
