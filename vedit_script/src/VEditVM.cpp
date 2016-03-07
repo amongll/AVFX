@@ -18,6 +18,7 @@
 NMSP_BEGIN(vedit)
 
 pthread_mutex_t Vm::script_lock = PTHREAD_MUTEX_INITIALIZER;
+shared_ptr<Vm> Vm::singleton_ptr;
 
 json_t* Vm::call_script(const char* procname, json_t* args) throw (Exception)
 {
@@ -254,7 +255,7 @@ void Vm::regist_script(json_t* text)throw(Exception)
 
 	ScriptType type = INVALID_SCRIPT;
 	for ( int i=1; i<INVALID_SCRIPT; i++) {
-		if (!strcmp(json_string_value(se), proc_type_names[i]) == 0) {
+		if (strcmp(json_string_value(se), proc_type_names[i]) == 0) {
 			type = (ScriptType)i;
 			break;
 		}

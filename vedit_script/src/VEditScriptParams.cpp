@@ -23,8 +23,9 @@ vedit::ScriptParams::Param::Param(const char* nm, json_t* detail,
 	default_scalar(NULL),
 	default_selector(NULL)
 {
-	DECLARE_CONST_MEM_MODIFIER(modifier, default_scalar, const json_t**);
-	*modifier = json_incref(detail);
+	//DECLARE_CONST_MEM_MODIFIER(modifier, default_scalar, const json_t**);
+	//*modifier = json_incref(detail);
+    define_detail = json_incref(detail);
 	try {
 		parse(script);
 	}

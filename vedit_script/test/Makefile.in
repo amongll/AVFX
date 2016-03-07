@@ -102,6 +102,10 @@ AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
+test_video_script_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
+	$(test_video_script_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -290,8 +294,9 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 test_video_script_SOURCES = test_video_script.cpp
-test_video_script_LDADD = ../src/.libs/libvedit_script.la
-test_video_script_CPPFLAGS = -I../src
+test_video_script_LDADD = ../src/.libs/libvedit_script.la @jansson_LIBS@ @mlt_LIBS@
+test_video_script_CPPFLAGS = -I../src @jansson_CFLAGS@ @mlt_CFLAGS@
+test_video_script_CXXFLAGS = -Wno-deprecated
 all: all-am
 
 .SUFFIXES:
@@ -338,7 +343,7 @@ clean-noinstPROGRAMS:
 
 test_video_script$(EXEEXT): $(test_video_script_OBJECTS) $(test_video_script_DEPENDENCIES) $(EXTRA_test_video_script_DEPENDENCIES) 
 	@rm -f test_video_script$(EXEEXT)
-	$(AM_V_CXXLD)$(CXXLINK) $(test_video_script_OBJECTS) $(test_video_script_LDADD) $(LIBS)
+	$(AM_V_CXXLD)$(test_video_script_LINK) $(test_video_script_OBJECTS) $(test_video_script_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -370,18 +375,18 @@ distclean-compile:
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LTCXXCOMPILE) -c -o $@ $<
 
 test_video_script-test_video_script.o: test_video_script.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_video_script_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_video_script-test_video_script.o -MD -MP -MF $(DEPDIR)/test_video_script-test_video_script.Tpo -c -o test_video_script-test_video_script.o `test -f 'test_video_script.cpp' || echo '$(srcdir)/'`test_video_script.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_video_script_CPPFLAGS) $(CPPFLAGS) $(test_video_script_CXXFLAGS) $(CXXFLAGS) -MT test_video_script-test_video_script.o -MD -MP -MF $(DEPDIR)/test_video_script-test_video_script.Tpo -c -o test_video_script-test_video_script.o `test -f 'test_video_script.cpp' || echo '$(srcdir)/'`test_video_script.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_video_script-test_video_script.Tpo $(DEPDIR)/test_video_script-test_video_script.Po
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='test_video_script.cpp' object='test_video_script-test_video_script.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_video_script_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_video_script-test_video_script.o `test -f 'test_video_script.cpp' || echo '$(srcdir)/'`test_video_script.cpp
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_video_script_CPPFLAGS) $(CPPFLAGS) $(test_video_script_CXXFLAGS) $(CXXFLAGS) -c -o test_video_script-test_video_script.o `test -f 'test_video_script.cpp' || echo '$(srcdir)/'`test_video_script.cpp
 
 test_video_script-test_video_script.obj: test_video_script.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_video_script_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_video_script-test_video_script.obj -MD -MP -MF $(DEPDIR)/test_video_script-test_video_script.Tpo -c -o test_video_script-test_video_script.obj `if test -f 'test_video_script.cpp'; then $(CYGPATH_W) 'test_video_script.cpp'; else $(CYGPATH_W) '$(srcdir)/test_video_script.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_video_script_CPPFLAGS) $(CPPFLAGS) $(test_video_script_CXXFLAGS) $(CXXFLAGS) -MT test_video_script-test_video_script.obj -MD -MP -MF $(DEPDIR)/test_video_script-test_video_script.Tpo -c -o test_video_script-test_video_script.obj `if test -f 'test_video_script.cpp'; then $(CYGPATH_W) 'test_video_script.cpp'; else $(CYGPATH_W) '$(srcdir)/test_video_script.cpp'; fi`
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_video_script-test_video_script.Tpo $(DEPDIR)/test_video_script-test_video_script.Po
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='test_video_script.cpp' object='test_video_script-test_video_script.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_video_script_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_video_script-test_video_script.obj `if test -f 'test_video_script.cpp'; then $(CYGPATH_W) 'test_video_script.cpp'; else $(CYGPATH_W) '$(srcdir)/test_video_script.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_video_script_CPPFLAGS) $(CPPFLAGS) $(test_video_script_CXXFLAGS) $(CXXFLAGS) -c -o test_video_script-test_video_script.obj `if test -f 'test_video_script.cpp'; then $(CYGPATH_W) 'test_video_script.cpp'; else $(CYGPATH_W) '$(srcdir)/test_video_script.cpp'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
