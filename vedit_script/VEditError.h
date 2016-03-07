@@ -1,7 +1,7 @@
 /*
  * VEditError.h
  *
- *  Created on: 2016Äê2ÔÂ23ÈÕ
+ *  Created on: 2016-2-23
  *      Author: li.lei@youku.com
  */
 
@@ -28,6 +28,7 @@ enum ErrorCode
 	ErrorEnumSelectNotFound,
 	ErrorScriptArgInvalid,
 	ErrorStreamFileInvalid,
+	ErrorFileSysError,
 	ErrorImplError
 };
 

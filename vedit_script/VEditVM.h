@@ -76,6 +76,8 @@ public:
 	static void regist_script(int fd)throw(Exception);
 	static void regist_script(FILE* fp)throw(Exception);
 
+	static void load_script_dir(const char* path) throw (Exception);
+
 	static mlt_producer get_stream_resource(const string& path) throw(Exception);
 	static const char* proc_type_names[ INVALID_SCRIPT ];
 private:

@@ -1,7 +1,7 @@
 /*
  * VEditException.h
  *
- *  Created on: 2016��2��23��
+ *  Created on: 2016-2-23
  *      Author: li.lei@youku.com
  */
 
@@ -16,14 +16,23 @@ NMSP_BEGIN(vedit)
 class Exception : public std::exception
 {
 public:
-	Exception(ErrorCode code);
+	Exception(ErrorCode code = ErrorUnknown);
 	Exception(ErrorCode code,const char* fmt,...);
-	virtual ~Exception() throw() {}
+	Exception(const Exception& r):
+		code(r.code),
+		detail(r.detail)
+	{}
+
+	Exception& operator=(const Exception& r) {
+		code = r.code;
+		detail = r.detail;
+		return *this;
+	}
+	virtual ~Exception() throw() ;
 	const ErrorCode code;
 	const std::string detail;
 
-	const char* what()const throw();
-
+	virtual const char* what()const throw();
 };
 
 

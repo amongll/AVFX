@@ -7,6 +7,13 @@
 
 
 #include "VEditVM.h"
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <cerrno>
+#include <framework/mlt.h>
+
+#include <dirent.h>
 
 NMSP_BEGIN(vedit)
 
@@ -159,6 +166,59 @@ mlt_producer Vm::get_stream_resource(const string& path)
 	}
 
 	return prod;
+}
+
+void Vm::load_script_dir(const char* path) throw (Exception)
+{
+	string inpath(path), dir_abs;
+	get_absolute_path(inpath, dir_abs);
+	struct stat stbuf;
+	if ( -1 == stat(dir_abs.c_str(),&stbuf) ) {
+		throw Exception(ErrorFileSysError, "dir %s not exists", dir_abs.c_str());
+	}
+
+	if ( !S_ISDIR(stbuf.st_mode) ) {
+		throw Exception(ErrorFileSysError, "%s not dir", dir_abs.c_str());
+	}
+
+	DIR* diobj = opendir(dir_abs.c_str());
+	if (diobj == NULL) {
+		throw Exception(ErrorFileSysError, "%s scan failed:%s", dir_abs.c_str(), strerror(errno));
+	}
+
+	struct dirent *de = NULL;
+	Exception eCopy;
+	char tmp_path[1024];
+	while ((de = readdir(diobj))) {
+		if (strlen(de->d_name) <= strlen(".json"))
+			continue;
+		if (strcmp(".json", de->d_name + strlen(de->d_name) - strlen(".json"))
+			!= 0)
+			continue;
+		snprintf(tmp_path, sizeof(tmp_path), "%s/%s", dir_abs.c_str(),
+			de->d_name);
+		if (-1 == stat(tmp_path, &stbuf))
+			continue;
+
+		if (!S_ISREG(stbuf.st_mode))
+			continue;
+
+		if ( access(tmp_path, R_OK) ) {
+			continue;
+		}
+
+		FILE* fp = fopen(tmp_path, "r");
+		if (!fp) continue;
+		try {
+			regist_script(fp);
+		}
+		catch(const Exception& e) {
+			fclose(fp);
+			mlt_log_warning(NULL, "vedit_script:%s", e.what());
+		}
+	}
+
+	closedir(diobj);
 }
 
 shared_ptr<Script> Vm::get_script(const char* procname, ScriptType type)
