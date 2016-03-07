@@ -7,38 +7,6 @@
 		"in":{"optional":true,"type":"pos_frame",
 			"desc":"音频的起始帧位置，如果不指定为0，表示开始位置。可以是pos_frame/pos_time/pos_perct类型，支持正负值，负值表示相对于结尾的偏移",
 			"default":0},
-		"out":{"optional":true,"type":"pos_time","desc":"音频的结束帧位置，不过不指定默认是音频的长度","default":-1},
-		"comein_position":{"optional":true,"type":"pos_time","desc":"音量渐入的截止位置","default":500},
-		"goout_position":{"optional":true,"type":"pos_time","desc":"音量淡出的开始位置","default": -500},
-		"comein_type":{"optional":true,"type":"#audio_trans_type","desc":"音频淡入淡出类型","default":"linear_in"},
-		"goout_type":{"optional":true,"type":"#audio_trans_type","desc":"音频淡入淡出类型","default":"fourier_out"}
-	},
-	"macros":{
-		"fps":25,
-		"xxx":"xx=$(param);"
-	},
-	"enums":{
-		"audio_trans_type":{
-			"linear_in":{
-				"geometry":"0=0;$(comein_position)=1;"
-			},
-			"fourier_in":{
-				"geometry":"0~=0;$(comein_position)~=1;"
-			},
-			"linear_out":{
-				"geometry":"$(goout_position)=1;$(out)=0;"
-			},
-			"fourier_out":{
-				"geometry":"$(goout_position)~=1;$(out)~=0;"
-			}
-		}
-	},
-	"effects":[
-		{"$call(volume_comein_uuid)":{"in":0,"out":"$(comein_position)"}},
-		{"$call(volume_goout_uuid)":{"in":"$(goout_position)","out":"$(out)"}}
-	],
-
-	"props":{
-		"$apply_props":["#(someprops_template_enum:selector)","$(some_enum_param)"]
+		"out":{"optional":true,"type":"pos_time","desc":"音频的结束帧位置，不过不指定默认是音频的长度","default":-1}
 	}
 }

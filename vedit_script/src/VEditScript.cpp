@@ -25,6 +25,7 @@ void Script::call(json_t* args_value) throw (Exception)
 		compiled = NULL;
 	}
 
+	if (args_value==NULL) args_value = json_object();
 	args = json_incref(args_value);
 	json_t* t = args;
 
