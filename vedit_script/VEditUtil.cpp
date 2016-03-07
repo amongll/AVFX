@@ -1,7 +1,7 @@
 /*
  * VEditUtil.cpp
  *
- *  Created on: 2016Äê3ÔÂ2ÈÕ
+ *  Created on: 2016-3-2
  *      Author: li.lei@youku.com
  */
 
