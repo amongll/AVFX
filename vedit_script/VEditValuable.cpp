@@ -8,6 +8,7 @@
 
 #include "VEditValuable.h"
 #include "VEditScriptParams.h"
+#include "VEditScript.h"
 
 NMSP_BEGIN(vedit)
 void Evaluable::expand_scalar(const char* nm, const json_t* v) throw (Exception)
@@ -39,7 +40,7 @@ void Evaluable::expand_scalar(const char* nm, const json_t* v) throw (Exception)
 			sprintf(buf, json_is_true(t)?"true":"false");
 		}
 
-		pair<MapIter,MapIter> ranges = param_idxes.find(nm);
+		pair<MapIter,MapIter> ranges = param_idxes.equal_range(string(nm));
 		MapIter it;
 		for ( it = ranges.first; it != ranges.second; it++ ) {
 			segments[it->second] = str;
@@ -73,7 +74,7 @@ void Evaluable::expand_position(const char* nm, const int& frame_in,
 	else if (replace_type == EValueStringCtxReplace || replace_type == EValueStringCtxReplace) {
 		char buf[50] = {0};
 		sprintf(buf, "%d", frame_seq);
-		pair<MapIter,MapIter> ranges = param_idxes.find(nm);
+		pair<MapIter,MapIter> ranges = param_idxes.equal_range(string(nm));
 		MapIter it;
 		for ( it = ranges.first; it != ranges.second; it++ ) {
 			segments[it->second] = buf;
@@ -156,7 +157,7 @@ void Evaluable::replace_asis(const char* nm, const string& v) throw (Exception)
 		return;
 	}
 	else if (replace_type == EValueStringCtxReplace || replace_type == EValueStringCtxReplace) {
-		pair<MapIter,MapIter> ranges = param_idxes.find(nm);
+		pair<MapIter,MapIter> ranges = param_idxes.equal_range(string(nm));
 		MapIter it;
 		for ( it = ranges.first; it != ranges.second; it++ ) {
 			segments[it->second] = v;
@@ -185,7 +186,7 @@ void Evaluable::replace_asis(const char* nm, int v) throw (Exception)
 		return;
 	}
 	else if (replace_type == EValueStringCtxReplace || replace_type == EValueStringCtxReplace) {
-		pair<MapIter,MapIter> ranges = param_idxes.find(nm);
+		pair<MapIter,MapIter> ranges = param_idxes.equal_range(string(nm));
 		MapIter it;
 		char buf[50];
 		sprintf(buf, "%d", v);
@@ -216,7 +217,7 @@ void Evaluable::replace_asis(const char* nm, double v) throw (Exception)
 		return;
 	}
 	else if (replace_type == EValueStringCtxReplace || replace_type == EValueStringCtxReplace) {
-		pair<MapIter,MapIter> ranges = param_idxes.find(nm);
+		pair<MapIter,MapIter> ranges = param_idxes.equal_range(string(nm));
 		MapIter it;
 		char buf[50];
 		sprintf(buf, "%f", v);
@@ -247,7 +248,7 @@ void Evaluable::replace_asis(const char* nm, bool v) throw (Exception)
 		return;
 	}
 	else if (replace_type == EValueStringCtxReplace || replace_type == EValueStringCtxReplace) {
-		pair<MapIter,MapIter> ranges = param_idxes.find(nm);
+		pair<MapIter,MapIter> ranges = param_idxes.equal_range(string(nm));
 		MapIter it;
 		char buf[50];
 		sprintf(buf, v?"true":"false");

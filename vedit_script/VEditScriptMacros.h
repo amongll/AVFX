@@ -1,18 +1,21 @@
 /*
  * VEditScriptMacros.h
  *
- *  Created on: 2016Äê2ÔÂ23ÈÕ
+ *  Created on: 2016ï¿½ï¿½2ï¿½ï¿½23ï¿½ï¿½
  *      Author: li.lei@youku.com
- *      Desc:	ºê¶¨Òå¡£ºêÖ»Ö§³Ö±êÁ¿£¬ÆäÖÐ×Ö·û´®Öµ¿ÉÒÔ´øÈë½Å±¾²ÎÊý£¬Ò²¿ÉÒÔ´øÈë½Å±¾Êä³öÄÚÈÝµÄÊôÐÔ
+ *      Desc:	ï¿½ê¶¨ï¿½å¡£ï¿½ï¿½Ö»Ö§ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½Öµï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½Å±ï¿½ï¿½ï¿½ï¿½ï¿½Ò²ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½Å±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ýµï¿½ï¿½ï¿½ï¿½ï¿½
  */
+#ifndef VEDITSCRIPTMACROS_INCLUDE
+#define VEDITSCRIPTMACROS_INCLUDE
 
 #include "VEditCommon.h"
 #include "VEditDefinable.h"
 #include "VEditCompilable.h"
+#include "VEditUtil.h"
 
 NMSP_BEGIN(vedit)
 
-class vedit::Script;
+class Script;
 class ScriptMacros :  public Definable
 {
 public:
@@ -21,8 +24,6 @@ public:
 		MapCIter it = macros.find(nm);
 		return it == macros.end() ? NULL : it->second.h;
 	}
-protected:
-	friend class shared_ptr<ScriptMacros>;
 	virtual ~ScriptMacros();
 
 private:
@@ -44,7 +45,7 @@ private:
 		json_t* js;
 	};*/
 
-	friend class vedit::Script;
+	friend class Script;
 	//hash_map<string,shared_ptr<JsonWrap> >	macros;
 	//typedef hash_map<string, shared_ptr<JsonWrap> >::iterator MapIter;
 	//typedef hash_map<string, shared_ptr<JsonWrap> >::const_iterator MapCIter;
@@ -52,7 +53,7 @@ private:
 	typedef hash_map<string, JsonWrap>::iterator MapIter;
 	typedef hash_map<string, JsonWrap>::const_iterator MapCIter;
 
-	ScriptMacros(const json_t& script) throw (Exception);
+	ScriptMacros(Script& script) throw (Exception);
 	void parse_macros() throw(Exception);
 
 	json_t* define_copy;
@@ -63,4 +64,5 @@ typedef shared_ptr<ScriptMacros> ScriptMacrosPtr;
 
 NMSP_END(vedit)
 
+#endif
 

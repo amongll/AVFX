@@ -6,7 +6,7 @@
  */
 
 #include "VEditScript.h"
-
+#include "VEditVM.h"
 
 NMSP_BEGIN(vedit)
 
@@ -55,7 +55,7 @@ void Script::call(json_t* args_value) throw (Exception)
 		}
 
 		pair<EnumExpandableIter, EnumExpandableIter> ranges =
-			param_enum_presents.find(it->second->name);
+			param_enum_presents.equal_range(string(it->second->name));
 
 		const json_t* enum_detail = get_selector(it->second->enum_name, sel);
 		if ( !enum_detail && ranges.first == param_enum_presents.end() ) {
@@ -141,7 +141,7 @@ void Script::call(json_t* args_value) throw (Exception)
 			}
 
 			pair<EvaluableIter, EvaluableIter> ranges =
-					param_evalue_presents.find(it->second->name);
+					param_evalue_presents.equal_range(string(it->second->name));
 			EvaluableIter eit;
 			for ( eit = ranges.first; eit != ranges.second; eit++ ) {
 				eit->second->expand_position(eit->first.c_str(),frame_in, frame_out, iarg);
@@ -157,7 +157,7 @@ void Script::call(json_t* args_value) throw (Exception)
 			}
 			else {
 				pair<EvaluableIter, EvaluableIter> ranges =
-						param_evalue_presents.find(it->second->name);
+						param_evalue_presents.equal_range(string(it->second->name));
 
 				if (!arg && ranges.first == param_evalue_presents.end() ) {
 					throw Exception(ErrorScriptArgInvalid,"arg:%s is needed",
@@ -196,7 +196,7 @@ void Script::apply_filter(const string& id, int start_pos, int end_pos,
 	json_object_set(other_args,"in", json_integer(start_pos));
 	json_object_set(other_args,"out", json_integer(end_pos));
 
-	json_t* seri = Vm::call_script(filterproc, Vm::FILTER_SCRIPT, other_args);
+	json_t* seri = Vm::call_script(filterproc, FILTER_SCRIPT, other_args);
 	FilterWrap& obj = filters[id];
 	obj.id = id;
 	obj.serialize = seri;
@@ -286,7 +286,8 @@ void Script::regist_macro_usage(const char* macro, MacroExpandable* obj)
 			return;
 	}
 
-	macro_presents.insert( make_pair(string(macro), shared_ptr<MacroExpandable>(obj)) ) ;
+	shared_ptr<MacroExpandable> v(obj);
+	macro_presents.insert( make_pair(string(macro), v) ) ;
 }
 
 void Script::regist_enum_selector_usage(const char* enmae, const char* sname,
@@ -622,7 +623,7 @@ json_t* Script::filters_serialize() throw (Exception)
 			json_object_set(wrap.h, it->first.c_str(), it->second.serialize.h);
 		}
 		else {
-			json_t* seri = it->second.call->compile(Vm::FILTER_SCRIPT);
+			json_t* seri = it->second.call->compile(FILTER_SCRIPT);
 			it->second.serialize = seri;
 			json_object_set_new(wrap.h, it->first.c_str(), seri);
 		}

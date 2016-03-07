@@ -6,6 +6,7 @@
  */
 
 #include "VEditEnumExpandable.h"
+#include "VEditScript.h"
 
 NMSP_BEGIN(vedit)
 

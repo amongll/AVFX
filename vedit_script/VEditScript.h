@@ -73,10 +73,15 @@ public:
 		return frame_out - frame_in;
 	}
 
+	virtual ~Script();
 protected:
 	friend class shared_ptr<Script>;
 	friend class ScriptProps;
 	friend class Vm;
+	friend class MacroExpandable;
+	friend class EnumExpandable;
+	friend class Evaluable;
+
 	Script() throw (Exception):
 		proc_name(NULL),
 		proc_type(NULL),
@@ -91,7 +96,6 @@ protected:
 	}
 
 	Script(const json_t* detail) throw (Exception);
-	virtual ~Script();
 
 	//返回需要前置求值的spec prop的名字, 按照顺序求值.
 	virtual void parse_specific() throw (Exception) = 0;
@@ -106,7 +110,7 @@ protected:
 	ScriptEnumsPtr enums;
 
 	ScriptPropsPtr  type_spec_props;
-	ScriptPropsPtr	mlt_props; //����Ӧ����mlt service����������
+	ScriptPropsPtr	mlt_props; //应用于mlt service对象的property
 
 	void regist_macro_usage(const char* macro, MacroExpandable* obj) throw (Exception);
 	void regist_enum_selector_usage(const char* enmae, const char* sname, EnumExpandable* obj) throw (Exception);

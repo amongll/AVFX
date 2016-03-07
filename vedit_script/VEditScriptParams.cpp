@@ -14,6 +14,7 @@ using namespace std;
 vedit::ScriptParams::Param::Param(const char* nm, json_t* detail,
 		const Script& script) throw (Exception):
 	name(nm),
+	desc(NULL),
 	define_detail(NULL),
 	param_style(UnknownParamStyle),
 	pos_type(UnknownPosType),

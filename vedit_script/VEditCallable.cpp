@@ -1,11 +1,13 @@
 /*
  * VEditCallable.cpp
  *
- *  Created on: 2016Äê3ÔÂ1ÈÕ
+ *  Created on: 2016ï¿½ï¿½3ï¿½ï¿½1ï¿½ï¿½
  *      Author: li.lei@youku.com
  */
 
 #include "VEditCallable.h"
+#include "VEditScript.h"
+#include "VEditVM.h"
 
 NMSP_BEGIN(vedit)
 
@@ -34,7 +36,7 @@ json_t* ScriptCallable::compile() throw (Exception)
 	return call_get;
 }
 
-json_t* ScriptCallable::compile(Vm::ScriptType type) throw (Exception)
+json_t* ScriptCallable::compile(ScriptType type) throw (Exception)
 {
 	json_t* call_args = NULL;
 	json_t* call_get = NULL;

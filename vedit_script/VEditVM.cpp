@@ -19,7 +19,7 @@ json_t* Vm::call_script(const char* procname, json_t* args) throw (Exception)
 	return script->get_mlt_serialize();
 }
 
-json_t* Vm::call_script(const char* procname, ScriptType type, json_t* args)
+json_t* Vm::call_script(const char* procname, vedit::ScriptType type, json_t* args)
 	throw (Exception)
 {
 	shared_ptr<Script> script = get_script(procname, type);
@@ -60,13 +60,16 @@ shared_ptr<Script> Vm::get_script(const char* procname)
 		obj = new FilterScript(it->second.defines.h); //todo args
 		break;
 	case PLAYLIST_SCRIPT:
-		obj = new PlaylistScript(it->second.defines.h); //todo args
+		//obj = new PlaylistScript(it->second.defines.h); //todo args
+		obj = NULL;
 		break;
 	case MULTITRACK_SCRIPT:
-		obj = new MultitrackScript(it->second.defines.h); //todo args
+		//obj = new MultitrackScript(it->second.defines.h); //todo args
+		obj = NULL;
 		break;
 	case TRANSITION_SCRIPT:
-		obj = new TransitionScript(it->second.defines.h); //todo args
+		//obj = new TransitionScript(it->second.defines.h); //todo args
+		obj = NULL;
 		break;
 	default:
 		assert(0);
@@ -95,7 +98,7 @@ Vm* Vm::instance()
 {
 	pthread_once(&thr_spec_cache_once, Vm::thr_spec_cache_key_create);
 	if ( !singleton ) {
-		Lock(&script_lock);
+		Lock lk(&script_lock);
 		if (!singleton) {
 			singleton = new Vm();
 			singleton_ptr.reset(singleton);
@@ -119,8 +122,7 @@ const char* Vm::proc_type_names[] = {
 	"filter",
 	"playlist",
 	"multitrack",
-	"transition",
-	NULL
+	"transition"
 };
 
 mlt_producer Vm::get_stream_resource(const string& path)
@@ -193,7 +195,7 @@ void Vm::regist_script(json_t* text)throw(Exception)
 	ScriptType type = INVALID_SCRIPT;
 	for ( int i=1; i<INVALID_SCRIPT; i++) {
 		if (!strcmp(json_string_value(se), proc_type_names[i]) == 0) {
-			type = i;
+			type = (ScriptType)i;
 			break;
 		}
 	}
@@ -221,13 +223,16 @@ void Vm::regist_script(json_t* text)throw(Exception)
 		obj = new FilterScript(text); //todo args
 		break;
 	case PLAYLIST_SCRIPT:
-		obj = new PlaylistScript(text); //todo args
+		//obj = new PlaylistScript(text); //todo args
+		obj = NULL;
 		break;
 	case MULTITRACK_SCRIPT:
-		obj = new MultitrackScript(text); //todo args
+		//obj = new MultitrackScript(text); //todo args
+		obj = NULL;
 		break;
 	case TRANSITION_SCRIPT:
-		obj = new TransitionScript(text); //todo args
+		//obj = new TransitionScript(text); //todo args
+		obj = NULL;
 		break;
 	default:
 		assert(0);

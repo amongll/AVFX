@@ -193,10 +193,10 @@ void parse_selector(const char* str, string& enm, string& snm)
 	}
 
 	if ( str[0] == '#' && str[1] == '('  && str[strlen(str)-1] == ')') {
-		char* p = str, *e = str + strlen(str) - 1;
+		const char* p = str, *e = str + strlen(str) - 1;
 		string tk;
 		while ( p != e ) {
-			if ( enm.length() == 0 && p == ':' ) {
+			if ( enm.length() == 0 && *p == ':' ) {
 				if (tk.length()) {
 					if ( !is_valid_identifier(tk.c_str()) ) {
 						return;

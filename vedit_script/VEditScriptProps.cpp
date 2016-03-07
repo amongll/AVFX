@@ -106,7 +106,7 @@ ScriptProps::Property& ScriptProps::add_property(const char* nm, json_t* value)
 	if (json_is_object(value) || json_is_array(value) ) {
 		throw Exception(ErrorImplError, "Only literal value allowed for added property");
 	}
-	Property* _tmp  = Property(*this, nm, value);
+	Property* _tmp  = new Property(*this, nm, value);
 	if ( _tmp->MacroExpandable::finished() == false ) {
 		throw Exception(ErrorImplError, "Only literal value allowed for added property");
 	}

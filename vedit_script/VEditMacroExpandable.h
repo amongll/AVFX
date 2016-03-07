@@ -1,7 +1,7 @@
 /*
  * VEditMacroExpandable.h
  *
- *  Created on: 2016Äê2ÔÂ24ÈÕ
+ *  Created on: 2016ï¿½ï¿½2ï¿½ï¿½24ï¿½ï¿½
  *      Author: li.lei@youku.com
  */
 
@@ -12,7 +12,7 @@
 #include "VEditException.h"
 
 NMSP_BEGIN(vedit)
-
+class Script;
 class MacroExpandable
 {
 public:
@@ -20,8 +20,8 @@ public:
 
 	void regist_self(Script& script) throw (Exception);
 
-protected:
 	virtual ~MacroExpandable();
+protected:
 	MacroExpandable(json_t* detail);
 
 	json_t* expand_result;

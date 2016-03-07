@@ -1,7 +1,7 @@
 /*
  * VEditException.h
  *
- *  Created on: 2016Äê2ÔÂ23ÈÕ
+ *  Created on: 2016ï¿½ï¿½2ï¿½ï¿½23ï¿½ï¿½
  *      Author: li.lei@youku.com
  */
 
@@ -18,6 +18,7 @@ class Exception : public std::exception
 public:
 	Exception(ErrorCode code);
 	Exception(ErrorCode code,const char* fmt,...);
+	virtual ~Exception() throw() {}
 	const ErrorCode code;
 	const std::string detail;
 

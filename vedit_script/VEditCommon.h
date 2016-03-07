@@ -1,7 +1,7 @@
 /*
  * VEditCommon.h
  *
- *  Created on: 2016ƒÍ2‘¬22»’
+ *  Created on: 2016ÔøΩÔøΩ2ÔøΩÔøΩ22ÔøΩÔøΩ
  *      Author: li.lei@youku.com
  */
 
@@ -31,7 +31,23 @@ using namespace std;
 #define USE_CONST_MEM_MODIFIER(mod, mem, type) \
 	mod = const_cast<type>(&(mem))
 
+
+
+
 NMSP_BEGIN(vedit)
+
+enum ScriptType {
+	UNKNOWN_SCRIPT,
+	AUDIO_RESOURCE_SCRIPT,
+	VIDEO_RESOURCE_SCRIPT,
+	IMAGE_RESOURCE_SCRIPT,
+	GIF_RESOURCE_SCRIPT,
+	FILTER_SCRIPT,
+	PLAYLIST_SCRIPT,
+	MULTITRACK_SCRIPT,
+	TRANSITION_SCRIPT,
+	INVALID_SCRIPT //Âç†‰ΩçÁ¨¶
+};
 
 bool is_valid_identifier(const char* check);
 
@@ -49,5 +65,17 @@ bool is_param_only(const char* str);
 
 
 NMSP_END(vedit)
+
+namespace __gnu_cxx {
+template<>
+struct hash<std::string>
+{
+	size_t operator()(const std::string& obj) const
+	{
+		return __stl_hash_string(obj.c_str());
+	}
+};
+
+}
 
 #endif /* VEDITCOMMON_H_ */

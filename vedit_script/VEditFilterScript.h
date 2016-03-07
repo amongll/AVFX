@@ -1,7 +1,7 @@
 /*
  * VEditFilterScript.h
  *
- *  Created on: 2016Äê2ÔÂ22ÈÕ
+ *  Created on: 2016-2-22
  *      Author: li.lei@youku.com
  */
 
@@ -23,6 +23,7 @@ public:
 	virtual ~FilterScript();
 	virtual json_t* compile() throw(Exception);
 	virtual void parse_specific() throw (Exception);
+	virtual void pre_judge() throw(Exception);
 };
 
 

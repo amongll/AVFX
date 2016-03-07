@@ -51,6 +51,7 @@ public:
 
 class ImageScript : public SingleResourceScript
 {
+public:
 	ImageScript(json_t* text):
 		SingleResourceScript(text)
 	{}
@@ -62,6 +63,7 @@ class ImageScript : public SingleResourceScript
 
 class GifScript : public SingleResourceScript
 {
+public:
 	GifScript(json_t* text):
 		SingleResourceScript(text)
 	{}
