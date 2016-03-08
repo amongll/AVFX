@@ -17,6 +17,7 @@ ScriptProps::Property::Property(ScriptProps& p, const char* nm, json_t* detail)
 		MacroExpandable(detail),
 		parent(p)
 {
+	MacroExpandable::regist_self(parent.script);
 	if ( !MacroExpandable::finished() ) {
 		return;
 	}

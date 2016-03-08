@@ -20,7 +20,7 @@ class ScriptMacros :  public Definable
 {
 public:
 	const json_t* get_macro(const char* nm) const {
-		if (!nm || strlen(nm) ) return NULL;
+		if (!nm || !strlen(nm) ) return NULL;
 		MapCIter it = macros.find(nm);
 		return it == macros.end() ? NULL : it->second.h;
 	}

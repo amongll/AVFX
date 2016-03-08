@@ -94,4 +94,20 @@ size_t get_absolute_path(const string& path, string& dest)
 	return ret;
 }
 
+std::ostream& operator <<(std::ostream& os, mlt_properties props)
+{
+	int count = mlt_properties_count(props);
+	os<<"{"<<endl;
+	for ( int i=0; i<count; i++) {
+		char buf[1024];
+		const char* name = mlt_properties_get_name(props, i);
+		snprintf(buf, sizeof(buf), "%s: %s\n", name, mlt_properties_get(props, name));
+		os << buf ;
+	}
+	os<<"}"<<endl;
+	return os;
+}
+
 NMSP_END(vedit)
+
+

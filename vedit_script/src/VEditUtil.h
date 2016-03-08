@@ -1,7 +1,7 @@
 /*
  * VEditUtil.h
  *
- *  Created on: 2016Äê3ÔÂ2ÈÕ
+ *  Created on: 2016ï¿½ï¿½3ï¿½ï¿½2ï¿½ï¿½
  *      Author: li.lei@youku.com
  */
 
@@ -67,6 +67,8 @@ private:
 };
 
 size_t get_absolute_path(const string& path, string& dest);
+
+std::ostream& operator<<(std::ostream& os, mlt_properties props);
 
 NMSP_END(vedit)
 

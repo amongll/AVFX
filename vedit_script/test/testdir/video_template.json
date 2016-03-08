@@ -1,12 +1,31 @@
 {
-	"procname":"myfirstvideo",
-	"proctype":"video",
-	"desc":"一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-	"params":{
-		"resource":{"optional":true,"type":"scalar","desc":"audio file input", "default":"/opt/lilei/merge_langyabang_30.flv"},
-		"in":{"optional":true,"type":"pos_frame",
-			"desc":"音频的起始帧位置，如果不指定为0，表示开始位置。可以是pos_frame/pos_time/pos_perct类型，支持正负值，负值表示相对于结尾的偏移",
-			"default":0},
-		"out":{"optional":true,"type":"pos_time","desc":"音频的结束帧位置，不过不指定默认是音频的长度","default":-1}
+	"procname": "myfirstvideo",
+	"proctype": "video",
+	"desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
+	"params": 
+	{
+		"resource": 
+		{
+			"optional": true,
+			"type": "scalar",
+			"desc": "audio file input",
+			"default": "/opt/lilei/merge_langyabang_30.flv"
+		},
+
+		"in": 
+		{
+			"optional": true,
+			"type": "pos_frame",
+			"desc": "音频的起始帧位置，如果不指定为0，表示开始位置。可以是pos_frame/pos_time类型，支持正负值，负值表示相对于结尾的偏移",
+			"default": 0
+		},
+
+		"out": 
+		{
+			"optional": true,
+			"type": "pos_time",
+			"desc": "音频的结束帧位置，不过不指定默认是音频的长度",
+			"default": -1
+		}
 	}
 }

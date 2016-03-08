@@ -96,55 +96,84 @@ void VideoScript::pre_judge() throw (Exception)
 	int length = mlt_producer_get_length(prod);
 	int inframe = json_integer_value(in), outframe = json_integer_value(out);
 
+	json_decref(in);
+	json_decref(out);
+
 	switch (inparam->pos_type) {
 	case ScriptParams::FramePos:
-		break;
-	case ScriptParams::TimePos:
-		inframe = (double)inframe / 40;
-		break;
-	case ScriptParams::PerctPos:
-		inframe = (double)inframe / 100 * length;
-		break;
-	}
-	if (inframe < 0) {
-		inframe = length + inframe;
-		if (inframe < 0 ) inframe = 0;
-	}
-	else {
-		if (inframe >= length) {
+		if ( inframe == -1  || inframe >= length) {
 			inframe = length - 1;
 		}
+		else if ( inframe < 0 ) {
+			inframe = length + inframe;
+			if (inframe < 0)inframe = 0;
+		}
+		break;
+	case ScriptParams::TimePos:
+		if ( inframe == -1 ) {
+			inframe = length - 1;
+		}
+		else if ( inframe >= 0  ){
+			inframe = (double)inframe / 40 ;
+		}
+		else {
+			inframe = (double)( ((length * 40) + inframe) ) / 40;
+			if (inframe < 0) inframe = 0;
+		}
+		break;
+	/*
+	case ScriptParams::PerctPos:
+		if (inframe ==  -1) {
+			inframe = length - 1;
+		}
+		else {
+			inframe = (double)inframe / 100 * length - 1;
+		}
+		break;
+	*/
 	}
 
 	switch (outparam->pos_type) {
 	case ScriptParams::FramePos:
-		break;
-	case ScriptParams::TimePos:
-		outframe = (double)outframe / 40;
-		break;
-	case ScriptParams::PerctPos:
-		outframe = (double)outframe / 100 * length;
-		break;
-	}
-	if (outframe < 0) {
-		outframe = length + outframe;
-		if (outframe < 0 ) outframe = 0;
-	}
-	else {
-		if (outframe >= length) {
+		if ( outframe == -1  || outframe >= length) {
 			outframe = length - 1;
 		}
+		else if ( outframe < 0 ) {
+			outframe = length + outframe;
+			if (outframe < 0)outframe = 0;
+		}
+		break;
+	case ScriptParams::TimePos:
+		if ( outframe == -1 ) {
+			outframe = length - 1;
+		}
+		else if ( outframe >= 0  ){
+			outframe = (double)outframe / 40 ;
+		}
+		else {
+			outframe = (double)( ((length * 40) + outframe) ) / 40;
+			if (outframe < 0) outframe = 0;
+		}
+		break;
 	}
 
-	if ( inframe < outframe ) {
+	if ( inframe > outframe ) {
 		inframe ^= outframe ^= inframe ^= outframe;
 	}
 
 	set_frame_range(inframe,outframe);
 
+	if ( !type_spec_props.get() ) {
+		type_spec_props.reset(new ScriptProps(*this, NULL));
+	}
+
 	type_spec_props->add_property("resource", res_arg);
-	mlt_props->add_property("in", in);
-	mlt_props->add_property("out", out);
+	json_decref(res_arg);
+	if ( !mlt_props.get()) {
+		mlt_props.reset(new ScriptProps(*this, NULL));
+	}
+	mlt_props->add_property("in", json_integer(inframe));
+	mlt_props->add_property("out", json_integer(outframe));
 
 	this->path  = path;
 	//todo: check format info
@@ -192,55 +221,77 @@ void AudioScript::pre_judge() throw (Exception)
 	int length = mlt_producer_get_length(prod);
 	int inframe = json_integer_value(in), outframe = json_integer_value(out);
 
+	json_decref(in);
+	json_decref(out);
+
 	switch (inparam->pos_type) {
 	case ScriptParams::FramePos:
-		break;
-	case ScriptParams::TimePos:
-		inframe = (double)inframe / 40;
-		break;
-	case ScriptParams::PerctPos:
-		inframe = (double)inframe / 100 * length;
-		break;
-	}
-	if (inframe < 0) {
-		inframe = length + inframe;
-		if (inframe < 0 ) inframe = 0;
-	}
-	else {
-		if (inframe >= length) {
+		if ( inframe == -1  || inframe >= length) {
 			inframe = length - 1;
 		}
+		else if ( inframe < 0 ) {
+			inframe = length + inframe;
+			if (inframe < 0)inframe = 0;
+		}
+		break;
+	case ScriptParams::TimePos:
+		if ( inframe == -1 ) {
+			inframe = length - 1;
+		}
+		else if ( inframe >= 0  ){
+			inframe = (double)inframe / 40 ;
+		}
+		else {
+			inframe = (double)( ((length * 40) + inframe) ) / 40;
+			if (inframe < 0) inframe = 0;
+		}
+		break;
+	/*
+	case ScriptParams::PerctPos:
+		if (inframe ==  -1) {
+			inframe = length - 1;
+		}
+		else {
+			inframe = (double)inframe / 100 * length - 1;
+		}
+		break;
+	*/
 	}
 
 	switch (outparam->pos_type) {
 	case ScriptParams::FramePos:
-		break;
-	case ScriptParams::TimePos:
-		outframe = (double)outframe / 40;
-		break;
-	case ScriptParams::PerctPos:
-		outframe = (double)outframe / 100 * length;
-		break;
-	}
-	if (outframe < 0) {
-		outframe = length + outframe;
-		if (outframe < 0 ) outframe = 0;
-	}
-	else {
-		if (outframe >= length) {
+		if ( outframe == -1  || outframe >= length) {
 			outframe = length - 1;
 		}
+		else if ( outframe < 0 ) {
+			outframe = length + outframe;
+			if (outframe < 0)outframe = 0;
+		}
+		break;
+	case ScriptParams::TimePos:
+		if ( outframe == -1 ) {
+			outframe = length - 1;
+		}
+		else if ( outframe >= 0  ){
+			outframe = (double)outframe / 40 ;
+		}
+		else {
+			outframe = (double)( ((length * 40) + outframe) ) / 40;
+			if (outframe < 0) outframe = 0;
+		}
+		break;
 	}
 
-	if ( inframe < outframe ) {
+	if ( inframe > outframe ) {
 		inframe ^= outframe ^= inframe ^= outframe;
 	}
 
 	set_frame_range(inframe,outframe);
 
 	type_spec_props->add_property("resource", res_arg);
-	mlt_props->add_property("in", in);
-	mlt_props->add_property("out", out);
+	json_decref(res_arg);
+	mlt_props->add_property("in", json_integer(inframe));
+	mlt_props->add_property("out", json_integer(outframe));
 
 	this->path  = path;
 	//todo: check format info

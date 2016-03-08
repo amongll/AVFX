@@ -96,7 +96,7 @@ void MacroExpandable::parse_tokens() throw (Exception)
 		return;
 	}
 
-	string cur_token;
+	//string cur_token;
 
 	size_t  pend_pos = 0, chk_pos =  0;
 	size_t ps1,ps2;
@@ -112,7 +112,9 @@ void MacroExpandable::parse_tokens() throw (Exception)
 				else {
 					string nm = v.substr(ps1 + 2, ps2 - ps1 - 2 );
 					if ( is_valid_identifier(nm.c_str()) ) {
-						segments.push_back(v.substr(pend_pos, ps1 - pend_pos));
+						if (pend_pos < ps1) {
+							segments.push_back(v.substr(pend_pos, ps1 - pend_pos));
+						}
 						chk_pos = pend_pos =  ps2 + 1;
 						segments.push_back(nm);
 						macro_idxes.insert(make_pair(nm, segments.size() - 1));
@@ -123,14 +125,14 @@ void MacroExpandable::parse_tokens() throw (Exception)
 				}
 			}
 			else {
-				chk_pos = cur_token.size();
+				chk_pos = v.size();
 			}
 		}
 		else {
-			chk_pos = cur_token.size();
+			chk_pos = v.size();
 		}
 
-		if (chk_pos == cur_token.size()) {
+		if (chk_pos == v.size()) {
 			if ( pend_pos < chk_pos ) {
 				segments.push_back(v.substr(pend_pos, chk_pos - 1));
 			}

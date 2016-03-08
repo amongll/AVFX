@@ -53,9 +53,12 @@ EnumExpandable::EnumExpandable(Script& s, json_t* ctx, const char* oper_name) th
 	script(s),
 	expand_context(NULL)
 {
-	if ( !ctx || !json_is_object(ctx) || !oper_name || !strlen(oper_name) ) {
+	if ( (ctx && !json_is_object(ctx)) || !oper_name || !strlen(oper_name) ) {
 		throw Exception(ErrorImplError, "enum context impl problem %s:%d", __FILE__,__LINE__);
 	}
+
+	if ( ctx == NULL || json_object_size(ctx) == 0 )
+		return;
 
 	json_t* enums = json_object_get(ctx, oper_name);
 	if ( enums && !json_is_array(enums) ) {
@@ -84,6 +87,7 @@ EnumExpandable::EnumExpandable(Script& s, json_t* ctx, const char* oper_name) th
 	else {
 		expand_context = json_copy(ctx);
 	}
+	register_self();
 }
 
 EnumExpandable::~EnumExpandable()

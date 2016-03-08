@@ -119,6 +119,7 @@ void vedit::ScriptParams::Param::parse(const Script& script) throw (Exception)
 			*imod = json_integer_value(default_define);
 		}
 	}
+	/*
 	else if ( !strcasecmp(type, "pos_perct") || !strcasecmp(type,"position_perct")
 				|| !strcasecmp(type, "perct_pos") || !strcasecmp(type,"perct_position")
 				|| !strcasecmp(type, "percent_pos") || !strcasecmp(type,"percent_position")
@@ -140,7 +141,7 @@ void vedit::ScriptParams::Param::parse(const Script& script) throw (Exception)
 			DECLARE_CONST_MEM_MODIFIER(imod,default_pos,int*);
 			*imod = json_integer_value(default_define);
 		}
-	}
+	}*/
 	else if ( type[0] == '#' ) {
 		const char* enum_str= type + 1;
 
