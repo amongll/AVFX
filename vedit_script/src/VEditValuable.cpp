@@ -13,7 +13,8 @@
 NMSP_BEGIN(vedit)
 void Evaluable::expand_scalar(const char* nm, const json_t* v) throw (Exception)
 {
-	assert(replace_type == EValueScalarReplace || replace_type == EValueStringCtxReplace);
+	assert(replace_type == EValueScalarReplace || replace_type == EValueStringCtxReplace
+		|| replace_type == EValueStringCtxReplace2);
 	assert( !json_is_object(v) && !json_is_array(v));
 
 	if (evalued)
@@ -23,7 +24,7 @@ void Evaluable::expand_scalar(const char* nm, const json_t* v) throw (Exception)
 		evalued = json_incref((json_t*)v);
 		return;
 	}
-	else if (replace_type == EValueStringCtxReplace || replace_type == EValueStringCtxReplace) {
+	else if (replace_type == EValueStringCtxReplace2 || replace_type == EValueStringCtxReplace) {
 		char buf[50] = {0};
 		const char* str = buf;
 		json_t* t = const_cast<json_t*>(v);
@@ -62,7 +63,7 @@ void Evaluable::expand_scalar(const char* nm, const json_t* v) throw (Exception)
 void Evaluable::expand_position(const char* nm, const int& frame_in,
 		const int& frame_out, int frame_seq) throw (Exception)
 {
-	assert(replace_type == EValuePositionReplace || replace_type == EValueStringCtxReplace);
+	assert(replace_type == EValuePositionReplace || replace_type == EValueStringCtxReplace2);
 	assert( frame_out >= 0 && frame_in >= 0 && frame_out >= frame_in && frame_seq >= 0);
 	if (evalued) return;
 
@@ -71,7 +72,7 @@ void Evaluable::expand_position(const char* nm, const int& frame_in,
 	if ( replace_type == EValuePositionReplace) {
 		evalued = json_integer(frame_seq);
 	}
-	else if (replace_type == EValueStringCtxReplace || replace_type == EValueStringCtxReplace) {
+	else if (replace_type == EValueStringCtxReplace2) {
 		char buf[50] = {0};
 		sprintf(buf, "%d", frame_seq);
 		pair<MapIter,MapIter> ranges = param_idxes.equal_range(string(nm));

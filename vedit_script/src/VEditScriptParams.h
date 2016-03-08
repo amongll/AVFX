@@ -32,7 +32,7 @@ public:
 		UnknownPosType,
 		FramePos, //帧位置
 		TimePos, //时间位置
-		PerctPos //百分比位置
+		//PerctPos //百分比位置
 	};
 	class Param
 	{

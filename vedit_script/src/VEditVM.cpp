@@ -158,10 +158,14 @@ mlt_producer Vm::get_stream_resource(const string& path)
 		}
 
 		mlt_profile profile = mlt_profile_init(NULL);
-		mlt_producer prod = mlt_factory_producer(profile,"loader",(const void*)abs_path.c_str());
+		prod = mlt_factory_producer(profile,"loader",(const void*)abs_path.c_str());
 		if (prod == NULL)
 			throw Exception(ErrorStreamFileInvalid,
 					"audio/video stream file invalid:%s", path.c_str());
+
+#ifdef DEBUG
+		cout<<mlt_producer_properties(prod);
+#endif
 
 		cache->resources[path] = prod;
 	}
@@ -220,6 +224,17 @@ void Vm::load_script_dir(const char* path) throw (Exception)
 	}
 
 	closedir(diobj);
+}
+
+void Vm::cleanup_stream_resources()
+{
+	Vm::instance();
+	StreamResourceCache* cache = static_cast<StreamResourceCache*>
+		(pthread_getspecific(thr_spec_cache_key));
+	if ( cache ) {
+		pthread_setspecific(thr_spec_cache_key, NULL);
+		delete cache;
+	}
 }
 
 shared_ptr<Script> Vm::get_script(const char* procname, ScriptType type)

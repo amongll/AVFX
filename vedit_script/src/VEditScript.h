@@ -30,10 +30,10 @@ public:
 	const char* const desc;
 
 	void call(json_t* param_values) throw(Exception);
-	void apply_filter(const string& id, int start_pos, int end_pos,
+	virtual void apply_filter(const string& id, int start_pos, int end_pos,
 		const char* filterproc,
 		json_t* other_args) throw (Exception);
-	void erase_filter(const string& id);
+	virtual void erase_filter(const string& id);
 
 	json_t* get_mlt_serialize() throw (Exception);
 
@@ -154,18 +154,27 @@ private:
 	hash_map<string, FilterWrap> filters;
 	json_t* filters_serialize() throw (Exception);
 
-	hash_multimap<string, shared_ptr<EnumExpandable> > selector_enum_presents;
-	hash_multimap<string, shared_ptr<MacroExpandable> > macro_presents;
+	//hash_multimap<string, shared_ptr<EnumExpandable> > selector_enum_presents;
+	//hash_multimap<string, shared_ptr<MacroExpandable> > macro_presents;
+	hash_multimap<string, EnumExpandable*> selector_enum_presents;
+	hash_multimap<string, MacroExpandable*> macro_presents;
 
-	hash_multimap<string, shared_ptr<EnumExpandable> > param_enum_presents;
-	hash_multimap<string, shared_ptr<Evaluable> > param_evalue_presents;
+	//hash_multimap<string, shared_ptr<EnumExpandable> > param_enum_presents;
+	//hash_multimap<string, shared_ptr<Evaluable> > param_evalue_presents;
+	hash_multimap<string, EnumExpandable*> param_enum_presents;
+	hash_multimap<string, Evaluable*> param_evalue_presents;
 
-	typedef hash_multimap<string, shared_ptr<EnumExpandable> >::iterator EnumExpandableIter;
-	typedef hash_multimap<string, shared_ptr<MacroExpandable> >::iterator MacroExpandableIter;
-	typedef hash_multimap<string, shared_ptr<Evaluable> >::iterator EvaluableIter;
+	//typedef hash_multimap<string, shared_ptr<EnumExpandable> >::iterator EnumExpandableIter;
+	//typedef hash_multimap<string, shared_ptr<MacroExpandable> >::iterator MacroExpandableIter;
+	//typedef hash_multimap<string, shared_ptr<Evaluable> >::iterator EvaluableIter;
+	typedef hash_multimap<string, EnumExpandable*>::iterator EnumExpandableIter;
+	typedef hash_multimap<string, MacroExpandable*>::iterator MacroExpandableIter;
+	typedef hash_multimap<string, Evaluable*>::iterator EvaluableIter;
 
-	hash_map<Evaluable*, shared_ptr<Evaluable> > all_pendings;
-	typedef hash_map<Evaluable*, shared_ptr<Evaluable> >::iterator EvaluableCheckIter;
+	//hash_map<Evaluable*, shared_ptr<Evaluable> > all_pendings;
+	//typedef hash_map<Evaluable*, shared_ptr<Evaluable> >::iterator EvaluableCheckIter;
+	hash_map<Evaluable*, Evaluable*> all_pendings;
+	typedef hash_map<Evaluable*, Evaluable*>::iterator EvaluableCheckIter;
 
 };
 

@@ -20,6 +20,7 @@
 #include <cstring>
 #include <framework/mlt.h>
 #include <pthread.h>
+#include <iostream>
 
 using namespace __gnu_cxx;
 using namespace std::tr1;

@@ -25,8 +25,12 @@ void Script::call(json_t* args_value) throw (Exception)
 		compiled = NULL;
 	}
 
-	if (args_value==NULL) args_value = json_object();
-	args = json_incref(args_value);
+	if (args_value==NULL) {
+		args = json_object();
+	}
+	else {
+		args = json_incref(args_value);
+	}
 	json_t* t = args;
 
 	json_t* se = json_object_get(defines,"props");
@@ -97,7 +101,7 @@ void Script::call(json_t* args_value) throw (Exception)
 				throw Exception(ErrorImplError, "position param can't be calced:%s ", it->second->name);
 			}
 
-			if ( it->second->pos_type == ScriptParams::PerctPos ) {
+			/*if ( it->second->pos_type == ScriptParams::PerctPos ) {
 				if ( iarg > 100) iarg = 100;
 				if ( iarg < -100) iarg = -100;
 
@@ -108,7 +112,8 @@ void Script::call(json_t* args_value) throw (Exception)
 					iarg = (frame_out - frame_in) * (double)(100 + iarg)/100;
 				}
 			}
-			else if ( it->second->pos_type == ScriptParams::FramePos) {
+			else */
+			if ( it->second->pos_type == ScriptParams::FramePos) {
 				if ( iarg < 0 ) {
 					if ( iarg  < (frame_in - frame_out) )
 						iarg = 0;
@@ -125,7 +130,7 @@ void Script::call(json_t* args_value) throw (Exception)
 
 			}
 			else if ( it->second->pos_type == ScriptParams::TimePos ) {
-				iarg = (double)(iarg)/1000 * 25; // 25fps
+				iarg = (double)(iarg)/40; // 25fps
 				if ( iarg < 0 ) {
 					if ( iarg  < (frame_in - frame_out) )
 						iarg = 0;
@@ -283,12 +288,11 @@ void Script::regist_macro_usage(const char* macro, MacroExpandable* obj)
 
 	MacroExpandableIter it;
 	for (it = ranges.first; it != ranges.second; it++) {
-		if ( it->second.get() == obj )
+		if ( it->second == obj )
 			return;
 	}
 
-	shared_ptr<MacroExpandable> v(obj);
-	macro_presents.insert( make_pair(string(macro), v) ) ;
+	macro_presents.insert( make_pair(string(macro), obj) ) ;
 }
 
 void Script::regist_enum_selector_usage(const char* enmae, const char* sname,
@@ -305,11 +309,10 @@ void Script::regist_enum_selector_usage(const char* enmae, const char* sname,
 			selector_enum_presents.equal_range(nm);
 	EnumExpandableIter it ;
 	for (it = ranges.first; it != ranges.second; it++ ) {
-		if ( it->second.get() == obj )
+		if ( it->second == obj )
 			return;
 	}
-
-	selector_enum_presents.insert( make_pair(nm, shared_ptr<EnumExpandable>(obj) ) );
+	selector_enum_presents.insert( make_pair(nm, obj ) );
 }
 
 void Script::regist_enum_param_usage(const char* param, EnumExpandable* obj)
@@ -328,11 +331,11 @@ void Script::regist_enum_param_usage(const char* param, EnumExpandable* obj)
 			param_enum_presents.equal_range(param);
 	EnumExpandableIter it;
 	for (it = ranges.first; it != ranges.second; it++ ) {
-		if (it->second.get() == obj)
+		if (it->second == obj)
 			return;
 	}
 
-	param_enum_presents.insert(make_pair( string(param), shared_ptr<EnumExpandable>(obj)));
+	param_enum_presents.insert(make_pair( string(param), obj));
 }
 
 void Script::regist_scalar_param_usage(const char* param, Evaluable* obj)
@@ -343,7 +346,7 @@ void Script::regist_scalar_param_usage(const char* param, Evaluable* obj)
 		throw Exception(ErrorParamNotFount, "param:%s", param);
 	}
 
-	if (param_obj->param_style != ScriptParams::ScalarParam ||
+	if (param_obj->param_style != ScriptParams::ScalarParam &&
 			param_obj->param_style != ScriptParams::PosParam ) {
 		throw Exception(ErrorInvalidParam, "param:%s not scalar", param);
 	}
@@ -352,12 +355,12 @@ void Script::regist_scalar_param_usage(const char* param, Evaluable* obj)
 			param_evalue_presents.equal_range(param);
 	EvaluableIter it ;
 	for(it = ranges.first; it != ranges.second ; it++ ) {
-		if ( it->second.get() == obj )
+		if ( it->second == obj )
 			return;
 	}
 
-	param_evalue_presents.insert( make_pair(string(param), shared_ptr<Evaluable>(obj)));
-	all_pendings.insert( make_pair(obj, shared_ptr<Evaluable>(obj)) );
+	param_evalue_presents.insert( make_pair(string(param), obj));
+	all_pendings.insert( make_pair(obj, obj) );
 }
 
 Script::Script(const json_t* detail) throw (Exception):
@@ -421,9 +424,9 @@ void Script::parse_impl() throw (Exception)
 
 void Script::parse_mlt_props(json_t* detail) throw (Exception)
 {
-	if (!detail)return;
-	if ( !json_is_object(detail) ) throw Exception(ErrorScriptFmtError, "\"props\":{...} fmt needed");
-	if ( json_object_size(detail) == 0) return;
+	//if (!detail)return;
+	if ( detail && !json_is_object(detail) ) throw Exception(ErrorScriptFmtError, "\"props\":{...} fmt needed");
+	//if ( json_object_size(detail) == 0) return;
 
 	ScriptProps* props = new ScriptProps(*this, detail);
 	mlt_props.reset(props);
@@ -431,16 +434,15 @@ void Script::parse_mlt_props(json_t* detail) throw (Exception)
 
 void Script::applies_selectors() throw (Exception)
 {
-	EnumExpandableIter it = selector_enum_presents.begin(), it2;
+	EnumExpandableIter it = selector_enum_presents.begin();
 
-	while ( it != selector_enum_presents.end() ) {
+	for(; it != selector_enum_presents.end(); it++ ) {
 		string enum_nm = it->first.substr(0, it->first.find(":"));
 		string sel_nm = it->first.substr(it->first.find(":") + 1);
 		const json_t* evalue = get_selector(enum_nm.c_str(), sel_nm.c_str());
 		it->second->expand_enum(enum_nm.c_str(), sel_nm.c_str(), NULL, evalue);
-		it2 = it++;
-		selector_enum_presents.erase(it2);
 	}
+	selector_enum_presents.clear();
 
 	/*
 	for ( it = selector_enum_presents.begin(); it != selector_enum_presents.end(); it++ ) {
@@ -453,13 +455,12 @@ void Script::applies_selectors() throw (Exception)
 
 void Script::applies_macros() throw (Exception)
 {
-	MacroExpandableIter it = macro_presents.begin(), it2;
-	while ( it != macro_presents.end() ) {
+	MacroExpandableIter it = macro_presents.begin();
+	for ( ; it != macro_presents.end(); it++) {
 		const json_t* macrovalue = get_macro(it->first.c_str());
 		it->second->expand_macro(it->first.c_str(), macrovalue);
-		it2 = it++;
-		macro_presents.erase(it2);
 	}
+	macro_presents.clear();
 
 	//for ( it = macro_presents.begin(); it != macro_presents.end(); it++ ) {
 	//	const json_t* macrovalue = get_macro(it->first.c_str());
@@ -641,16 +642,17 @@ void Script::check_evaluables()
 		throw Exception(ErrorScriptArgInvalid, "script not compiled completed.");
 	}
 
-	EvaluableCheckIter it = all_pendings.begin(), tit;
-	while ( it != all_pendings.end() ) {
-		if ( it->first->finished( ) ) {
-			tit = it++;
-			all_pendings.erase(tit);
+	EvaluableCheckIter it = all_pendings.begin();
+	bool all_evalued = true;
+	for (; it != all_pendings.end(); it++ ) {
+		if ( !it->first->finished( ) ) {
+			all_evalued = false;
 		}
 	}
-	if (all_pendings.size() > 0) {
+	if (all_evalued == false) {
 		throw Exception(ErrorScriptArgInvalid, "script not compiled completed.");
 	}
+	all_pendings.clear();
 }
 
 NMSP_END(vedit)
