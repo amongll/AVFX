@@ -173,8 +173,10 @@ private:
 
 	//hash_map<Evaluable*, shared_ptr<Evaluable> > all_pendings;
 	//typedef hash_map<Evaluable*, shared_ptr<Evaluable> >::iterator EvaluableCheckIter;
-	hash_map<Evaluable*, Evaluable*> all_pendings;
-	typedef hash_map<Evaluable*, Evaluable*>::iterator EvaluableCheckIter;
+	//hash_map<Evaluable*, Evaluable*> all_pendings;
+	//typedef hash_map<Evaluable*, Evaluable*>::iterator EvaluableCheckIter;
+	hash_set<Evaluable*> all_pendings;
+	typedef hash_set<Evaluable*>::iterator EvaluableCheckIter;
 
 };
 

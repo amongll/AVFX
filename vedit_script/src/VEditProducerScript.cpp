@@ -109,29 +109,32 @@ void VideoScript::pre_judge() throw (Exception)
 			if (inframe < 0)inframe = 0;
 		}
 		break;
-	case ScriptParams::TimePos:
+	case ScriptParams::TimePos: {
+		int total_time = length * 40;
 		if ( inframe == -1 ) {
 			inframe = length - 1;
 		}
 		else if ( inframe >= 0  ){
-			inframe = (double)inframe / 40 ;
+			if ( inframe > total_time) {
+				inframe = length -1;
+			}
+			else {
+				inframe = (double)inframe / 40 ;
+			}
 		}
 		else {
-			inframe = (double)( ((length * 40) + inframe) ) / 40;
-			if (inframe < 0) inframe = 0;
+			inframe = total_time + inframe;
+			if ( inframe < 0 ) {
+				inframe = length - 1;
+			}
+			else {
+				inframe = (double)inframe/40;
+			}
 		}
-		break;
-	/*
-	case ScriptParams::PerctPos:
-		if (inframe ==  -1) {
-			inframe = length - 1;
-		}
-		else {
-			inframe = (double)inframe / 100 * length - 1;
-		}
-		break;
-	*/
 	}
+		break;
+	}
+
 
 	switch (outparam->pos_type) {
 	case ScriptParams::FramePos:
@@ -143,17 +146,29 @@ void VideoScript::pre_judge() throw (Exception)
 			if (outframe < 0)outframe = 0;
 		}
 		break;
-	case ScriptParams::TimePos:
+	case ScriptParams::TimePos: {
+		int total_time = length * 40;
 		if ( outframe == -1 ) {
 			outframe = length - 1;
 		}
 		else if ( outframe >= 0  ){
-			outframe = (double)outframe / 40 ;
+			if ( outframe > total_time) {
+				outframe = length -1;
+			}
+			else {
+				outframe = (double)outframe / 40 ;
+			}
 		}
 		else {
-			outframe = (double)( ((length * 40) + outframe) ) / 40;
-			if (outframe < 0) outframe = 0;
+			outframe = total_time + outframe;
+			if ( outframe < 0 ) {
+				outframe = length - 1;
+			}
+			else {
+				outframe = (double)outframe/40;
+			}
 		}
+	}
 		break;
 	}
 
@@ -172,8 +187,13 @@ void VideoScript::pre_judge() throw (Exception)
 	if ( !mlt_props.get()) {
 		mlt_props.reset(new ScriptProps(*this, NULL));
 	}
-	mlt_props->add_property("in", json_integer(inframe));
-	mlt_props->add_property("out", json_integer(outframe));
+	json_t* jv = json_integer(inframe);
+	mlt_props->add_property("in", jv);
+	json_decref(jv);
+
+	jv = json_integer(outframe);
+	mlt_props->add_property("out", jv);
+	json_decref(jv);
 
 	this->path  = path;
 	//todo: check format info
@@ -234,29 +254,32 @@ void AudioScript::pre_judge() throw (Exception)
 			if (inframe < 0)inframe = 0;
 		}
 		break;
-	case ScriptParams::TimePos:
+	case ScriptParams::TimePos: {
+		int total_time = length * 40;
 		if ( inframe == -1 ) {
 			inframe = length - 1;
 		}
 		else if ( inframe >= 0  ){
-			inframe = (double)inframe / 40 ;
+			if ( inframe > total_time) {
+				inframe = length -1;
+			}
+			else {
+				inframe = (double)inframe / 40 ;
+			}
 		}
 		else {
-			inframe = (double)( ((length * 40) + inframe) ) / 40;
-			if (inframe < 0) inframe = 0;
+			inframe = total_time + inframe;
+			if ( inframe < 0 ) {
+				inframe = length - 1;
+			}
+			else {
+				inframe = (double)inframe/40;
+			}
 		}
-		break;
-	/*
-	case ScriptParams::PerctPos:
-		if (inframe ==  -1) {
-			inframe = length - 1;
-		}
-		else {
-			inframe = (double)inframe / 100 * length - 1;
-		}
-		break;
-	*/
 	}
+		break;
+	}
+
 
 	switch (outparam->pos_type) {
 	case ScriptParams::FramePos:
@@ -268,17 +291,29 @@ void AudioScript::pre_judge() throw (Exception)
 			if (outframe < 0)outframe = 0;
 		}
 		break;
-	case ScriptParams::TimePos:
+	case ScriptParams::TimePos: {
+		int total_time = length * 40;
 		if ( outframe == -1 ) {
 			outframe = length - 1;
 		}
 		else if ( outframe >= 0  ){
-			outframe = (double)outframe / 40 ;
+			if ( outframe > total_time) {
+				outframe = length -1;
+			}
+			else {
+				outframe = (double)outframe / 40 ;
+			}
 		}
 		else {
-			outframe = (double)( ((length * 40) + outframe) ) / 40;
-			if (outframe < 0) outframe = 0;
+			outframe = total_time + outframe;
+			if ( outframe < 0 ) {
+				outframe = length - 1;
+			}
+			else {
+				outframe = (double)outframe/40;
+			}
 		}
+	}
 		break;
 	}
 
@@ -290,8 +325,13 @@ void AudioScript::pre_judge() throw (Exception)
 
 	type_spec_props->add_property("resource", res_arg);
 	json_decref(res_arg);
-	mlt_props->add_property("in", json_integer(inframe));
-	mlt_props->add_property("out", json_integer(outframe));
+	json_t* jv = json_integer(inframe);
+	mlt_props->add_property("in", jv);
+	json_decref(jv);
+
+	jv = json_integer(outframe);
+	mlt_props->add_property("out", jv);
+	json_decref(jv);
 
 	this->path  = path;
 	//todo: check format info

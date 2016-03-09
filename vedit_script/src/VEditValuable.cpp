@@ -67,7 +67,7 @@ void Evaluable::expand_position(const char* nm, const int& frame_in,
 	assert( frame_out >= 0 && frame_in >= 0 && frame_out >= frame_in && frame_seq >= 0);
 	if (evalued) return;
 
-	int len = frame_out - frame_in;
+	int len = frame_out - frame_in + 1;
 	if ( frame_seq >= len ) frame_seq = len - 1;
 	if ( replace_type == EValuePositionReplace) {
 		evalued = json_integer(frame_seq);

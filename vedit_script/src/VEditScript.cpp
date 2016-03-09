@@ -118,7 +118,7 @@ void Script::call(json_t* args_value) throw (Exception)
 					if ( iarg  < (frame_in - frame_out) )
 						iarg = 0;
 					else {
-						iarg = (frame_out - frame_in) + iarg;
+						iarg = (frame_out - frame_in) + iarg + 1;
 					}
 				}
 				else if ( iarg > (frame_out - frame_in) ) {
@@ -130,19 +130,23 @@ void Script::call(json_t* args_value) throw (Exception)
 
 			}
 			else if ( it->second->pos_type == ScriptParams::TimePos ) {
-				iarg = (double)(iarg)/40; // 25fps
+				int totol_time_ms = (frame_out-frame_in+1)*40;
 				if ( iarg < 0 ) {
-					if ( iarg  < (frame_in - frame_out) )
-						iarg = 0;
+					if ( iarg == -1 ) {
+						iarg = frame_out - frame_in;
+					}
 					else {
-						iarg = (frame_out - frame_in) + iarg;
+						iarg = totol_time_ms + iarg;
+						iarg /= 40;
 					}
 				}
-				else if ( iarg > (frame_out - frame_in) ) {
-					iarg = frame_out - frame_in;
-				}
 				else {
-					;//
+					if ( iarg > totol_time_ms ) {
+						iarg = frame_out - frame_in;
+					}
+					else {
+						iarg /= 40;
+					}
 				}
 			}
 
@@ -156,24 +160,26 @@ void Script::call(json_t* args_value) throw (Exception)
 		else if ( it->second->param_style == ScriptParams::ScalarParam ) {
 			if ( !arg ) {
 				arg = it->second->default_scalar;
+				if ( !arg ) {
+					throw Exception(ErrorScriptArgInvalid,
+						"arg:%s empty and has no default", it->second->name);
+				}
 			}
 			else if ( json_is_object(arg) || json_is_array(arg) ) {
 				throw Exception(ErrorScriptArgInvalid,"arg:%s should be scalar",
 					it->second->name);
 			}
-			else {
-				pair<EvaluableIter, EvaluableIter> ranges =
-						param_evalue_presents.equal_range(string(it->second->name));
+			pair<EvaluableIter, EvaluableIter> ranges =
+					param_evalue_presents.equal_range(string(it->second->name));
 
-				if (!arg && ranges.first == param_evalue_presents.end() ) {
-					throw Exception(ErrorScriptArgInvalid,"arg:%s is needed",
-						it->second->name);
-				}
+			if (!arg && ranges.first == param_evalue_presents.end() ) {
+				throw Exception(ErrorScriptArgInvalid,"arg:%s is needed",
+					it->second->name);
+			}
 
-				EvaluableIter eit;
-				for ( eit = ranges.first; eit != ranges.second; eit++ ) {
-					eit->second->expand_scalar(eit->first.c_str(),arg);
-				}
+			EvaluableIter eit;
+			for ( eit = ranges.first; eit != ranges.second; eit++ ) {
+				eit->second->expand_scalar(eit->first.c_str(),arg);
 			}
 		}
 	}
@@ -360,7 +366,7 @@ void Script::regist_scalar_param_usage(const char* param, Evaluable* obj)
 	}
 
 	param_evalue_presents.insert( make_pair(string(param), obj));
-	all_pendings.insert( make_pair(obj, obj) );
+	all_pendings.insert(obj );
 }
 
 Script::Script(const json_t* detail) throw (Exception):
@@ -645,7 +651,7 @@ void Script::check_evaluables()
 	EvaluableCheckIter it = all_pendings.begin();
 	bool all_evalued = true;
 	for (; it != all_pendings.end(); it++ ) {
-		if ( !it->first->finished( ) ) {
+		if ( !(*it)->finished( ) ) {
 			all_evalued = false;
 		}
 	}
