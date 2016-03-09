@@ -1,7 +1,7 @@
 /*
  * VEditScriptParams.cpp
  *
- *  Created on: 2016��2��22��
+ *  Created on: 2016-2-22
  *      Author: li.lei@youku.com
  */
 
@@ -143,6 +143,7 @@ void vedit::ScriptParams::Param::parse(const Script& script) throw (Exception)
 		}
 	}*/
 	else if ( type[0] == '#' ) {
+		*pmodifier = EnumParam;
 		const char* enum_str= type + 1;
 
 		if (strlen(enum_str) == 0) throw Exception(ErrorParamDefineError,

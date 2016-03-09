@@ -583,13 +583,20 @@ json_t* Script::serialize_mlt(int dummy)  throw (Exception)
 		}
 		json_decref(subdetail);
 	}
+
+	json_t* uuid_se = json_object_get(ret, "uuid");
+	if ( !uuid_se || !json_is_string(uuid_se) || !strlen(json_string_value(uuid_se)) ) {
+		json_object_set_new(ret, "uuid", json_string(Vm::uuid().c_str()));
+	}
 	return ret;
 }
 
 void Script::parse_specific_props(const vector<string>& prop_nms)
 		throw (Exception)
 {
-	ScriptProps* props = new ScriptProps(*this, prop_nms);
+	vector<string> copy = prop_nms;
+	copy.push_back("uuid");
+	ScriptProps* props = new ScriptProps(*this, copy);
 	type_spec_props.reset(props);
 }
 

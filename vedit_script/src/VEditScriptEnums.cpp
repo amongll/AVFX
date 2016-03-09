@@ -46,7 +46,7 @@ void ScriptEnums::parse_enums() throw (Exception)
 			void* ii = json_object_iter(se);
 			while(ii) {
 				const char* snm = json_object_iter_key(ii);
-				sse = json_object_iter_value(sse);
+				sse = json_object_iter_value(ii);
 
 				if ( is_valid_identifier(enm) == false ) {
 					throw Exception(ErrorEnumDefineError, "enum select %s->%s invalid", enm, snm);

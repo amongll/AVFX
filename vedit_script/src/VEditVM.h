@@ -24,6 +24,8 @@ public:
 	static json_t* call_script(const char* procname, vedit::ScriptType type, json_t* args)throw(Exception);
 	static shared_ptr<Script> get_script(const char* procname)throw(Exception);
 
+	static string uuid();
+
 	static shared_ptr<VideoScript> get_video_script(const char* procname)
 	{
 		return shared_ptr<VideoScript>(dynamic_cast<VideoScript*>
@@ -88,6 +90,8 @@ private:
 	static Vm* singleton;
 	static Vm* instance();
 	static pthread_mutex_t script_lock;
+
+	static unsigned int rand_seed;
 
 	static pthread_key_t thr_spec_cache_key;
 	static pthread_once_t thr_spec_cache_once;

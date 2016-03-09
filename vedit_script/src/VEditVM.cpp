@@ -12,6 +12,8 @@
 #include <sys/types.h>
 #include <cerrno>
 #include <framework/mlt.h>
+#include <sys/time.h>
+#include <time.h>
 
 #include <dirent.h>
 
@@ -19,6 +21,7 @@ NMSP_BEGIN(vedit)
 
 pthread_mutex_t Vm::script_lock = PTHREAD_MUTEX_INITIALIZER;
 shared_ptr<Vm> Vm::singleton_ptr;
+unsigned int Vm::rand_seed = time(NULL);
 
 json_t* Vm::call_script(const char* procname, json_t* args) throw (Exception)
 {
@@ -359,6 +362,21 @@ Vm::StreamResourceCache::~StreamResourceCache()
 		mlt_producer_close(it->second);
 	}
 }
+
+string Vm::uuid()
+{
+	Lock lk(&script_lock);
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+
+	uint64_t v = tv.tv_sec * 1000 + tv.tv_usec / 1000;
+	v *= 1000;
+	v += rand_r(&rand_seed)%1000;
+	char buf[50];
+	snprintf(buf,sizeof(buf),"%llu",v);
+	return string(buf);
+}
+
 
 NMSP_END(vedit)
 

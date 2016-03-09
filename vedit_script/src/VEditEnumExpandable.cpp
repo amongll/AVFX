@@ -100,7 +100,8 @@ void EnumExpandable::register_self() throw (Exception)
 {
 	hash_map<string, int>::iterator it ;
 	for ( it = enum_ctx_tags.begin(); it != enum_ctx_tags.end(); it++ ) {
-		if ( is_selector_only(it->first.c_str()) ) {
+		//if ( is_selector_only(it->first.c_str()) ) {
+		if ( it->first.find(':') != std::string::npos) {
 			string enm,snm;
 			enm = it->first.substr(0,it->first.find(':'));
 			snm = it->first.substr(it->first.find(':')+1);

@@ -157,7 +157,8 @@ ScriptProps::ScriptProps(Script& script, const vector<string>& spec_props)
 		const char* pnm = json_object_iter_key(it);
 		json_t* v = json_object_iter_value(it);
 		Property* pobj = new Property(*this, pnm, v);
-		props.insert( make_pair(string(pnm), shared_ptr<Property>(pobj)) ) ;
+		props[pnm].reset(pobj);
+		//props.insert( make_pair(string(pnm), shared_ptr<Property>(pobj)) ) ;
 		it = json_object_iter_next(after_enum_expand, it);
 	}
 }
