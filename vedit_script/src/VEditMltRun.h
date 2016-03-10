@@ -18,11 +18,25 @@ class Script;
 struct JsonPathComponent
 {
 	enum PathType {
+		PathInvalid,
 		PathObject,
 		PathArray
 	};
 
 	JsonPathComponent(const char* desc = NULL);
+	JsonPathComponent(const JsonPathComponent& r):
+		type(r.type),
+		name(r.name),
+		array_insert_idx(r.array_insert_idx)
+	{
+	}
+
+	JsonPathComponent& operator=(const JsonPathComponent& r) {
+		type = r.type;
+		name = r.name;
+		array_insert_idx = r.array_insert_idx;
+		return *this;
+	}
 
 	bool is_root()const {
 		return type == PathObject && name.length() == 0;
@@ -35,9 +49,27 @@ struct JsonPathComponent
 
 struct JsonPath
 {
-	JsonPath(const char* desc = NULL);
+	explicit JsonPath(const char* desc = NULL);
 	JsonPath(const JsonPath& r);
-	vector<JsonPathComponent> path;
+
+	void push_back(const char* comp) {
+		JsonPathComponent p;
+		p.type = JsonPathComponent::PathObject;
+		p.name = comp;
+		path.push_back(p);
+	}
+
+	void push_back(const char* arrnm, int idx) {
+		JsonPathComponent comp;
+		comp.type = JsonPathComponent::PathArray;
+		comp.name = arrnm;
+		comp.array_insert_idx = idx;
+		path.push_back(comp);
+	}
+
+	typedef list<JsonPathComponent>::iterator PathCompIter;
+	typedef list<JsonPathComponent>::const_iterator PathCompCIter;
+	list<JsonPathComponent> path;
 	JsonPath& operator=(const JsonPath& r);
 
 	static JsonPath operator+(const JsonPath& l, const JsonPath& r);
@@ -46,24 +78,27 @@ struct JsonPath
 class MltRuntime
 {
 public:
-	MltRuntime(json_t* script_serialed, int give=1);
+	MltRuntime(json_t* script_serialed, int give=1) throw(Exception);
 	virtual ~MltRuntime();
 
 	/*
 	 * 比如要修改一个playlist的第10个slice的第3个effects，如此表达
 	 * "/slices:9/effects:3
 	 */
-	void erase_runtime_entry(const string& uuid);
-	void erase_runtime_entry(const JsonPath& path);
+	void erase_runtime_entry(const string& uuid) throw (Exception);
+	void erase_runtime_entry(const JsonPath& path) throw(Exception);
+	void erase_runtime_entry(const char* path) throw(Exception);
 
 	void add_runtime_entry(
 		const JsonPath& path,
-		json_t* script_serialed, int give=1);
+		json_t* script_serialed, int give=1) throw(Exception);
 
 	void replace_runtime_entry(const string& src_uuid,
-		const JsonPath& path, json_t* script_serialed, int give = 1);
+		const JsonPath& path, json_t* script_serialed, int give = 1) throw(Exception);
 
 	const JsonPath* get_runtime_entry_path(const string& uuid);
+
+	void reload() throw (Exception);
 
 	void run() throw (Exception);
 	void seek() throw (Exception);
@@ -81,16 +116,36 @@ public:
 	static const char* const multitrack_entry_path = "tracks:-1";
 private:
 	friend class Script;
+
+	void parse_struct(json_t* v, const JsonPath& curPath , hash_map<string,JsonPath>& uuid_paths) throw (Exception);
+
 	uint32_t json_version;
 	json_t* json_serialize;
 
 	uint32_t producer_version;
 
-	hash_map<string, shared_ptr<JsonPath> > uuid_pathmap;
+	typedef hash_map<string,JsonPath>::iterator PathIter;
+	typedef hash_map<string,JsonPath>::const_iterator PathCIter;
+	typedef hash_map<string,mlt_service>::iterator SvcIter;
+	typedef hash_map<string,mlt_service>::const_iterator SvcCIter;
+
+	hash_map<string, JsonPath> uuid_pathmap;
 	hash_map<string, mlt_service> uuid_mlt_svcmap;
 
-	mlt_producer producer;
+	enum Status {
+		StatusCreated,
+		StatusInvalid,
+		StatusInited,
+		StatusRunning,
+		StatusStopped
+	};
 
+	Status status;
+
+	bool is_stopped();
+	bool is_running();
+
+	mlt_producer producer;
 	mlt_consumer consumer;
 };
 

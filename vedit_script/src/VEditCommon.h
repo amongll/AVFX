@@ -11,6 +11,7 @@
 #include <string>
 #include <tr1/memory>
 #include <vector>
+#include <list>
 #include <deque>
 #include <set>
 #include <hash_map>

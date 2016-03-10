@@ -44,6 +44,12 @@ const char* error_desc(ErrorCode code)
 		return "<file/dir not found or unexpected>";
 	case ErrorImplError:
 		return "<Implementation problem>";
+	case ErrorRuntimeJsonUUIDDup:
+		return "<mlt runtime json uuid dup>";
+	case ErrorRuntimeJsonUUIDDup:
+		return "<mlt runtime json uuid not found>";
+	case ErrorRuntimeUuidPathInvalid:
+		return "<mlt runtime uuid path invalid>";
 	default:
 		return "";
 	}

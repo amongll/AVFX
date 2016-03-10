@@ -29,6 +29,9 @@ enum ErrorCode
 	ErrorScriptArgInvalid,
 	ErrorStreamFileInvalid,
 	ErrorFileSysError,
+	ErrorRuntimeJsonUUIDDup,
+	ErrorRuntimeJsonUUIDNotFound,
+	ErrorRuntimeUuidPathInvalid,
 	ErrorImplError
 };
 
