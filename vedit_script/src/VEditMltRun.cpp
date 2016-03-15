@@ -419,7 +419,7 @@ json_t* MltRuntime::run() throw (Exception)
 
 	producer = tmp_producer;
 	mlt_profile profile = mlt_profile_init(NULL);
-	consumer = mlt_factory_consumer(profile, "sdl", NULL);
+	consumer = mlt_factory_consumer(profile, "sdl", NULL); //todo
 	mlt_consumer_connect(consumer, mlt_producer_service(producer));
 	mlt_consumer_start(consumer);
 	status = StatusRunning;
