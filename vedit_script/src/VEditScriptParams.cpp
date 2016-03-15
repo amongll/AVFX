@@ -1,7 +1,7 @@
 /*
  * VEditScriptParams.cpp
  *
- *  Created on: 2016��2��22��
+ *  Created on: 2016-2-22
  *      Author: li.lei@youku.com
  */
 
@@ -83,7 +83,7 @@ void vedit::ScriptParams::Param::parse(const Script& script) throw (Exception)
 		if (default_define) {
 			if (json_is_object(default_define) || json_is_array(default_define)
 					|| json_is_null(default_define) ) {
-				throw Exception(ErrorParamDefineError,"default is not scalar value for param:%s",
+				throw_error_v(ErrorParamDefineError,"default is not scalar value for param:%s",
 					name);
 			}
 			DECLARE_CONST_MEM_MODIFIER(xmod, default_scalar, const json_t**);
@@ -98,7 +98,7 @@ void vedit::ScriptParams::Param::parse(const Script& script) throw (Exception)
 		*xmod = FramePos;
 
 		if (default_define) {
-			if (!json_is_integer(default_define)) throw Exception(ErrorParamDefineError,
+			if (!json_is_integer(default_define)) throw_error_v(ErrorParamDefineError,
 					"default is not position for param:%s", name);
 
 			DECLARE_CONST_MEM_MODIFIER(imod,default_pos,int*);
@@ -112,7 +112,7 @@ void vedit::ScriptParams::Param::parse(const Script& script) throw (Exception)
 		DECLARE_CONST_MEM_MODIFIER(xmod, pos_type, ParamPosType*);
 		*xmod = TimePos;
 		if (default_define) {
-			if (!json_is_integer(default_define)) throw Exception(ErrorParamDefineError,
+			if (!json_is_integer(default_define)) throw_error_v(ErrorParamDefineError,
 				"default is not position for param:%s", name);
 
 			DECLARE_CONST_MEM_MODIFIER(imod,default_pos,int*);
@@ -130,12 +130,12 @@ void vedit::ScriptParams::Param::parse(const Script& script) throw (Exception)
 		*xmod = PerctPos;
 
 		if (default_define) {
-			if (!json_is_integer(default_define)) throw Exception(ErrorParamDefineError,
+			if (!json_is_integer(default_define)) throw_error_v(ErrorParamDefineError,
 				"default is not position for param:%s", name);
 
 			json_int_t v = json_integer_value(default_define);
 			if ( v < -100 || v > 100 )
-				throw Exception(ErrorParamDefineError,
+				throw_error_v(ErrorParamDefineError,
 					"default is not valid percent position for param:%s", name);
 
 			DECLARE_CONST_MEM_MODIFIER(imod,default_pos,int*);
@@ -143,22 +143,23 @@ void vedit::ScriptParams::Param::parse(const Script& script) throw (Exception)
 		}
 	}*/
 	else if ( type[0] == '#' ) {
+		*pmodifier = EnumParam;
 		const char* enum_str= type + 1;
 
-		if (strlen(enum_str) == 0) throw Exception(ErrorParamDefineError,
+		if (strlen(enum_str) == 0) throw_error_v(ErrorParamDefineError,
 				"enum type is invalid for param:%s", name);
 
 		if (!script.has_enum(enum_str)) {
-			throw Exception(ErrorEnumTypeNotFound,
+			throw_error_v(ErrorEnumTypeNotFound,
 				"param:%s", name);
 		}
 
 		if ( default_define ) {
-			if (!json_is_string(default_define)) throw Exception(ErrorParamDefineError,
+			if (!json_is_string(default_define)) throw_error_v(ErrorParamDefineError,
 				"default is not invalid enum selector for param:%s", name);
 
 			if ( ! script.get_selector(enum_str,json_string_value(default_define))) {
-				throw Exception(ErrorEnumSelectNotFound,
+				throw_error_v(ErrorEnumSelectNotFound,
 						"default selector:%s for param:%s",json_string_value(default_define), name);
 			}
 
@@ -170,7 +171,7 @@ void vedit::ScriptParams::Param::parse(const Script& script) throw (Exception)
 		*smod = enum_str;
 	}
 	else {
-		throw Exception(ErrorParamDefineError);
+		throw_error(ErrorParamDefineError);
 	}
 }
 

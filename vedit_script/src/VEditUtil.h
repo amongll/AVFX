@@ -14,11 +14,16 @@ NMSP_BEGIN(vedit)
 
 struct JsonWrap
 {
-	JsonWrap(json_t* js = NULL):
+	JsonWrap(json_t* js = NULL, int give=0):
 		h(NULL)
 	{
-		if (js)
-			h = json_incref(js);
+		if (js) {
+			if (give == 0)
+				h = json_incref(js);
+			else
+				h = js;
+
+		}
 	}
 
 	JsonWrap(const JsonWrap& rh):
@@ -47,6 +52,8 @@ struct JsonWrap
 
 	json_t* h;
 };
+
+typedef std::pair<const char*, JsonWrap> ScriptSerialized;
 
 struct Lock
 {

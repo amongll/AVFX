@@ -1,7 +1,7 @@
 /*
  * VEditDefinable.cpp
  *
- *  Created on: 2016Äê2ÔÂ25ÈÕ
+ *  Created on: 2016ï¿½ï¿½2ï¿½ï¿½25ï¿½ï¿½
  *      Author: li.lei@youku.com
  */
 
@@ -9,5 +9,5 @@
 
 json_t* vedit::Definable::serialize_define() const throw (Exception)
 {
-	throw Exception(ErrorFeatureNotImpl);
+	throw_error(ErrorFeatureNotImpl);
 }

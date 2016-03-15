@@ -39,17 +39,17 @@ void ScriptEnums::parse_enums() throw (Exception)
 		se = json_object_iter_value(eit);
 
 		if ( is_valid_identifier(enm) == false ) {
-			throw Exception(ErrorEnumDefineError, "enum name :%s invalid", enm);
+			throw_error_v(ErrorEnumDefineError, "enum name :%s invalid", enm);
 		}
 
 		if ( json_is_object(se) && json_object_size(se) ) {
 			void* ii = json_object_iter(se);
 			while(ii) {
 				const char* snm = json_object_iter_key(ii);
-				sse = json_object_iter_value(sse);
+				sse = json_object_iter_value(ii);
 
 				if ( is_valid_identifier(enm) == false ) {
-					throw Exception(ErrorEnumDefineError, "enum select %s->%s invalid", enm, snm);
+					throw_error_v(ErrorEnumDefineError, "enum select %s->%s invalid", enm, snm);
 				}
 
 				JsonWrap* sobj = new JsonWrap(sse);
@@ -84,7 +84,7 @@ ScriptEnums::JsonWrap::JsonWrap(json_t* detail) throw (Exception) : js(NULL)
 		}
 	}
 	else {
-		throw Exception(ErrorEnumDefineError);
+		throw_error(ErrorEnumDefineError);
 	}
 }
 

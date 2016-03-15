@@ -9,6 +9,7 @@
 #define VEDITPRODUCERSCRIPT_H_
 
 #include "VEditScript.h"
+#include "VEditMltRun.h"
 
 NMSP_BEGIN(vedit)
 
@@ -71,6 +72,17 @@ public:
 	virtual ~GifScript();
 	virtual json_t* compile() throw (Exception);
 	virtual void pre_judge() throw (Exception);
+};
+
+struct SingleResourceLoader : public MltLoader
+{
+	static int declare();
+
+
+	mlt_service get_video(JsonWrap js) throw (Exception);
+	mlt_service get_audio(JsonWrap js) throw (Exception);
+	mlt_service get_image(JsonWrap js) throw (Exception);
+	mlt_service get_gif(JsonWrap js) throw (Exception);
 };
 
 NMSP_END(vedit)

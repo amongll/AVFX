@@ -8,6 +8,7 @@
 #include "VEditProducerScript.h"
 #include "VEditVM.h"
 
+
 NMSP_BEGIN(vedit)
 
 
@@ -63,12 +64,12 @@ void VideoScript::pre_judge() throw (Exception)
 
 	if ( !inparam || inparam->param_style != ScriptParams::PosParam ||
 		!outparam || outparam->param_style != ScriptParams::PosParam) {
-		throw Exception(ErrorScriptArgInvalid, "in/out position param is required for %s script",
+		throw_error_v(ErrorScriptArgInvalid, "in/out position param is required for %s script",
 			Vm::proc_type_names[VIDEO_RESOURCE_SCRIPT]);
 	}
 
 	if ( !resparam || resparam->param_style != ScriptParams::ScalarParam ) {
-		throw Exception(ErrorScriptArgInvalid, "resource scalar param is required for %s script",
+		throw_error_v(ErrorScriptArgInvalid, "resource scalar param is required for %s script",
 			Vm::proc_type_names[VIDEO_RESOURCE_SCRIPT]);
 	}
 
@@ -77,17 +78,17 @@ void VideoScript::pre_judge() throw (Exception)
 	json_t* out = get_arg_value("out");
 
 	if (!res_arg || !json_is_string(res_arg) || !strlen(json_string_value(res_arg))) {
-		throw Exception(ErrorScriptArgInvalid, "resource arg is required for %s script",
+		throw_error_v(ErrorScriptArgInvalid, "resource arg is required for %s script",
 			Vm::proc_type_names[VIDEO_RESOURCE_SCRIPT]);
 	}
 
 	if ( !in || !json_is_integer(in) ) {
-		throw Exception(ErrorScriptArgInvalid, "in arg is required for %s script",
+		throw_error_v(ErrorScriptArgInvalid, "in arg is required for %s script",
 			Vm::proc_type_names[VIDEO_RESOURCE_SCRIPT]);
 	}
 
 	if ( !out || !json_is_integer(out) ) {
-		throw Exception(ErrorScriptArgInvalid, "out arg is required for %s script",
+		throw_error_v(ErrorScriptArgInvalid, "out arg is required for %s script",
 			Vm::proc_type_names[VIDEO_RESOURCE_SCRIPT]);
 	}
 
@@ -109,29 +110,32 @@ void VideoScript::pre_judge() throw (Exception)
 			if (inframe < 0)inframe = 0;
 		}
 		break;
-	case ScriptParams::TimePos:
+	case ScriptParams::TimePos: {
+		int total_time = length * 40;
 		if ( inframe == -1 ) {
 			inframe = length - 1;
 		}
 		else if ( inframe >= 0  ){
-			inframe = (double)inframe / 40 ;
+			if ( inframe > total_time) {
+				inframe = length -1;
+			}
+			else {
+				inframe = (double)inframe / 40 ;
+			}
 		}
 		else {
-			inframe = (double)( ((length * 40) + inframe) ) / 40;
-			if (inframe < 0) inframe = 0;
+			inframe = total_time + inframe;
+			if ( inframe < 0 ) {
+				inframe = length - 1;
+			}
+			else {
+				inframe = (double)inframe/40;
+			}
 		}
-		break;
-	/*
-	case ScriptParams::PerctPos:
-		if (inframe ==  -1) {
-			inframe = length - 1;
-		}
-		else {
-			inframe = (double)inframe / 100 * length - 1;
-		}
-		break;
-	*/
 	}
+		break;
+	}
+
 
 	switch (outparam->pos_type) {
 	case ScriptParams::FramePos:
@@ -143,17 +147,29 @@ void VideoScript::pre_judge() throw (Exception)
 			if (outframe < 0)outframe = 0;
 		}
 		break;
-	case ScriptParams::TimePos:
+	case ScriptParams::TimePos: {
+		int total_time = length * 40;
 		if ( outframe == -1 ) {
 			outframe = length - 1;
 		}
 		else if ( outframe >= 0  ){
-			outframe = (double)outframe / 40 ;
+			if ( outframe > total_time) {
+				outframe = length -1;
+			}
+			else {
+				outframe = (double)outframe / 40 ;
+			}
 		}
 		else {
-			outframe = (double)( ((length * 40) + outframe) ) / 40;
-			if (outframe < 0) outframe = 0;
+			outframe = total_time + outframe;
+			if ( outframe < 0 ) {
+				outframe = length - 1;
+			}
+			else {
+				outframe = (double)outframe/40;
+			}
 		}
+	}
 		break;
 	}
 
@@ -172,8 +188,13 @@ void VideoScript::pre_judge() throw (Exception)
 	if ( !mlt_props.get()) {
 		mlt_props.reset(new ScriptProps(*this, NULL));
 	}
-	mlt_props->add_property("in", json_integer(inframe));
-	mlt_props->add_property("out", json_integer(outframe));
+	json_t* jv = json_integer(inframe);
+	mlt_props->add_property("in", jv);
+	json_decref(jv);
+
+	jv = json_integer(outframe);
+	mlt_props->add_property("out", jv);
+	json_decref(jv);
 
 	this->path  = path;
 	//todo: check format info
@@ -188,12 +209,12 @@ void AudioScript::pre_judge() throw (Exception)
 
 	if ( !inparam || inparam->param_style != ScriptParams::PosParam ||
 		!outparam || outparam->param_style != ScriptParams::PosParam) {
-		throw Exception(ErrorScriptArgInvalid, "in/out position param is required for %s script",
+		throw_error_v(ErrorScriptArgInvalid, "in/out position param is required for %s script",
 			Vm::proc_type_names[VIDEO_RESOURCE_SCRIPT]);
 	}
 
 	if ( !resparam || resparam->param_style != ScriptParams::ScalarParam ) {
-		throw Exception(ErrorScriptArgInvalid, "resource scalar param is required for %s script",
+		throw_error_v(ErrorScriptArgInvalid, "resource scalar param is required for %s script",
 			Vm::proc_type_names[VIDEO_RESOURCE_SCRIPT]);
 	}
 
@@ -202,17 +223,17 @@ void AudioScript::pre_judge() throw (Exception)
 	json_t* out = get_arg_value("out");
 
 	if (!res_arg || !json_is_string(res_arg) || !strlen(json_string_value(res_arg))) {
-		throw Exception(ErrorScriptArgInvalid, "resource arg is required for %s script",
+		throw_error_v(ErrorScriptArgInvalid, "resource arg is required for %s script",
 			Vm::proc_type_names[VIDEO_RESOURCE_SCRIPT]);
 	}
 
 	if ( !in || !json_is_integer(in) ) {
-		throw Exception(ErrorScriptArgInvalid, "in arg is required for %s script",
+		throw_error_v(ErrorScriptArgInvalid, "in arg is required for %s script",
 			Vm::proc_type_names[VIDEO_RESOURCE_SCRIPT]);
 	}
 
 	if ( !out || !json_is_integer(out) ) {
-		throw Exception(ErrorScriptArgInvalid, "out arg is required for %s script",
+		throw_error_v(ErrorScriptArgInvalid, "out arg is required for %s script",
 			Vm::proc_type_names[VIDEO_RESOURCE_SCRIPT]);
 	}
 
@@ -234,29 +255,32 @@ void AudioScript::pre_judge() throw (Exception)
 			if (inframe < 0)inframe = 0;
 		}
 		break;
-	case ScriptParams::TimePos:
+	case ScriptParams::TimePos: {
+		int total_time = length * 40;
 		if ( inframe == -1 ) {
 			inframe = length - 1;
 		}
 		else if ( inframe >= 0  ){
-			inframe = (double)inframe / 40 ;
+			if ( inframe > total_time) {
+				inframe = length -1;
+			}
+			else {
+				inframe = (double)inframe / 40 ;
+			}
 		}
 		else {
-			inframe = (double)( ((length * 40) + inframe) ) / 40;
-			if (inframe < 0) inframe = 0;
+			inframe = total_time + inframe;
+			if ( inframe < 0 ) {
+				inframe = length - 1;
+			}
+			else {
+				inframe = (double)inframe/40;
+			}
 		}
-		break;
-	/*
-	case ScriptParams::PerctPos:
-		if (inframe ==  -1) {
-			inframe = length - 1;
-		}
-		else {
-			inframe = (double)inframe / 100 * length - 1;
-		}
-		break;
-	*/
 	}
+		break;
+	}
+
 
 	switch (outparam->pos_type) {
 	case ScriptParams::FramePos:
@@ -268,17 +292,29 @@ void AudioScript::pre_judge() throw (Exception)
 			if (outframe < 0)outframe = 0;
 		}
 		break;
-	case ScriptParams::TimePos:
+	case ScriptParams::TimePos: {
+		int total_time = length * 40;
 		if ( outframe == -1 ) {
 			outframe = length - 1;
 		}
 		else if ( outframe >= 0  ){
-			outframe = (double)outframe / 40 ;
+			if ( outframe > total_time) {
+				outframe = length -1;
+			}
+			else {
+				outframe = (double)outframe / 40 ;
+			}
 		}
 		else {
-			outframe = (double)( ((length * 40) + outframe) ) / 40;
-			if (outframe < 0) outframe = 0;
+			outframe = total_time + outframe;
+			if ( outframe < 0 ) {
+				outframe = length - 1;
+			}
+			else {
+				outframe = (double)outframe/40;
+			}
 		}
+	}
 		break;
 	}
 
@@ -290,8 +326,13 @@ void AudioScript::pre_judge() throw (Exception)
 
 	type_spec_props->add_property("resource", res_arg);
 	json_decref(res_arg);
-	mlt_props->add_property("in", json_integer(inframe));
-	mlt_props->add_property("out", json_integer(outframe));
+	json_t* jv = json_integer(inframe);
+	mlt_props->add_property("in", jv);
+	json_decref(jv);
+
+	jv = json_integer(outframe);
+	mlt_props->add_property("out", jv);
+	json_decref(jv);
 
 	this->path  = path;
 	//todo: check format info
@@ -305,9 +346,98 @@ void ImageScript::pre_judge() throw (Exception)
 void GifScript::pre_judge() throw (Exception)
 {
 }
+
+mlt_service SingleResourceLoader::get_video(JsonWrap js)
+	throw (Exception)
+{
+	json_t* defines = js.h;
+	json_t* je = json_object_get(defines, "resource");
+
+	assert( je && json_is_string(je) && strlen(json_string_value(je)));
+
+	mlt_profile profile = mlt_profile_init(NULL);
+	mlt_producer obj = mlt_factory_producer(profile, "loader", json_string_value(je));
+
+	if ( !obj ) {
+		throw_error_v(ErrorRuntimeLoadFailed, "video producer load failed:%s", json_string_value(je));
+	}
+
+	mlt_properties props = mlt_producer_properties(obj);
+
+	je = json_object_get(defines, "props");
+	if (je && json_is_object(je) && json_object_size(je)) {
+
+		json_t* inj = json_object_get(je,"in"), *outj = json_object_get(je,"out");
+		assert(inj && outj && json_is_integer(inj) && json_is_integer(outj));
+
+		mlt_producer_set_in_and_out(obj,json_integer_value(inj), json_integer_value(outj));
+
+		void* it = json_object_iter(je);
+		while(it) {
+			const char* k = json_object_iter_key(it);
+			json_t* prop_je = json_object_iter_value(it);
+			it = json_object_iter_next(je, it);
+
+			if ( json_is_object(prop_je) || json_is_array(prop_je))
+				continue;
+
+			if ( !strcmp(k,"in") || !strcmp(k,"out"))
+				continue;
+
+			switch(prop_je->type) {
+			case JSON_INTEGER:
+				mlt_properties_set_int64(props, k, json_integer_value(prop_je));
+				break;
+			case JSON_REAL:
+				mlt_properties_set_double(props, k, json_real_value(prop_je));
+				break;
+			case JSON_STRING:
+				mlt_properties_set(props, k, json_string_value(prop_je));
+				break;
+			case JSON_TRUE:
+				mlt_properties_set_int(props,k, 1);
+				break;
+			case JSON_FALSE:
+				mlt_properties_set_int(props,k, 0);
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	return mlt_producer_service(obj);
+}
+
+mlt_service SingleResourceLoader::get_audio(JsonWrap js)
+	throw (Exception)
+{
+	throw_error(ErrorFeatureNotImpl);
+}
+
+mlt_service SingleResourceLoader::get_image(JsonWrap js)
+	throw (Exception)
+{
+	throw_error(ErrorFeatureNotImpl);
+}
+
+int SingleResourceLoader::declare() {
+	MltLoader::regist_loader<SingleResourceLoader>("video",
+		static_cast<MltLoader::LoadMltMemFp>(&SingleResourceLoader::get_video) );
+	MltLoader::regist_loader<SingleResourceLoader>("audio",
+		static_cast<MltLoader::LoadMltMemFp>(&SingleResourceLoader::get_audio) );
+	MltLoader::regist_loader<SingleResourceLoader>("image",
+		static_cast<MltLoader::LoadMltMemFp>(&SingleResourceLoader::get_image) );
+	MltLoader::regist_loader<SingleResourceLoader>( "gif",
+		static_cast<MltLoader::LoadMltMemFp>(&SingleResourceLoader::get_gif) );
+	return 4;
+}
+
+mlt_service SingleResourceLoader::get_gif(JsonWrap js)
+	throw (Exception)
+{
+	throw_error(ErrorFeatureNotImpl);
+}
+
 NMSP_END(vedit)
-
-
-
-
 

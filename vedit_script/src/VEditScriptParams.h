@@ -63,7 +63,7 @@ public:
 				default_selector(NULL),
 				desc(NULL)
 		{
-			throw Exception(ErrorFeatureNotImpl);
+			throw_error(ErrorFeatureNotImpl);
 		}
 
 		Param(const char* nm, json_type scalar_type, const json_t* dv,
@@ -78,7 +78,7 @@ public:
 				default_selector(NULL),
 				desc(NULL)
 		{
-			throw Exception(ErrorFeatureNotImpl);
+			throw_error(ErrorFeatureNotImpl);
 		}
 
 		Param(const char* nm, const char* enum_type, const char* dv,
@@ -93,7 +93,7 @@ public:
 				default_selector(NULL),
 				desc(NULL)
 		{
-			throw Exception(ErrorFeatureNotImpl);
+			throw_error(ErrorFeatureNotImpl);
 		}
 
 
@@ -120,7 +120,7 @@ public:
 	}
 
 	void define_param(const char* name, shared_ptr<Param> param)throw(Exception) {
-		throw Exception(ErrorFeatureNotImpl); //todo: script define feature
+		throw_error(ErrorFeatureNotImpl); //todo: script define feature
 	}
 
 	virtual ~ScriptParams();

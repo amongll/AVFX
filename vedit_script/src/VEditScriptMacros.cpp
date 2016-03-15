@@ -49,7 +49,7 @@ void ScriptMacros::parse_macros() throw (Exception) {
 			continue;
 
 		if ( is_valid_identifier(nm) == false)
-			throw Exception(ErrorMacroDefineError, "macro indentifier:%s invalid", nm);
+			throw_error_v(ErrorMacroDefineError, "macro indentifier:%s invalid", nm);
 
 		//JsonWrap* mobj = new JsonWrap(se);
 		//macros[nm].reset(mobj);

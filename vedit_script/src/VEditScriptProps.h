@@ -50,10 +50,10 @@ public:
 
 		json_t* compile() throw (Exception) {
 			if ( !MacroExpandable::finished() ) {
-				throw Exception(ErrorImplError, "property resolved incompletely");
+				throw_error_v(ErrorImplError, "property resolved incompletely");
 			}
 			if ( !Evaluable::finished() ) {
-				throw Exception(ErrorImplError, "property resolved incompletely");
+				throw_error_v(ErrorImplError, "property resolved incompletely");
 			}
 			return json_incref(Evaluable::evalued);
 		}

@@ -67,7 +67,7 @@ void Evaluable::expand_position(const char* nm, const int& frame_in,
 	assert( frame_out >= 0 && frame_in >= 0 && frame_out >= frame_in && frame_seq >= 0);
 	if (evalued) return;
 
-	int len = frame_out - frame_in;
+	int len = frame_out - frame_in + 1;
 	if ( frame_seq >= len ) frame_seq = len - 1;
 	if ( replace_type == EValuePositionReplace) {
 		evalued = json_integer(frame_seq);
@@ -176,7 +176,7 @@ void Evaluable::replace_asis(const char* nm, const string& v) throw (Exception)
 		}
 	}
 	else {
-		throw Exception(ErrorImplError, "Evaluable::replace_asis replace_type not allowed");
+		throw_error_v(ErrorImplError, "Evaluable::replace_asis replace_type not allowed");
 	}
 }
 
@@ -207,7 +207,7 @@ void Evaluable::replace_asis(const char* nm, int v) throw (Exception)
 		}
 	}
 	else {
-		throw Exception(ErrorImplError, "Evaluable::replace_asis replace_type not allowed");
+		throw_error_v(ErrorImplError, "Evaluable::replace_asis replace_type not allowed");
 	}
 }
 
@@ -238,7 +238,7 @@ void Evaluable::replace_asis(const char* nm, double v) throw (Exception)
 		}
 	}
 	else {
-		throw Exception(ErrorImplError, "Evaluable::replace_asis replace_type not allowed");
+		throw_error_v(ErrorImplError, "Evaluable::replace_asis replace_type not allowed");
 	}
 }
 
@@ -269,7 +269,7 @@ void Evaluable::replace_asis(const char* nm, bool v) throw (Exception)
 		}
 	}
 	else {
-		throw Exception(ErrorImplError, "Evaluable::replace_asis replace_type not allowed");
+		throw_error_v(ErrorImplError, "Evaluable::replace_asis replace_type not allowed");
 	}
 }
 
@@ -281,7 +281,7 @@ void Evaluable::apply_params(Script& script, json_t* args) throw (Exception)
 	if ( json_object_size(args) == 0 ) return;
 
 	if (replace_type == EValuePositionReplace || replace_type == EValueStringCtxReplace2) {
-		throw Exception(ErrorImplError, "prev evaluable property can't contain position params");
+		throw_error_v(ErrorImplError, "prev evaluable property can't contain position params");
 	}
 
 	void* it = json_object_iter(args);
