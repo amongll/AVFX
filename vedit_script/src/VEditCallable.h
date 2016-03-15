@@ -7,7 +7,7 @@
 
 #ifndef VEDITCALLABLE_H_
 #define VEDITCALLABLE_H_
-#include "VEditCommon.h"
+#include "VEditUtil.h"
 #include "VEditScriptProps.h"
 
 NMSP_BEGIN(vedit)
@@ -17,8 +17,8 @@ class ScriptCallable
 public:
 	ScriptCallable(Script& caller, json_t* call_detail) throw(Exception);
 
-	json_t* compile() throw(Exception);
-	json_t* compile(vedit::ScriptType type) throw(Exception);
+	ScriptSerialized compile() throw(Exception);
+	ScriptSerialized compile(vedit::ScriptType type) throw(Exception);
 private:
 	Script& script;
 	void parse(json_t* call_detail) throw(Exception);

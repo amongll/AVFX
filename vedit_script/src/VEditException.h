@@ -38,4 +38,16 @@ public:
 
 NMSP_END(vedit)
 
+#define throw_error(code) do{\
+	throw Exception(code);\
+}while(0)
+
+#define throw_error_v(code, fmt, detail...) do{\
+	char fmtbuf[512];\
+	char buf[1024];\
+	snprintf(fmtbuf, sizeof(fmtbuf),"%s at<%%s:%%d %%s>", fmt);\
+	snprintf(buf,sizeof(buf), fmtbuf, ##detail, __FILE__,__LINE__,__PRETTY_FUNCTION__);\
+	throw Exception(code, "%s", buf);\
+}while(0)
+
 #endif /* VEDITEXCEPTION_H_ */

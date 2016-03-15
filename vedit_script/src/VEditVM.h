@@ -20,8 +20,8 @@ NMSP_BEGIN(vedit)
 class Vm
 {
 public:
-	static json_t* call_script(const char* procname, json_t* args) throw(Exception);
-	static json_t* call_script(const char* procname, vedit::ScriptType type, json_t* args)throw(Exception);
+	static ScriptSerialized call_script(const char* procname, json_t* args) throw(Exception);
+	static ScriptSerialized call_script(const char* procname, vedit::ScriptType type, json_t* args)throw(Exception);
 	static shared_ptr<Script> get_script(const char* procname)throw(Exception);
 
 	static string uuid();
@@ -29,49 +29,49 @@ public:
 	static shared_ptr<VideoScript> get_video_script(const char* procname)
 	{
 		return shared_ptr<VideoScript>(dynamic_cast<VideoScript*>
-		( get_script(procname, VIDEO_RESOURCE_SCRIPT).get()) );
+		( get_script(procname, VIDEO_RESOURCE_SCRIPT)) );
 	}
 
 	static shared_ptr<AudioScript> get_audio_script(const char* procname)
 	{
 		return shared_ptr<AudioScript>(dynamic_cast<AudioScript*>
-		( get_script(procname, AUDIO_RESOURCE_SCRIPT).get()) );
+		( get_script(procname, AUDIO_RESOURCE_SCRIPT)) );
 	}
 
 	static shared_ptr<ImageScript> get_image_script(const char* procname)
 	{
 		return shared_ptr<ImageScript>(dynamic_cast<ImageScript*>
-		( get_script(procname, IMAGE_RESOURCE_SCRIPT).get()) );
+		( get_script(procname, IMAGE_RESOURCE_SCRIPT)) );
 	}
 
 	static shared_ptr<GifScript> get_gif_script(const char* procname)
 	{
 		return shared_ptr<GifScript>(dynamic_cast<GifScript*>
-		( get_script(procname, GIF_RESOURCE_SCRIPT).get()) );
+		( get_script(procname, GIF_RESOURCE_SCRIPT)) );
 	}
 
 	static shared_ptr<FilterScript> get_filter_script(const char* procname)
 	{
 		return shared_ptr<FilterScript>(dynamic_cast<FilterScript*>
-		( get_script(procname, FILTER_SCRIPT).get()) );
+		( get_script(procname, FILTER_SCRIPT)) );
 	}
 
 	static shared_ptr<PlaylistScript> get_playlist_script(const char* procname)
 	{
 		return shared_ptr<PlaylistScript>(dynamic_cast<PlaylistScript*>
-		( get_script(procname, PLAYLIST_SCRIPT).get()) );
+		( get_script(procname, PLAYLIST_SCRIPT)) );
 	}
 
 	static shared_ptr<MultitrackScript> get_multitrack_script(const char* procname)
 	{
 		return shared_ptr<MultitrackScript>(dynamic_cast<MultitrackScript*>
-		( get_script(procname, MULTITRACK_SCRIPT).get()) );
+		( get_script(procname, MULTITRACK_SCRIPT)) );
 	}
 
 	static shared_ptr<TransitionScript> get_transition_script(const char* procname)
 	{
 		return shared_ptr<TransitionScript>(dynamic_cast<TransitionScript*>
-		( get_script(procname, TRANSITION_SCRIPT).get()) );
+		( get_script(procname, TRANSITION_SCRIPT)) );
 	}
 
 	static void regist_script(json_t* text)throw(Exception);
@@ -98,7 +98,8 @@ private:
 	static void thr_spec_cache_cleanup(void*);
 	static void thr_spec_cache_key_create();
 
-	static shared_ptr<Script> get_script(const char* procnmae, ScriptType type) throw (Exception);
+	static Script* get_script(const char* procnmae, ScriptType type) throw (Exception);
+	static Script* get_script_impl(const char* procname) throw (Exception);
 
 
 	struct StreamResourceCache

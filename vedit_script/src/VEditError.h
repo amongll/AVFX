@@ -32,6 +32,7 @@ enum ErrorCode
 	ErrorRuntimeJsonUUIDDup,
 	ErrorRuntimeJsonUUIDNotFound,
 	ErrorRuntimeUuidPathInvalid,
+	ErrorRuntimeLoadFailed,
 	ErrorImplError
 };
 

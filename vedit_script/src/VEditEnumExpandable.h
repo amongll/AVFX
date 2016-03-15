@@ -24,7 +24,7 @@ public:
 		if (finished())
 			return expand_context;
 		else {
-			throw Exception(ErrorImplError, "enum expand incomplete");
+			throw_error_v(ErrorImplError, "enum expand incomplete");
 		}
 	}
 

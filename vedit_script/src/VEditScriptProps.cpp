@@ -89,7 +89,7 @@ ScriptProps::Property& ScriptProps::get_property(const char* nm) throw (Exceptio
 {
 	MapIter it =  props.find(nm);
 	if ( it == props.end() ) {
-		throw Exception(ErrorImplError, "Property not found or script not enum expanded");
+		throw_error_v(ErrorImplError, "Property not found or script not enum expanded");
 	}
 
 	return *it->second.get();
@@ -105,14 +105,14 @@ ScriptProps::Property& ScriptProps::add_property(const char* nm, json_t* value)
 		throw (Exception)
 {
 	if (json_is_object(value) || json_is_array(value) ) {
-		throw Exception(ErrorImplError, "Only literal value allowed for added property");
+		throw_error_v(ErrorImplError, "Only literal value allowed for added property");
 	}
 	Property* _tmp  = new Property(*this, nm, value);
 	if ( _tmp->MacroExpandable::finished() == false ) {
-		throw Exception(ErrorImplError, "Only literal value allowed for added property");
+		throw_error_v(ErrorImplError, "Only literal value allowed for added property");
 	}
 	if ( _tmp->Evaluable::finished() == false ) {
-		throw Exception(ErrorImplError, "Only literal value allowed for added property");
+		throw_error_v(ErrorImplError, "Only literal value allowed for added property");
 	}
 
 	MapIter it =  props.find(nm);
@@ -166,7 +166,7 @@ ScriptProps::ScriptProps(Script& script, const vector<string>& spec_props)
 json_t* ScriptProps::compile() throw (Exception)
 {
 	if (EnumExpandable::finished() == false) {
-		throw Exception(ErrorImplError, "properties enums resolved incompletely");
+		throw_error_v(ErrorImplError, "properties enums resolved incompletely");
 	}
 	json_t* ret = json_object();
 	try {

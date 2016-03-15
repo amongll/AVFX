@@ -15,6 +15,7 @@
 #include <deque>
 #include <set>
 #include <hash_map>
+#include <map>
 #include <hash_set>
 #include <jansson.h>
 #include <cassert>
@@ -22,6 +23,7 @@
 #include <framework/mlt.h>
 #include <pthread.h>
 #include <iostream>
+#include <sstream>
 
 using namespace __gnu_cxx;
 using namespace std::tr1;

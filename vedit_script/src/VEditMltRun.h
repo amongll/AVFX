@@ -8,7 +8,7 @@
 #ifndef VEDITMLTRUN_H_
 #define VEDITMLTRUN_H_
 
-#include "VEditCommon.h"
+#include "VEditUtil.h"
 #include "VEditException.h"
 
 NMSP_BEGIN(vedit)
@@ -27,14 +27,14 @@ struct JsonPathComponent
 	JsonPathComponent(const JsonPathComponent& r):
 		type(r.type),
 		name(r.name),
-		array_insert_idx(r.array_insert_idx)
+		arr_idx(r.arr_idx)
 	{
 	}
 
 	JsonPathComponent& operator=(const JsonPathComponent& r) {
 		type = r.type;
 		name = r.name;
-		array_insert_idx = r.array_insert_idx;
+		arr_idx = r.arr_idx;
 		return *this;
 	}
 
@@ -44,7 +44,7 @@ struct JsonPathComponent
 
 	PathType type;
 	string name;
-	int array_insert_idx;
+	int arr_idx;
 };
 
 struct JsonPath
@@ -63,17 +63,62 @@ struct JsonPath
 		JsonPathComponent comp;
 		comp.type = JsonPathComponent::PathArray;
 		comp.name = arrnm;
-		comp.array_insert_idx = idx;
+		comp.arr_idx = idx;
 		path.push_back(comp);
 	}
+
+	string str()const;
 
 	typedef list<JsonPathComponent>::iterator PathCompIter;
 	typedef list<JsonPathComponent>::const_iterator PathCompCIter;
 	list<JsonPathComponent> path;
 	JsonPath& operator=(const JsonPath& r);
+	JsonPath operator+(const JsonPath& r);
 
-	static JsonPath operator+(const JsonPath& l, const JsonPath& r);
 };
+
+template<class SubClass>
+struct MltLoaderDeclare
+{
+	static SubClass singleton;
+	static int init_hack;
+
+	static int _hack_init()
+	{
+		SubClass::declare();
+		return 0;
+	}
+};
+
+template<class SubClass>
+SubClass MltLoaderDeclare<SubClass>::singleton;
+
+struct MltLoader
+{
+	MltLoader(){}
+	virtual ~MltLoader() {};
+
+	typedef mlt_service (MltLoader::*LoadMltMemFp)(JsonWrap js);
+
+	template<class SubClass>
+	static void regist_loader(const char* procname,
+			mlt_service (SubClass::*memfp)(JsonWrap)throw(Exception) )
+	{
+		static MltLoader* obj =
+					dynamic_cast<MltLoader*>(&MltLoaderDeclare<SubClass>::singleton);
+		assert(obj);
+		pair<MltLoader*, LoadMltMemFp>& entry = loader_regists[string(procname)];
+		entry.first = obj;
+		entry.second = static_cast<LoadMltMemFp>(memfp);
+	}
+
+	static mlt_service load_mlt(JsonWrap js) throw (Exception);
+
+	static hash_map<string, pair<MltLoader*,LoadMltMemFp> > loader_regists;
+};
+
+template<class SubClass>
+int MltLoaderDeclare<SubClass>::init_hack = MltLoaderDeclare<SubClass>::_hack_init();
 
 class MltRuntime
 {
@@ -87,22 +132,27 @@ public:
 	 */
 	void erase_runtime_entry(const string& uuid) throw (Exception);
 	void erase_runtime_entry(const JsonPath& path) throw(Exception);
-	void erase_runtime_entry(const char* path) throw(Exception);
 
 	void add_runtime_entry(
 		const JsonPath& path,
 		json_t* script_serialed, int give=1) throw(Exception);
 
+	void replace_runtime_entry(const JsonPath& path, json_t* script_seriled, int giv=1)
+		throw (Exception);
 	void replace_runtime_entry(const string& src_uuid,
-		const JsonPath& path, json_t* script_serialed, int give = 1) throw(Exception);
+		json_t* script_serialed, int give = 1) throw(Exception);
 
 	const JsonPath* get_runtime_entry_path(const string& uuid);
 
-	void reload() throw (Exception);
-
-	void run() throw (Exception);
-	void seek() throw (Exception);
+	json_t* run() throw (Exception);
+	void seek(int framePos) throw (Exception);
 	void stop() throw (Exception);
+
+	bool running() {
+		Lock lk(&run_lock);
+		return status == StatusRunning;
+	}
+
 	uint32_t get_frame_length() throw (Exception);
 	uint32_t get_frame_position() throw (Exception);
 
@@ -110,14 +160,13 @@ public:
 	int get_runtime_entry_property_double(const string& uuid, const string& procname);
 	string get_runtime_entry_property_string(const string& uuid, const string& procname);
 
-	static const char* const root_path = "";
-	static const char* const attached_filter_path = "effects:-1";
-	static const char* const playlist_entry_path = "slices:-1";
-	static const char* const multitrack_entry_path = "tracks:-1";
 private:
+	void stop_ulk() throw (Exception);
+
 	friend class Script;
 
-	void parse_struct(json_t* v, const JsonPath& curPath , hash_map<string,JsonPath>& uuid_paths) throw (Exception);
+	void parse_struct(json_t* v, const JsonPath& curPath ,
+		hash_map<string,JsonPath>& uuid_paths, int erase = 0) throw (Exception);
 
 	uint32_t json_version;
 	json_t* json_serialize;
@@ -129,21 +178,20 @@ private:
 	typedef hash_map<string,mlt_service>::iterator SvcIter;
 	typedef hash_map<string,mlt_service>::const_iterator SvcCIter;
 
+	pthread_mutex_t run_lock;
+
 	hash_map<string, JsonPath> uuid_pathmap;
 	hash_map<string, mlt_service> uuid_mlt_svcmap;
 
 	enum Status {
 		StatusCreated,
-		StatusInvalid,
-		StatusInited,
+		StatusLoadFailed,
 		StatusRunning,
 		StatusStopped
 	};
 
 	Status status;
 
-	bool is_stopped();
-	bool is_running();
 
 	mlt_producer producer;
 	mlt_consumer consumer;

@@ -49,7 +49,7 @@ void Script::call(json_t* args_value) throw (Exception)
 			sel = it->second->default_selector;
 		}
 		else if ( !json_is_string(arg) ) {
-			throw Exception(ErrorScriptArgInvalid,"arg:%s should be enum selector",
+			throw_error_v(ErrorScriptArgInvalid,"arg:%s should be enum selector",
 				it->second->name);
 		}
 		else if ( strlen(json_string_value(arg)) == 0 ) {
@@ -64,7 +64,7 @@ void Script::call(json_t* args_value) throw (Exception)
 
 		const json_t* enum_detail = get_selector(it->second->enum_name, sel);
 		if ( !enum_detail && ranges.first == param_enum_presents.end() ) {
-			throw Exception(ErrorScriptArgInvalid,"arg:%s is invalid enum selector",
+			throw_error_v(ErrorScriptArgInvalid,"arg:%s is invalid enum selector",
 				it->second->name);
 		}
 
@@ -92,13 +92,13 @@ void Script::call(json_t* args_value) throw (Exception)
 					iarg = json_integer_value(arg);
 				}
 				else {
-					throw Exception(ErrorScriptArgInvalid,"arg:%s should be integer",
+					throw_error_v(ErrorScriptArgInvalid,"arg:%s should be integer",
 						it->second->name);
 				}
 			}
 
 			if( frame_out < 0 || frame_in < 0 || frame_in > frame_out) {
-				throw Exception(ErrorImplError, "position param can't be calced:%s ", it->second->name);
+				throw_error_v(ErrorImplError, "position param can't be calced:%s ", it->second->name);
 			}
 
 			/*if ( it->second->pos_type == ScriptParams::PerctPos ) {
@@ -161,19 +161,19 @@ void Script::call(json_t* args_value) throw (Exception)
 			if ( !arg ) {
 				arg = it->second->default_scalar;
 				if ( !arg ) {
-					throw Exception(ErrorScriptArgInvalid,
+					throw_error_v(ErrorScriptArgInvalid,
 						"arg:%s empty and has no default", it->second->name);
 				}
 			}
 			else if ( json_is_object(arg) || json_is_array(arg) ) {
-				throw Exception(ErrorScriptArgInvalid,"arg:%s should be scalar",
+				throw_error_v(ErrorScriptArgInvalid,"arg:%s should be scalar",
 					it->second->name);
 			}
 			pair<EvaluableIter, EvaluableIter> ranges =
 					param_evalue_presents.equal_range(string(it->second->name));
 
 			if (!arg && ranges.first == param_evalue_presents.end() ) {
-				throw Exception(ErrorScriptArgInvalid,"arg:%s is needed",
+				throw_error_v(ErrorScriptArgInvalid,"arg:%s is needed",
 					it->second->name);
 			}
 
@@ -185,20 +185,21 @@ void Script::call(json_t* args_value) throw (Exception)
 	}
 }
 
+/***
 void Script::apply_filter(const string& id, int start_pos, int end_pos,
 		const char* filterproc,
 		json_t* other_args) throw (Exception)
 {
 	if ( start_pos < 0 || end_pos < 0 || start_pos > end_pos ) {
-		throw Exception(ErrorInvalidParam, "Script::apply_filter frame pos invalid");
+		throw_error_v(ErrorInvalidParam, "Script::apply_filter frame pos invalid");
 	}
 	if ( frame_out < 0) {
-		throw Exception(ErrorImplError, "script length not determinated");
+		throw_error_v(ErrorImplError, "script length not determinated");
 	}
 
 	FilterIter it = filters.find(id);
 	if (it != filters.end()) {
-		throw Exception(ErrorImplError, "filter %s already exists", id.c_str());
+		throw_error_v(ErrorImplError, "filter %s already exists", id.c_str());
 	}
 
 	int len = frame_out - frame_in;
@@ -228,13 +229,21 @@ void Script::erase_filter(const string& id)
 		compiled = NULL;
 	}
 }
+**/
 
-json_t* Script::get_mlt_serialize() throw (Exception)
+ScriptSerialized Script::get_mlt_serialize() throw (Exception)
 {
-	if (compiled) return json_incref(compiled);
+	if (!compiled) {
+		check_evaluables();
+		compiled = serialize_mlt(0);
+	}
 
-	check_evaluables();
-	return compiled = serialize_mlt(0);
+	if (!compiled) {
+		return make_pair<const char*, JsonWrap>(NULL, JsonWrap(NULL));
+	}
+
+	const char* uuid = json_string_value(json_object_get(compiled,"uuid"));
+	return make_pair<const char*, JsonWrap>(uuid, JsonWrap(compiled, 0));
 }
 
 const json_t* Script::get_params_define() const
@@ -266,15 +275,15 @@ const json_t* Script::get_enums_define() const {
 }
 
 void Script::add_params(ScriptParamsPtr params) throw (Exception) {
-	throw Exception(ErrorFeatureNotImpl);
+	throw_error(ErrorFeatureNotImpl);
 }
 
 void Script::add_macros(ScriptMacrosPtr macros) throw (Exception) {
-	throw Exception(ErrorFeatureNotImpl);
+	throw_error(ErrorFeatureNotImpl);
 }
 
 bool Script::add_enums(ScriptEnumsPtr enums) throw (Exception) {
-	throw Exception(ErrorFeatureNotImpl);
+	throw_error(ErrorFeatureNotImpl);
 }
 
 Script::~Script() {
@@ -286,7 +295,7 @@ void Script::regist_macro_usage(const char* macro, MacroExpandable* obj)
 		throw (Exception)
 {
 	if ( macros->get_macro(macro) == NULL ) {
-		throw Exception(ErrorMacroNotFound, "macro:%s", macro);
+		throw_error_v(ErrorMacroNotFound, "macro:%s", macro);
 	}
 
 	pair<MacroExpandableIter, MacroExpandableIter>
@@ -305,7 +314,7 @@ void Script::regist_enum_selector_usage(const char* enmae, const char* sname,
 		EnumExpandable* obj) throw (Exception) {
 
 	if ( enums->get_selector(enmae, sname) == NULL) {
-		throw Exception(ErrorEnumSelectNotFound, "enum:%s:%s", enmae, sname);
+		throw_error_v(ErrorEnumSelectNotFound, "enum:%s:%s", enmae, sname);
 	}
 
 	string nm(enmae);
@@ -326,11 +335,11 @@ void Script::regist_enum_param_usage(const char* param, EnumExpandable* obj)
 {
 	const ScriptParam* param_obj = params->get_param(param);
 	if ( param_obj == NULL) {
-		throw Exception(ErrorParamNotFount, "param:%s", param);
+		throw_error_v(ErrorParamNotFount, "param:%s", param);
 	}
 
 	if (param_obj->param_style != ScriptParams::EnumParam ) {
-		throw Exception(ErrorInvalidParam, "param:%s not enum", param);
+		throw_error_v(ErrorInvalidParam, "param:%s not enum", param);
 	}
 
 	pair<EnumExpandableIter,EnumExpandableIter> ranges =
@@ -349,12 +358,12 @@ void Script::regist_scalar_param_usage(const char* param, Evaluable* obj)
 {
 	const ScriptParam* param_obj = params->get_param(param);
 	if ( param_obj == NULL) {
-		throw Exception(ErrorParamNotFount, "param:%s", param);
+		throw_error_v(ErrorParamNotFount, "param:%s", param);
 	}
 
 	if (param_obj->param_style != ScriptParams::ScalarParam &&
 			param_obj->param_style != ScriptParams::PosParam ) {
-		throw Exception(ErrorInvalidParam, "param:%s not scalar", param);
+		throw_error_v(ErrorInvalidParam, "param:%s not scalar", param);
 	}
 
 	pair<EvaluableIter,EvaluableIter> ranges =
@@ -381,7 +390,7 @@ Script::Script(const json_t* detail) throw (Exception):
 {
 	json_t* t = const_cast<json_t*>(detail);
 	if ( !json_is_object(t) || json_object_size(t)==0 ) {
-		throw Exception(ErrorScriptFmtError);
+		throw_error(ErrorScriptFmtError);
 	}
 
 	defines = json_deep_copy(t);
@@ -401,7 +410,7 @@ void Script::parse_impl() throw (Exception)
 
 	se = json_object_get(defines, "procname");
 	if ( !se || !json_is_string(se) || !strlen(json_string_value(se))) {
-		throw Exception(ErrorScriptFmtError, "procname is invalid");
+		throw_error_v(ErrorScriptFmtError, "procname is invalid");
 	}
 
 	DECLARE_CONST_MEM_MODIFIER(smod, proc_name, const char**);
@@ -431,7 +440,7 @@ void Script::parse_impl() throw (Exception)
 void Script::parse_mlt_props(json_t* detail) throw (Exception)
 {
 	//if (!detail)return;
-	if ( detail && !json_is_object(detail) ) throw Exception(ErrorScriptFmtError, "\"props\":{...} fmt needed");
+	if ( detail && !json_is_object(detail) ) throw_error_v(ErrorScriptFmtError, "\"props\":{...} fmt needed");
 	//if ( json_object_size(detail) == 0) return;
 
 	ScriptProps* props = new ScriptProps(*this, detail);
@@ -605,43 +614,30 @@ void Script::parse_filter_scriptcall() throw (Exception)
 	json_t* filter_defines = json_object_get(defines,"effects");
 	if ( !filter_defines )
 		return;
-	if ( !json_is_object(filter_defines)) {
-		throw Exception(ErrorScriptFmtError, "effects should be filter script calls");
+	if ( !json_is_array(filter_defines)) {
+		throw_error_v(ErrorScriptFmtError, "effects should be filter script calls");
 	}
-	if ( json_object_size(filter_defines) == 0) return;
+	if ( json_array_size(filter_defines) == 0) return;
 
-	void *it = json_object_iter(filter_defines);
-	while ( it  ) {
-		const char* k = json_object_iter_key(it);
-		json_t* call_detail = json_object_iter_value(it);
-
+	int asz = json_array_size(filter_defines);
+	filters.resize(asz);
+	for ( int i =0 ; i<asz;  i++ ) {
+		json_t* call_detail = json_array_get(filter_defines, i);
 		ScriptCallable* call = new ScriptCallable(*this, call_detail);
-		FilterWrap& o = filters[k];
-		o.id = k;
-		o.call.reset(call);
-
-		it = json_object_iter_next(filter_defines, it);
+		FilterWrap& obj = filters[i];
+		obj.call.reset(call);
 	}
 }
 
-
-
 json_t* Script::filters_serialize() throw (Exception)
 {
-	json_t* ret = json_object();
-	JsonWrap wrap(ret);
-	json_decref(ret);
+	json_t* ret = json_array();
+	JsonWrap wrap(ret, 1);
 
 	FilterIter it;
 	for ( it = filters.begin(); it != filters.end(); it++ ) {
-		if (it->second.serialize) {
-			json_object_set(wrap.h, it->first.c_str(), it->second.serialize.h);
-		}
-		else {
-			json_t* seri = it->second.call->compile(FILTER_SCRIPT);
-			it->second.serialize = seri;
-			json_object_set_new(wrap.h, it->first.c_str(), seri);
-		}
+		it->call_result = it->call->compile(FILTER_SCRIPT);
+		json_array_append(wrap.h, it->call_result.second.h);
 	}
 
 	return json_incref(wrap.h);
@@ -652,7 +648,7 @@ void Script::check_evaluables()
 	if (selector_enum_presents.size() != 0 ||
 		param_enum_presents.size() != 0 ||
 		macro_presents.size() !=0 ) {
-		throw Exception(ErrorScriptArgInvalid, "script not compiled completed.");
+		throw_error_v(ErrorScriptArgInvalid, "script not compiled completed.");
 	}
 
 	EvaluableCheckIter it = all_pendings.begin();
@@ -663,7 +659,7 @@ void Script::check_evaluables()
 		}
 	}
 	if (all_evalued == false) {
-		throw Exception(ErrorScriptArgInvalid, "script not compiled completed.");
+		throw_error_v(ErrorScriptArgInvalid, "script not compiled completed.");
 	}
 	all_pendings.clear();
 }

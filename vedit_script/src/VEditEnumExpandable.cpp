@@ -54,7 +54,7 @@ EnumExpandable::EnumExpandable(Script& s, json_t* ctx, const char* oper_name) th
 	expand_context(NULL)
 {
 	if ( (ctx && !json_is_object(ctx)) || !oper_name || !strlen(oper_name) ) {
-		throw Exception(ErrorImplError, "enum context impl problem %s:%d", __FILE__,__LINE__);
+		throw_error_v(ErrorImplError, "enum context impl problem %s:%d", __FILE__,__LINE__);
 	}
 
 	if ( ctx == NULL || json_object_size(ctx) == 0 )
@@ -62,7 +62,7 @@ EnumExpandable::EnumExpandable(Script& s, json_t* ctx, const char* oper_name) th
 
 	json_t* enums = json_object_get(ctx, oper_name);
 	if ( enums && !json_is_array(enums) ) {
-		throw Exception(ErrorImplError, "script enum context problem %s:%d", __FILE__,__LINE__);
+		throw_error_v(ErrorImplError, "script enum context problem %s:%d", __FILE__,__LINE__);
 	}
 
 	if ( enums ) {
@@ -120,7 +120,7 @@ void EnumExpandable::parse(json_t* values) throw (Exception)
 	for ( i=0; i<json_array_size(values); i++ ) {
 		json_t* ae = json_array_get(values, i);
 		if ( ! json_is_string(ae) )
-			throw Exception(ErrorScriptFmtError,"enum apply format error");
+			throw_error_v(ErrorScriptFmtError,"enum apply format error");
 
 		const char* v = json_string_value(ae);
 
@@ -138,7 +138,7 @@ void EnumExpandable::parse(json_t* values) throw (Exception)
 			enum_ctx_tags[_ps[0]] = i;
 		}
 		else {
-			throw Exception(ErrorScriptFmtError, "enum apply format error");
+			throw_error_v(ErrorScriptFmtError, "enum apply format error");
 		}
 	}
 }
@@ -149,7 +149,7 @@ EnumExpandable::EnumExpandable(Script& s, json_t* ctx,
 	expand_context(NULL)
 {
 	if ( !json_is_object(ctx) ) {
-		throw Exception(ErrorImplError, "Some Script sub class specific fmt error");
+		throw_error_v(ErrorImplError, "Some Script sub class specific fmt error");
 	}
 	vector<string>::const_iterator it;
 	expand_context = json_object();
@@ -157,7 +157,7 @@ EnumExpandable::EnumExpandable(Script& s, json_t* ctx,
 		json_t* se = json_object_get(ctx, it->c_str());
 		if ( se ) {
 			if ( json_is_object(se) || json_is_array(se) ) {
-				throw Exception(ErrorImplError, "Some Script sub class specific fmt error");
+				throw_error_v(ErrorImplError, "Some Script sub class specific fmt error");
 			}
 			else {
 				json_object_set(expand_context, it->c_str(), se);
