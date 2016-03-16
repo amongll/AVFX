@@ -80,7 +80,44 @@ void Script::call(json_t* args_value) throw (Exception)
 	}
 
 	applies_macros();
+
+	for ( it = params->params.begin(); it != params->params.end(); it++ ) {
+		if ( it->second->param_style == ScriptParams::EnumParam ) continue;
+
+		const json_t* arg = t ? json_object_get(t, it->second->name) : NULL;
+
+		if ( it->second->param_style == ScriptParams::ScalarParam ) {
+			if ( !arg ) {
+				arg = it->second->default_scalar;
+				if ( !arg ) {
+					throw_error_v(ErrorScriptArgInvalid,
+						"arg:%s empty and has no default", it->second->name);
+				}
+			}
+			else if ( json_is_object(arg) || json_is_array(arg) ) {
+				throw_error_v(ErrorScriptArgInvalid,"arg:%s should be scalar",
+					it->second->name);
+			}
+			pair<EvaluableIter, EvaluableIter> ranges =
+					param_evalue_presents.equal_range(string(it->second->name));
+
+			if (!arg && ranges.first == param_evalue_presents.end() ) {
+				throw_error_v(ErrorScriptArgInvalid,"arg:%s is needed",
+					it->second->name);
+			}
+
+			EvaluableIter eit;
+			for ( eit = ranges.first; eit != ranges.second; eit++ ) {
+				eit->second->expand_scalar(eit->first.c_str(),arg);
+			}
+		}
+	}
+
 	pre_judge();
+
+	if( frame_out < 0 || frame_in < 0 || frame_in > frame_out) {
+		throw_error_v(ErrorImplError, "position param can't be calced:%s ", it->second->name);
+	}
 
 	for ( it = params->params.begin(); it != params->params.end(); it++ ) {
 		if ( it->second->param_style == ScriptParams::EnumParam ) continue;
@@ -97,10 +134,6 @@ void Script::call(json_t* args_value) throw (Exception)
 					throw_error_v(ErrorScriptArgInvalid,"arg:%s should be integer",
 						it->second->name);
 				}
-			}
-
-			if( frame_out < 0 || frame_in < 0 || frame_in > frame_out) {
-				throw_error_v(ErrorImplError, "position param can't be calced:%s ", it->second->name);
 			}
 
 			if ( it->first == "in" ) {
@@ -151,31 +184,6 @@ void Script::call(json_t* args_value) throw (Exception)
 			EvaluableIter eit;
 			for ( eit = ranges.first; eit != ranges.second; eit++ ) {
 				eit->second->expand_position(eit->first.c_str(),frame_in, frame_out, iarg);
-			}
-		}
-		else if ( it->second->param_style == ScriptParams::ScalarParam ) {
-			if ( !arg ) {
-				arg = it->second->default_scalar;
-				if ( !arg ) {
-					throw_error_v(ErrorScriptArgInvalid,
-						"arg:%s empty and has no default", it->second->name);
-				}
-			}
-			else if ( json_is_object(arg) || json_is_array(arg) ) {
-				throw_error_v(ErrorScriptArgInvalid,"arg:%s should be scalar",
-					it->second->name);
-			}
-			pair<EvaluableIter, EvaluableIter> ranges =
-					param_evalue_presents.equal_range(string(it->second->name));
-
-			if (!arg && ranges.first == param_evalue_presents.end() ) {
-				throw_error_v(ErrorScriptArgInvalid,"arg:%s is needed",
-					it->second->name);
-			}
-
-			EvaluableIter eit;
-			for ( eit = ranges.first; eit != ranges.second; eit++ ) {
-				eit->second->expand_scalar(eit->first.c_str(),arg);
 			}
 		}
 	}

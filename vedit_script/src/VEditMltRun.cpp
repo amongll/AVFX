@@ -11,9 +11,6 @@
 
 NMSP_BEGIN(vedit)
 
-
-
-
 JsonPathComponent::JsonPathComponent(const char* desc):
 	type(PathInvalid),
 	arr_idx(0)
@@ -94,6 +91,34 @@ std::string JsonPath::str() const
 	}
 
 	return oss.str();
+}
+
+pthread_mutex_t MltLoader::mlt_register_lock = PTHREAD_MUTEX_INITIALIZER;
+hash_map<string,MltSvcWrap> MltLoader::mlt_register;
+
+void MltLoader::push_mlt_registry(mlt_service obj, const char* uuid)
+{
+	if (!obj || !uuid || !strlen(uuid)) return;
+
+	Lock lk(&mlt_register_lock);
+	mlt_register[string(uuid)] = MltSvcWrap(obj, 1);
+}
+
+mlt_service MltLoader::pop_mlt_registry(const char* uuid)
+{
+	if (!uuid || !strlen(uuid) ) return NULL;
+
+	mlt_service ret = NULL;
+	{
+		Lock lk(&mlt_register_lock);
+		hash_map<string, MltSvcWrap>::iterator it = mlt_register.find(string(uuid));
+		if ( it != mlt_register.end() ) {
+			ret = it->second.obj;
+			mlt_properties_inc_ref(mlt_service_properties(ret));
+			mlt_register.erase(it);
+		}
+	}
+	return ret;
 }
 
 mlt_service MltLoader::load_mlt(JsonWrap arg) throw (Exception)
