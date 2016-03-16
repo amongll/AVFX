@@ -50,21 +50,31 @@ static void my_sig_handler(int )
 int main(int argc, char* argv[])
 {
     assert(mlt_factory_init(NULL));
-	Vm::load_script_dir(argv[1]);
-	ScriptSerialized  a
-	= Vm::call_script(argv[2], vedit::VIDEO_RESOURCE_SCRIPT, NULL);
-	json_dumpf(a.second.h, stdout, JSON_PRESERVE_ORDER|JSON_INDENT(2));
-	Vm::cleanup_stream_resources();
+    json_t* call_args = NULL;
+    if (argc >= 4 ) {
+    	json_error_t jserr;
+    	call_args = json_loads(argv[3],0, &jserr);
+    }
 
-	MltRuntime run(a.second.h);
+    try {
+    	Vm::load_script_dir(argv[1]);
+    	ScriptSerialized  a = Vm::call_script(argv[2], vedit::VIDEO_RESOURCE_SCRIPT, call_args);
+    	if (call_args) json_decref(call_args);
+    	json_dumpf(a.second.h, stdout, JSON_PRESERVE_ORDER|JSON_INDENT(2));
+    	Vm::cleanup_stream_resources();
 
-	run.run();
-	register_stop((void*)&run, stop_mlt_run);
+    	MltRuntime run(a.second.h);
 
-	while(run.running()) {
-		struct timespec req = {1,0};
-		nanosleep(&req, NULL);
-	}
+    	run.run();
+    	register_stop((void*)&run, stop_mlt_run);
+
+    	while(run.running()) {
+    		struct timespec req = {1,0};
+    		nanosleep(&req, NULL);
+    	}
+    }catch(const Exception& e){
+    	std::cerr << e.what() << std::endl;
+    }
 
 
     mlt_factory_close();

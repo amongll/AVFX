@@ -67,6 +67,7 @@ Vm* Vm::instance()
 		Lock lk(&script_lock);
 		if (!singleton) {
 			SingleResourceLoader::declare();
+			FilterLoader::declare();
 			singleton = new Vm();
 			singleton_ptr.reset(singleton);
 			return singleton;

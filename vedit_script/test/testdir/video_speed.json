@@ -1,5 +1,5 @@
 {
-	"procname": "video_test_enum",
+	"procname": "video_speed",
 	"proctype": "video",
 	"desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
 	"enums": 
@@ -47,6 +47,12 @@
 
 	"params": 
 	{
+        "speed":
+        {
+            "optional": true,
+            "type": "scalar",
+            "default": 2.0
+        },
 		"resource": 
 		{
 			"optional": true,
@@ -97,6 +103,7 @@
 		"proptest5": "#(MACRO4) $(param4) $(in) $(out) jjjj",
 		"proptest6": "#(MACRO5)",
 		"proptest7": "#(MACRO5)#(MACRO5)$(in)",
+        "_speed": "$(speed)",
 		"$apply_props": 
 		[
 			"$(param5)",

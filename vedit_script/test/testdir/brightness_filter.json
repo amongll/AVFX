@@ -1,0 +1,51 @@
+{
+	"proctype": "filter",
+	"procname": "brightness",
+	"desc": "亮度逐渐变化的特效",
+	"filter": "brightness",
+	"argument": "",
+	"enums":{
+		"animation":{
+			"linear":{
+				"start": "$(inlevel)",
+				"end": "$(outlevel)"
+			},
+			"fourier":{
+				"level": "$(in)~=$(inlevel);$(out)~=$(outlevel);"
+			}
+		}
+	},
+	"params": {
+		"style": {
+			"optional":true,
+			"type": "#animation",
+			"desc": "亮度变化的风格",
+			"default": "linear"
+		},
+		"in":{
+			"optional":false,
+			"type": "frame_pos",
+			"desc": "特效生效的帧位置"
+		},
+		"out":{
+			"optional":false,
+			"type":"frame_pos",
+			"desc":"特效结束的帧位置"
+		},
+		"inlevel":{
+			"optional": true,
+			"type": "scalar",
+			"desc": "起始位置的亮度值",
+			"default": 0.0
+		},
+		"outlevel":{
+			"optional": true,
+			"type": "scalar",
+			"desc": "结束位置的亮度值",
+			"default": 1.0
+		}
+	},
+	"props":{
+		"$apply_props":["$(style)"]
+	}
+}

@@ -273,7 +273,7 @@ bool is_call(const char* str, string& procnm)
 		return false;
 	}
 
-	return false;
+	return true;
 }
 
 
