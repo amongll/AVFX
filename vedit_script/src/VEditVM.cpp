@@ -59,7 +59,7 @@ void Vm::thr_spec_cache_cleanup(void* dummy)
 	delete spec;
 }
 
-Vm* Vm::singleton = NULL;
+Vm* Vm::singleton = Vm::instance();
 Vm* Vm::instance()
 {
 	pthread_once(&thr_spec_cache_once, Vm::thr_spec_cache_key_create);
@@ -68,6 +68,7 @@ Vm* Vm::instance()
 		if (!singleton) {
 			SingleResourceLoader::declare();
 			FilterLoader::declare();
+			PlaylistLoader::declare();
 			singleton = new Vm();
 			singleton_ptr.reset(singleton);
 			return singleton;
@@ -230,8 +231,7 @@ Script* Vm::get_script_impl(const char* procname) throw (Exception)
 		obj = new FilterScript(it->second.defines.h); //todo args
 		break;
 	case PLAYLIST_SCRIPT:
-		//obj = new PlaylistScript(it->second.defines.h); //todo args
-		obj = NULL;
+		obj = new PlaylistScript(it->second.defines.h); //todo args
 		break;
 	case MULTITRACK_SCRIPT:
 		//obj = new MultitrackScript(it->second.defines.h); //todo args
@@ -310,8 +310,7 @@ void Vm::regist_script(json_t* text)throw(Exception)
 		obj = new FilterScript(text); //todo args
 		break;
 	case PLAYLIST_SCRIPT:
-		//obj = new PlaylistScript(text); //todo args
-		obj = NULL;
+		obj = new PlaylistScript(text); //todo args
 		break;
 	case MULTITRACK_SCRIPT:
 		//obj = new MultitrackScript(text); //todo args

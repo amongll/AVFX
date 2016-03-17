@@ -144,7 +144,7 @@ void Script::call(json_t* args_value) throw (Exception)
 			}
 			else if ( it->second->pos_type == ScriptParams::FramePos) {
 				if ( iarg < 0 ) {
-					if ( iarg  < (frame_in - frame_out) )
+					if ( iarg  < (frame_in - frame_out - 1) )
 						iarg = 0;
 					else {
 						iarg = (frame_out - frame_in) + iarg + 1;
@@ -165,7 +165,12 @@ void Script::call(json_t* args_value) throw (Exception)
 						iarg = frame_out - frame_in;
 					}
 					else {
-						iarg = totol_time_ms + iarg;
+						if ( iarg < -totol_time_ms) {
+							iarg = 0;
+						}
+						else  {
+							iarg = totol_time_ms + iarg;
+						}
 						iarg /= 40;
 					}
 				}

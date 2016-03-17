@@ -1,5 +1,5 @@
 {
-	"procname": "video_with_brightness_inout",
+	"procname": "video_with_filter",
 	"proctype": "video",
 	"desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
 	"params": 
@@ -31,14 +31,14 @@
 			"optional": true,
 			"type": "pos_time",
 			"desc": "亮度渐入的截止位置",
-			"default": 500
+			"default": 1500
 		},
 		
 		"goout_start": {
 			"optional": true,
 			"type": "pos_time",
 			"desc": "亮度转出开始位置",
-			"default": -500
+			"default": -1500
 		},
 		
 		"goout_stop":{
