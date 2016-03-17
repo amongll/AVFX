@@ -143,6 +143,23 @@ ScriptProps::ScriptProps(Script& script, json_t* detail,
 	}
 }
 
+ScriptProps::ScriptProps(Script& script, json_t* detail, const vector<string>& spec_props)
+	throw(Exception):
+	EnumExpandable(script, detail, spec_props)
+{
+	if (!finished()) return;
+
+	json_t* after_enum_expand = EnumExpandable::expand_context;
+	void* it = json_object_iter(after_enum_expand);
+	while ( it) {
+		const char* pnm = json_object_iter_key(it);
+		json_t* v = json_object_iter_value(it);
+		Property* pobj = new Property(*this, pnm, v);
+		props[pnm].reset(pobj);
+		it = json_object_iter_next(after_enum_expand, it);
+	}
+}
+
 ScriptProps::ScriptProps(Script& script, const vector<string>& spec_props)
 		throw (Exception):
 	EnumExpandable(script, script.defines, spec_props)
@@ -158,7 +175,6 @@ ScriptProps::ScriptProps(Script& script, const vector<string>& spec_props)
 		json_t* v = json_object_iter_value(it);
 		Property* pobj = new Property(*this, pnm, v);
 		props[pnm].reset(pobj);
-		//props.insert( make_pair(string(pnm), shared_ptr<Property>(pobj)) ) ;
 		it = json_object_iter_next(after_enum_expand, it);
 	}
 }

@@ -351,6 +351,9 @@ mlt_service SingleResourceLoader::get_video(JsonWrap js)
 	throw (Exception)
 {
 	json_t* defines = js.h;
+
+	defines_tmp=js;
+
 	json_t* je = json_object_get(defines, "resource");
 
 	assert( je && json_is_string(je) && strlen(json_string_value(je)));
@@ -406,6 +409,10 @@ mlt_service SingleResourceLoader::get_video(JsonWrap js)
 		}
 	}
 
+	producer_tmp  = obj;
+
+	parse_filters();
+
 	return mlt_producer_service(obj);
 }
 
@@ -439,5 +446,37 @@ mlt_service SingleResourceLoader::get_gif(JsonWrap js)
 	throw_error(ErrorFeatureNotImpl);
 }
 
+void SingleResourceLoader::parse_filters() throw (Exception)
+{
+	json_t* ja = json_object_get(defines_tmp.h, "effects");
+	if (!ja || !json_is_array(ja) || !json_array_size(ja)  ) return;
+
+	int aze = json_array_size(ja);
+	for ( int i=0; i<aze; i++ ) {
+		json_t* jae = json_array_get(ja, i);
+		mlt_filter filter = get_filter(jae);
+
+		mlt_producer_attach(producer_tmp, filter);
+	}
+}
+
+SingleResourceLoader::~SingleResourceLoader()
+{
+	if ( producer_tmp ) mlt_producer_close(producer_tmp);
+}
+
+mlt_filter SingleResourceLoader::get_filter(json_t* defines) throw (Exception)
+{
+	if ( !json_is_object(defines) || !json_object_size(defines) ) {
+		throw_error_v(ErrorRuntimeLoadFailed, "effect json serialization format error");
+	}
+
+	mlt_filter ret = (mlt_filter)MltLoader::load_mlt(JsonWrap(defines));
+	return ret;
+}
+
+
 NMSP_END(vedit)
+
+
 

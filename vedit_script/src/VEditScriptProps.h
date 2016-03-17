@@ -76,6 +76,7 @@ public:
 	Property& add_property(const char* nm, json_t* value) throw (Exception);
 
 	ScriptProps(Script& script, const vector<string>& spec_props) throw(Exception);
+	ScriptProps(Script& script, json_t* detail, const vector<string>& spec_props)throw(Exception);
 	ScriptProps(Script& script, json_t* detail, const char* enum_apply_tag="$apply_props")
 		throw(Exception);
 private:

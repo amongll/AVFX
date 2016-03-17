@@ -1,0 +1,76 @@
+{
+	"proctype": "playlist",
+	"procname": "playlist_simple",
+	"desc": "",
+	"slices": 
+	[
+		{
+			"ctrl": 
+			{
+				"blank_time": 2000
+			}
+		},
+
+		{
+			"$call(video_with_filter)": 
+			{
+				"resource": "http://10.10.69.212/testphp/merge_langyabang_4.flv",
+				"in": 1000000,
+				"out": 1030000
+			}
+		},
+
+		{
+			"ctrl": 
+			{
+				"blank_time": 2000
+			}
+		},
+
+		{
+			"$call(video_with_filter)": 
+			{
+				"resource": "http://10.10.69.212/testphp/merge_langyabang_4.flv",
+				"in": 170000,
+				"out": 171000
+			},
+
+			"ctrl": 
+			{
+				"repeat": 5 
+			}
+		},
+
+		{
+			"ctrl": 
+			{
+				"blank_time": 2000
+			}
+		},
+
+		{
+			"$call(video_with_filter)": 
+			{
+				"resource": "http://10.10.69.212/testphp/merge_langyabang_4.flv",
+				"in": 280000,
+				"out": 300000
+			}
+		},
+
+		{
+			"ctrl": 
+			{
+				"blank_time": 2000
+			}
+		},
+		
+		{
+			"$call(video_with_filter)": 
+			{
+				"resource": "http://10.10.69.212/testphp/merge_langyabang_9.flv",
+				"in": 290000,
+				"out": 310000
+			}
+		}
+	]
+}

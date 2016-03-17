@@ -1,0 +1,18 @@
+{
+	"proctype": "filter",
+	"procname": "grayscale",
+	"desc": "grayscale",
+	"filter": "grayscale",
+	"params": {
+		"in":{
+			"optional":false,
+			"type": "frame_pos",
+			"desc": "特效生效的帧位置"
+		},
+		"out":{
+			"optional":false,
+			"type":"frame_pos",
+			"desc":"特效结束的帧位置"
+		}
+	}
+}

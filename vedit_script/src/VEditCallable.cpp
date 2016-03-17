@@ -54,7 +54,7 @@ ScriptSerialized ScriptCallable::compile(ScriptType type) throw (Exception)
 
 void ScriptCallable::parse(json_t* call_detail) throw (Exception)
 {
-	if ( ! json_is_object(call_detail) || json_object_size(call_detail) == 1) {
+	if ( ! json_is_object(call_detail) || json_object_size(call_detail) != 1) {
 		throw_error_v(ErrorScriptFmtError, "Not a callable");
 	}
 

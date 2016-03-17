@@ -37,6 +37,8 @@ void Script::call(json_t* args_value) throw (Exception)
 	parse_mlt_props(se);
 	parse_specific();
 
+	parse_filter_scriptcall();
+
 	applies_selectors();
 
 	ScriptParams::MapCIter it = params->params.begin();
@@ -78,86 +80,13 @@ void Script::call(json_t* args_value) throw (Exception)
 	}
 
 	applies_macros();
-	pre_judge();
 
 	for ( it = params->params.begin(); it != params->params.end(); it++ ) {
 		if ( it->second->param_style == ScriptParams::EnumParam ) continue;
 
 		const json_t* arg = t ? json_object_get(t, it->second->name) : NULL;
 
-		if ( it->second->param_style == ScriptParams::PosParam ) {
-			int iarg = it->second->default_pos;
-			if ( arg )  {
-				if ( json_is_integer(arg)) {
-					iarg = json_integer_value(arg);
-				}
-				else {
-					throw_error_v(ErrorScriptArgInvalid,"arg:%s should be integer",
-						it->second->name);
-				}
-			}
-
-			if( frame_out < 0 || frame_in < 0 || frame_in > frame_out) {
-				throw_error_v(ErrorImplError, "position param can't be calced:%s ", it->second->name);
-			}
-
-			/*if ( it->second->pos_type == ScriptParams::PerctPos ) {
-				if ( iarg > 100) iarg = 100;
-				if ( iarg < -100) iarg = -100;
-
-				if ( iarg > 0) {
-					iarg = (frame_out-frame_in) * (double)iarg/100;
-				}
-				else if ( iarg < 0 ) {
-					iarg = (frame_out - frame_in) * (double)(100 + iarg)/100;
-				}
-			}
-			else */
-			if ( it->second->pos_type == ScriptParams::FramePos) {
-				if ( iarg < 0 ) {
-					if ( iarg  < (frame_in - frame_out) )
-						iarg = 0;
-					else {
-						iarg = (frame_out - frame_in) + iarg + 1;
-					}
-				}
-				else if ( iarg > (frame_out - frame_in) ) {
-					iarg = frame_out - frame_in;
-				}
-				else {
-					;//
-				}
-
-			}
-			else if ( it->second->pos_type == ScriptParams::TimePos ) {
-				int totol_time_ms = (frame_out-frame_in+1)*40;
-				if ( iarg < 0 ) {
-					if ( iarg == -1 ) {
-						iarg = frame_out - frame_in;
-					}
-					else {
-						iarg = totol_time_ms + iarg;
-						iarg /= 40;
-					}
-				}
-				else {
-					if ( iarg > totol_time_ms ) {
-						iarg = frame_out - frame_in;
-					}
-					else {
-						iarg /= 40;
-					}
-				}
-			}
-
-			pair<EvaluableIter, EvaluableIter> ranges =
-					param_evalue_presents.equal_range(string(it->second->name));
-			EvaluableIter eit;
-			for ( eit = ranges.first; eit != ranges.second; eit++ ) {
-				eit->second->expand_position(eit->first.c_str(),frame_in, frame_out, iarg);
-			}
-		}
-		else if ( it->second->param_style == ScriptParams::ScalarParam ) {
+		if ( it->second->param_style == ScriptParams::ScalarParam ) {
 			if ( !arg ) {
 				arg = it->second->default_scalar;
 				if ( !arg ) {
@@ -183,53 +112,87 @@ void Script::call(json_t* args_value) throw (Exception)
 			}
 		}
 	}
+
+	pre_judge();
+
+	if( frame_out < 0 || frame_in < 0 || frame_in > frame_out) {
+		throw_error_v(ErrorImplError, "position param can't be calced:%s ", it->second->name);
+	}
+
+	for ( it = params->params.begin(); it != params->params.end(); it++ ) {
+		if ( it->second->param_style == ScriptParams::EnumParam ) continue;
+
+		const json_t* arg = t ? json_object_get(t, it->second->name) : NULL;
+
+		if ( it->second->param_style == ScriptParams::PosParam ) {
+			int iarg = it->second->default_pos;
+			if ( arg )  {
+				if ( json_is_integer(arg)) {
+					iarg = json_integer_value(arg);
+				}
+				else {
+					throw_error_v(ErrorScriptArgInvalid,"arg:%s should be integer",
+						it->second->name);
+				}
+			}
+
+			if ( it->first == "in" ) {
+				iarg = 0;
+			}
+			else if ( it->first == "out" ) {
+				iarg = frame_out - frame_in;
+			}
+			else if ( it->second->pos_type == ScriptParams::FramePos) {
+				if ( iarg < 0 ) {
+					if ( iarg  < (frame_in - frame_out - 1) )
+						iarg = 0;
+					else {
+						iarg = (frame_out - frame_in) + iarg + 1;
+					}
+				}
+				else if ( iarg > (frame_out - frame_in) ) {
+					iarg = frame_out - frame_in;
+				}
+				else {
+					;//
+				}
+
+			}
+			else if ( it->second->pos_type == ScriptParams::TimePos ) {
+				int totol_time_ms = (frame_out-frame_in+1)*40;
+				if ( iarg < 0 ) {
+					if ( iarg == -1 ) {
+						iarg = frame_out - frame_in;
+					}
+					else {
+						if ( iarg < -totol_time_ms) {
+							iarg = 0;
+						}
+						else  {
+							iarg = totol_time_ms + iarg;
+						}
+						iarg /= 40;
+					}
+				}
+				else {
+					if ( iarg > totol_time_ms ) {
+						iarg = frame_out - frame_in;
+					}
+					else {
+						iarg /= 40;
+					}
+				}
+			}
+
+			pair<EvaluableIter, EvaluableIter> ranges =
+					param_evalue_presents.equal_range(string(it->second->name));
+			EvaluableIter eit;
+			for ( eit = ranges.first; eit != ranges.second; eit++ ) {
+				eit->second->expand_position(eit->first.c_str(),frame_in, frame_out, iarg);
+			}
+		}
+	}
 }
-
-/***
-void Script::apply_filter(const string& id, int start_pos, int end_pos,
-		const char* filterproc,
-		json_t* other_args) throw (Exception)
-{
-	if ( start_pos < 0 || end_pos < 0 || start_pos > end_pos ) {
-		throw_error_v(ErrorInvalidParam, "Script::apply_filter frame pos invalid");
-	}
-	if ( frame_out < 0) {
-		throw_error_v(ErrorImplError, "script length not determinated");
-	}
-
-	FilterIter it = filters.find(id);
-	if (it != filters.end()) {
-		throw_error_v(ErrorImplError, "filter %s already exists", id.c_str());
-	}
-
-	int len = frame_out - frame_in;
-	if ( start_pos > len ) start_pos = len;
-	if ( end_pos > len) end_pos = len;
-
-	json_object_set(other_args,"in", json_integer(start_pos));
-	json_object_set(other_args,"out", json_integer(end_pos));
-
-	json_t* seri = Vm::call_script(filterproc, FILTER_SCRIPT, other_args);
-	FilterWrap& obj = filters[id];
-	obj.id = id;
-	obj.serialize = seri;
-	json_decref(seri);
-
-	if (compiled) {
-		json_decref(compiled);
-		compiled = NULL;
-	}
-}
-
-void Script::erase_filter(const string& id)
-{
-	filters.erase(id);
-	if (compiled) {
-		json_decref(compiled);
-		compiled = NULL;
-	}
-}
-**/
 
 ScriptSerialized Script::get_mlt_serialize() throw (Exception)
 {
@@ -458,14 +421,6 @@ void Script::applies_selectors() throw (Exception)
 		it->second->expand_enum(enum_nm.c_str(), sel_nm.c_str(), NULL, evalue);
 	}
 	selector_enum_presents.clear();
-
-	/*
-	for ( it = selector_enum_presents.begin(); it != selector_enum_presents.end(); it++ ) {
-		string enum_nm = it->first.substr(0, it->first.find(":"));
-		string sel_nm = it->first.substr(it->first.find(":") + 1);
-		const json_t* evalue = get_selector(enum_nm.c_str(), sel_nm.c_str());
-		it->second->expand_enum(enum_nm.c_str(), sel_nm.c_str(), NULL, evalue);
-	}*/
 }
 
 void Script::applies_macros() throw (Exception)
@@ -476,11 +431,6 @@ void Script::applies_macros() throw (Exception)
 		it->second->expand_macro(it->first.c_str(), macrovalue);
 	}
 	macro_presents.clear();
-
-	//for ( it = macro_presents.begin(); it != macro_presents.end(); it++ ) {
-	//	const json_t* macrovalue = get_macro(it->first.c_str());
-	//	it->second->expand_macro(it->first.c_str(), macrovalue);
-	//}
 }
 
 json_t* Script::get_arg_value(const char* nm) throw (Exception)
@@ -572,7 +522,8 @@ json_t* Script::serialize_mlt(int dummy)  throw (Exception)
 
 	try{
 		json_t* filter_seris = filters_serialize();
-		json_object_set_new(ret, "effects", filter_seris);
+		if (filter_seris)
+			json_object_set_new(ret, "effects", filter_seris);
 	}
 	catch(const Exception& e){
 		json_decref(ret);
@@ -637,8 +588,12 @@ json_t* Script::filters_serialize() throw (Exception)
 	FilterIter it;
 	for ( it = filters.begin(); it != filters.end(); it++ ) {
 		it->call_result = it->call->compile(FILTER_SCRIPT);
-		json_array_append(wrap.h, it->call_result.second.h);
+		if ( it->call_result.first && it->call_result.second)
+			json_array_append(wrap.h, it->call_result.second.h);
 	}
+
+	if ( json_array_size(ret) == 0)
+		return 0;
 
 	return json_incref(wrap.h);
 }

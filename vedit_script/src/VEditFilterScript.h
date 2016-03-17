@@ -10,6 +10,7 @@
 
 
 #include "VEditScript.h"
+#include "VEditMltRun.h"
 
 NMSP_BEGIN(vedit)
 
@@ -24,6 +25,12 @@ public:
 	virtual json_t* compile() throw(Exception);
 	virtual void parse_specific() throw (Exception);
 	virtual void pre_judge() throw(Exception);
+};
+
+struct FilterLoader : public MltLoader
+{
+	static void declare();
+	mlt_service get_filter(JsonWrap js)throw(Exception);
 };
 
 

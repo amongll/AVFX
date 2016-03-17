@@ -93,6 +93,68 @@ struct MltLoaderDeclare
 template<class SubClass>
 SubClass MltLoaderDeclare<SubClass>::singleton;
 
+struct MltSvcWrap
+{
+	MltSvcWrap(mlt_service o=NULL, int giv=0):
+		obj(NULL),
+		type(invalid_type)
+	{
+		obj = o;
+		if (obj && giv==0) {
+			mlt_properties_inc_ref(mlt_service_properties(obj));
+		}
+		if (obj) type = mlt_service_identify(obj);
+	}
+	~MltSvcWrap() {
+		_close();
+	}
+
+	MltSvcWrap(const MltSvcWrap& r) :
+		obj(r.obj),
+		type(r.type) {
+		if (obj) mlt_properties_inc_ref(mlt_service_properties(obj));
+	}
+
+
+	MltSvcWrap& operator=(const MltSvcWrap& r) {
+		_close();
+		obj = r.obj;
+		type = r.type;
+		if (obj) mlt_properties_inc_ref(mlt_service_properties(obj));
+		return *this;
+	}
+	mlt_service obj;
+	mlt_service_type type;
+private:
+	void _close()
+	{
+		if (obj) {
+			switch(type) {
+			case producer_type:
+				mlt_producer_close(MLT_PRODUCER(obj));
+				break;
+			case playlist_type:
+				mlt_playlist_close(MLT_PLAYLIST(obj));
+				break;
+			case tractor_type:
+				mlt_tractor_close(MLT_TRACTOR(obj));
+				break;
+			case multitrack_type:
+				mlt_multitrack_close(MLT_MULTITRACK(obj));
+				break;
+			case filter_type:
+				mlt_filter_close(MLT_FILTER(obj));
+				break;
+			case transition_type:
+				mlt_transition_close(MLT_TRANSITION(obj));
+				break;
+			}
+		}
+		obj = NULL;
+		type = invalid_type;
+	}
+};
+
 struct MltLoader
 {
 	MltLoader(){}
@@ -112,9 +174,17 @@ struct MltLoader
 		entry.second = static_cast<LoadMltMemFp>(memfp);
 	}
 
+	static void push_mlt_registry(mlt_service obj, const char* uuid);
+	static mlt_service pop_mlt_registry(const char* uuid);
+
 	static mlt_service load_mlt(JsonWrap js) throw (Exception);
 
 	static hash_map<string, pair<MltLoader*,LoadMltMemFp> > loader_regists;
+
+	static pthread_mutex_t mlt_register_lock;
+	//为某些类型的脚本在脚本扩展期间需要实际的mlt service计算某些值时，暂存对应的mlt service，
+	//为后续的MltLoader创建service时，引用这些已经创建过的service
+	static hash_map<string, MltSvcWrap> mlt_register;
 };
 
 template<class SubClass>

@@ -78,11 +78,18 @@ struct SingleResourceLoader : public MltLoader
 {
 	static int declare();
 
+	SingleResourceLoader():producer_tmp(NULL){}
+	virtual ~SingleResourceLoader();
 
 	mlt_service get_video(JsonWrap js) throw (Exception);
 	mlt_service get_audio(JsonWrap js) throw (Exception);
 	mlt_service get_image(JsonWrap js) throw (Exception);
 	mlt_service get_gif(JsonWrap js) throw (Exception);
+private:
+	void parse_filters() throw (Exception);
+	mlt_filter get_filter(json_t* defines) throw (Exception);
+	JsonWrap defines_tmp;
+	mlt_producer producer_tmp;
 };
 
 NMSP_END(vedit)

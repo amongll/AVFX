@@ -78,7 +78,8 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-noinst_PROGRAMS = test_video_script$(EXEEXT)
+noinst_PROGRAMS = test_video_script$(EXEEXT) \
+	test_run_serialized$(EXEEXT)
 subdir = test
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/depcomp
@@ -94,14 +95,22 @@ CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 PROGRAMS = $(noinst_PROGRAMS)
-am_test_video_script_OBJECTS =  \
-	test_video_script-test_video_script.$(OBJEXT)
-test_video_script_OBJECTS = $(am_test_video_script_OBJECTS)
-test_video_script_DEPENDENCIES = ../src/.libs/libvedit_script.la
+am_test_run_serialized_OBJECTS =  \
+	test_run_serialized-test_run_serialized.$(OBJEXT)
+test_run_serialized_OBJECTS = $(am_test_run_serialized_OBJECTS)
+test_run_serialized_DEPENDENCIES = ../src/.libs/libvedit_script.la
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
+test_run_serialized_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
+	$(test_run_serialized_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
+am_test_video_script_OBJECTS =  \
+	test_video_script-test_video_script.$(OBJEXT)
+test_video_script_OBJECTS = $(am_test_video_script_OBJECTS)
+test_video_script_DEPENDENCIES = ../src/.libs/libvedit_script.la
 test_video_script_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
 	$(test_video_script_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) \
@@ -140,8 +149,9 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-SOURCES = $(test_video_script_SOURCES)
-DIST_SOURCES = $(test_video_script_SOURCES)
+SOURCES = $(test_run_serialized_SOURCES) $(test_video_script_SOURCES)
+DIST_SOURCES = $(test_run_serialized_SOURCES) \
+	$(test_video_script_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -297,6 +307,10 @@ test_video_script_SOURCES = test_video_script.cpp
 test_video_script_LDADD = ../src/.libs/libvedit_script.la @jansson_LIBS@ @mlt_LIBS@
 test_video_script_CPPFLAGS = -I../src @jansson_CFLAGS@ @mlt_CFLAGS@
 test_video_script_CXXFLAGS = -Wno-deprecated
+test_run_serialized_SOURCES = test_run_serialized.cpp
+test_run_serialized_LDADD = ../src/.libs/libvedit_script.la @jansson_LIBS@ @mlt_LIBS@
+test_run_serialized_CPPFLAGS = -I../src @jansson_CFLAGS@ @mlt_CFLAGS@
+test_run_serialized_CXXFLAGS = -Wno-deprecated
 all: all-am
 
 .SUFFIXES:
@@ -341,6 +355,10 @@ clean-noinstPROGRAMS:
 	echo " rm -f" $$list; \
 	rm -f $$list
 
+test_run_serialized$(EXEEXT): $(test_run_serialized_OBJECTS) $(test_run_serialized_DEPENDENCIES) $(EXTRA_test_run_serialized_DEPENDENCIES) 
+	@rm -f test_run_serialized$(EXEEXT)
+	$(AM_V_CXXLD)$(test_run_serialized_LINK) $(test_run_serialized_OBJECTS) $(test_run_serialized_LDADD) $(LIBS)
+
 test_video_script$(EXEEXT): $(test_video_script_OBJECTS) $(test_video_script_DEPENDENCIES) $(EXTRA_test_video_script_DEPENDENCIES) 
 	@rm -f test_video_script$(EXEEXT)
 	$(AM_V_CXXLD)$(test_video_script_LINK) $(test_video_script_OBJECTS) $(test_video_script_LDADD) $(LIBS)
@@ -351,6 +369,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_run_serialized-test_run_serialized.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_video_script-test_video_script.Po@am__quote@
 
 .cpp.o:
@@ -373,6 +392,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LTCXXCOMPILE) -c -o $@ $<
+
+test_run_serialized-test_run_serialized.o: test_run_serialized.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_run_serialized_CPPFLAGS) $(CPPFLAGS) $(test_run_serialized_CXXFLAGS) $(CXXFLAGS) -MT test_run_serialized-test_run_serialized.o -MD -MP -MF $(DEPDIR)/test_run_serialized-test_run_serialized.Tpo -c -o test_run_serialized-test_run_serialized.o `test -f 'test_run_serialized.cpp' || echo '$(srcdir)/'`test_run_serialized.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_run_serialized-test_run_serialized.Tpo $(DEPDIR)/test_run_serialized-test_run_serialized.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='test_run_serialized.cpp' object='test_run_serialized-test_run_serialized.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_run_serialized_CPPFLAGS) $(CPPFLAGS) $(test_run_serialized_CXXFLAGS) $(CXXFLAGS) -c -o test_run_serialized-test_run_serialized.o `test -f 'test_run_serialized.cpp' || echo '$(srcdir)/'`test_run_serialized.cpp
+
+test_run_serialized-test_run_serialized.obj: test_run_serialized.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_run_serialized_CPPFLAGS) $(CPPFLAGS) $(test_run_serialized_CXXFLAGS) $(CXXFLAGS) -MT test_run_serialized-test_run_serialized.obj -MD -MP -MF $(DEPDIR)/test_run_serialized-test_run_serialized.Tpo -c -o test_run_serialized-test_run_serialized.obj `if test -f 'test_run_serialized.cpp'; then $(CYGPATH_W) 'test_run_serialized.cpp'; else $(CYGPATH_W) '$(srcdir)/test_run_serialized.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_run_serialized-test_run_serialized.Tpo $(DEPDIR)/test_run_serialized-test_run_serialized.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='test_run_serialized.cpp' object='test_run_serialized-test_run_serialized.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_run_serialized_CPPFLAGS) $(CPPFLAGS) $(test_run_serialized_CXXFLAGS) $(CXXFLAGS) -c -o test_run_serialized-test_run_serialized.obj `if test -f 'test_run_serialized.cpp'; then $(CYGPATH_W) 'test_run_serialized.cpp'; else $(CYGPATH_W) '$(srcdir)/test_run_serialized.cpp'; fi`
 
 test_video_script-test_video_script.o: test_video_script.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_video_script_CPPFLAGS) $(CPPFLAGS) $(test_video_script_CXXFLAGS) $(CXXFLAGS) -MT test_video_script-test_video_script.o -MD -MP -MF $(DEPDIR)/test_video_script-test_video_script.Tpo -c -o test_video_script-test_video_script.o `test -f 'test_video_script.cpp' || echo '$(srcdir)/'`test_video_script.cpp

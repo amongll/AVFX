@@ -59,7 +59,7 @@ void Vm::thr_spec_cache_cleanup(void* dummy)
 	delete spec;
 }
 
-Vm* Vm::singleton = NULL;
+Vm* Vm::singleton = Vm::instance();
 Vm* Vm::instance()
 {
 	pthread_once(&thr_spec_cache_once, Vm::thr_spec_cache_key_create);
@@ -67,6 +67,8 @@ Vm* Vm::instance()
 		Lock lk(&script_lock);
 		if (!singleton) {
 			SingleResourceLoader::declare();
+			FilterLoader::declare();
+			PlaylistLoader::declare();
 			singleton = new Vm();
 			singleton_ptr.reset(singleton);
 			return singleton;
@@ -110,8 +112,9 @@ mlt_producer Vm::get_stream_resource(const string& path)
 	}
 	else {
 		//todo: 可选择的profile，影响producer的包括fps, aspect_ratio
-		string abs_path;
-		get_absolute_path(path, abs_path);
+		string abs_path = path;
+		if ( path.find("://") == string::npos )
+			get_absolute_path(path, abs_path);
 		if (abs_path.size() == 0) {
 			throw_error_v(ErrorImplError, "resource path is invalid:%s", path.c_str());
 		}
@@ -228,8 +231,7 @@ Script* Vm::get_script_impl(const char* procname) throw (Exception)
 		obj = new FilterScript(it->second.defines.h); //todo args
 		break;
 	case PLAYLIST_SCRIPT:
-		//obj = new PlaylistScript(it->second.defines.h); //todo args
-		obj = NULL;
+		obj = new PlaylistScript(it->second.defines.h); //todo args
 		break;
 	case MULTITRACK_SCRIPT:
 		//obj = new MultitrackScript(it->second.defines.h); //todo args
@@ -308,8 +310,7 @@ void Vm::regist_script(json_t* text)throw(Exception)
 		obj = new FilterScript(text); //todo args
 		break;
 	case PLAYLIST_SCRIPT:
-		//obj = new PlaylistScript(text); //todo args
-		obj = NULL;
+		obj = new PlaylistScript(text); //todo args
 		break;
 	case MULTITRACK_SCRIPT:
 		//obj = new MultitrackScript(text); //todo args
@@ -369,17 +370,46 @@ Vm::StreamResourceCache::~StreamResourceCache()
 	}
 }
 
+#include <endian.h>
+
 string Vm::uuid()
 {
+	static uint16_t local_rand1 = (uint16_t)rand_r(&rand_seed)%0x10000;
+	static uint16_t local_rand2 = (uint16_t)rand_r(&rand_seed)%0x10000;
+	static int local_pid = htobe32(getpid());
 	Lock lk(&script_lock);
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
 
 	uint64_t v = tv.tv_sec * 1000 + tv.tv_usec / 1000;
-	v *= 100000;
-	v += rand_r(&rand_seed)%100000;
-	char buf[50];
-	snprintf(buf,sizeof(buf),"%lu",v);
+	v *= 65536;
+	v += rand_r(&rand_seed)%65535;
+
+	v = htobe64(v);
+
+	char buf[37];
+	char *p = buf;
+
+	uint8_t* pv = (uint8_t*)&v;
+	for ( int i=0; i<8; i++ ) {
+		p += snprintf(p, 3, "%02x", *pv++);
+		switch(i) {
+		case 3:
+		case 5:
+		case 7:
+			*p++ = '-';
+			break;
+		}
+	}
+
+	p += snprintf(p, 6, "%04x-", local_rand1);
+	p += snprintf(p, 5, "%04x", local_rand2);
+
+	pv = (uint8_t*)&local_pid;
+	for ( int i=0; i<4; i++) {
+		p += snprintf(p, 3, "%02x", *pv++);
+	}
+
 	return string(buf);
 }
 

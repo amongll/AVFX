@@ -58,15 +58,9 @@
 		"in": 
 		{
 			"optional": true,
-<<<<<<< HEAD
 			"type": "pos_time",
 			"desc": "音频的起始帧位置，如果不指定为0，表示开始位置。可以是pos_frame/pos_time类型，支持正负值，负值表示相对于结尾的偏移",
 			"default": 400000
-=======
-			"type": "pos_frame",
-			"desc": "音频的起始帧位置，如果不指定为0，表示开始位置。可以是pos_frame/pos_time类型，支持正负值，负值表示相对于结尾的偏移",
-			"default": 0
->>>>>>> 3450a3e2c32eb83c5f1ac47bbddaf4e5cdafb5fb
 		},
 
 		"out": 
@@ -74,11 +68,7 @@
 			"optional": true,
 			"type": "pos_time",
 			"desc": "音频的结束帧位置，不过不指定默认是音频的长度",
-<<<<<<< HEAD
 			"default": 530000
-=======
-			"default": -1
->>>>>>> 3450a3e2c32eb83c5f1ac47bbddaf4e5cdafb5fb
 		},
 
 		"param4": 
