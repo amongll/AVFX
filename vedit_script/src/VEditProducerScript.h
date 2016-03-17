@@ -24,6 +24,7 @@ public:
 	virtual void parse_specific() throw (Exception);
 
 	string path;
+	string uuid;
 };
 
 class VideoScript : public SingleResourceScript

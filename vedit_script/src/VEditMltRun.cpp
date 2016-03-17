@@ -436,7 +436,14 @@ json_t* MltRuntime::run() throw (Exception)
 	if ( json_serialize == NULL)
 		throw_error_v(ErrorImplError, "running with empty json_serailzed");
 
-	mlt_producer tmp_producer = (mlt_producer) MltLoader::load_mlt(JsonWrap(json_serialize));
+	json_t* uuid_je = json_object_get(json_serialize, "uuid");
+	assert(uuid_je && json_is_string(uuid_je) && strlen(json_string_value(uuid_je)));
+
+//	mlt_producer tmp_producer = MLT_PRODUCER( MltLoader::pop_mlt_registry(json_string_value(uuid_je)));
+//	if (tmp_producer == NULL) {
+	mlt_producer	tmp_producer = (mlt_producer) MltLoader::load_mlt(JsonWrap(json_serialize));
+//	}
+
 	producer_version = json_version;
 
 	if (producer)mlt_producer_close(producer);
@@ -445,6 +452,8 @@ json_t* MltRuntime::run() throw (Exception)
 	producer = tmp_producer;
 	mlt_profile profile = mlt_profile_init(NULL);
 	consumer = mlt_factory_consumer(profile, "sdl", NULL); //todo
+
+	//mlt_producer_optimise(producer);
 	mlt_consumer_connect(consumer, mlt_producer_service(producer));
 	mlt_consumer_start(consumer);
 	status = StatusRunning;

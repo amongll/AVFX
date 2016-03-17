@@ -181,6 +181,10 @@ mlt_service FilterLoader::get_filter(JsonWrap js) throw (Exception)
 		}
 	}
 
+#ifdef DEBUG
+	std::cout << mlt_filter_properties(obj);
+#endif
+
 	return mlt_filter_service(obj);
 }
 

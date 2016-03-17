@@ -63,7 +63,6 @@ int main(int argc, char* argv[])
     	if (call_args) json_decref(call_args);
     	json_dumpf(a.second.h, stdout, JSON_PRESERVE_ORDER|JSON_INDENT(2));
     	json_dump_file(a.second.h, "run.json", JSON_PRESERVE_ORDER|JSON_INDENT(2));
-    	Vm::cleanup_stream_resources();
 
     	MltRuntime run(a.second.h);
 

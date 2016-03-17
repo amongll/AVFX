@@ -94,6 +94,7 @@ const char* Vm::proc_type_names[] = {
 	"transition"
 };
 
+/**
 mlt_producer Vm::get_stream_resource(const string& path)
 	throw (Exception)
 {
@@ -133,7 +134,7 @@ mlt_producer Vm::get_stream_resource(const string& path)
 	}
 
 	return prod;
-}
+}**/
 
 void Vm::load_script_dir(const char* path) throw (Exception)
 {
@@ -188,6 +189,7 @@ void Vm::load_script_dir(const char* path) throw (Exception)
 	closedir(diobj);
 }
 
+/**
 void Vm::cleanup_stream_resources()
 {
 	Vm::instance();
@@ -197,7 +199,7 @@ void Vm::cleanup_stream_resources()
 		pthread_setspecific(thr_spec_cache_key, NULL);
 		delete cache;
 	}
-}
+}**/
 
 Script* Vm::get_script_impl(const char* procname) throw (Exception)
 {
