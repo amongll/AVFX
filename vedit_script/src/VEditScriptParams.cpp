@@ -18,6 +18,7 @@ vedit::ScriptParams::Param::Param(const char* nm, json_t* detail,
 	define_detail(NULL),
 	param_style(UnknownParamStyle),
 	pos_type(UnknownPosType),
+	pos_relative(true),
 	enum_name(NULL),
 	default_pos(0),
 	default_scalar(NULL),
@@ -58,24 +59,7 @@ void vedit::ScriptParams::Param::parse(const Script& script) throw (Exception)
 			type = "scalar";
 	}
 
-	/***
-	bool is_optional = false;
-	se = json_object_get(define_detail, "optional");
-	if (!se)
-		se = json_object_get(define_detail, "option");
-	if (!se)
-		se = json_object_get(define_detail, "opt");
-
-	if (se && json_is_boolean(se)) {
-		is_optional = json_is_true(se);
-	}
-	**/
-
 	json_t* default_define = json_object_get(define_detail, "default");
-	//if (is_optional) {
-	//	default_define = json_object_get(define_detail, "default");
-	//}
-
 	DECLARE_CONST_MEM_MODIFIER(pmodifier, param_style, ParamStyle*);
 	if ( !strcasecmp(type,"scalar") ) {
 		*pmodifier = ScalarParam;
@@ -104,6 +88,12 @@ void vedit::ScriptParams::Param::parse(const Script& script) throw (Exception)
 			DECLARE_CONST_MEM_MODIFIER(imod,default_pos,int*);
 			*imod = json_integer_value(default_define);
 		}
+
+		json_t* pos_relative_je = json_object_get(define_detail, "relative");
+		if ( pos_relative_je && json_is_false(pos_relative_je)) {
+			DECLARE_CONST_MEM_MODIFIER(xxmod, pos_relative, bool*);
+			*xxmod  = false;
+		}
 	}
 	else if ( !strcasecmp(type, "pos_time") || !strcasecmp(type,"position_time")
 				|| !strcasecmp(type, "time_pos") || !strcasecmp(type,"time_position") ) {
@@ -118,30 +108,13 @@ void vedit::ScriptParams::Param::parse(const Script& script) throw (Exception)
 			DECLARE_CONST_MEM_MODIFIER(imod,default_pos,int*);
 			*imod = json_integer_value(default_define);
 		}
-	}
-	/*
-	else if ( !strcasecmp(type, "pos_perct") || !strcasecmp(type,"position_perct")
-				|| !strcasecmp(type, "perct_pos") || !strcasecmp(type,"perct_position")
-				|| !strcasecmp(type, "percent_pos") || !strcasecmp(type,"percent_position")
-				|| !strcasecmp(type, "pos_percent") || !strcasecmp(type,"position_percent") ) {
 
-		*pmodifier = PosParam;
-		DECLARE_CONST_MEM_MODIFIER(xmod, pos_type, ParamPosType*);
-		*xmod = PerctPos;
-
-		if (default_define) {
-			if (!json_is_integer(default_define)) throw_error_v(ErrorParamDefineError,
-				"default is not position for param:%s", name);
-
-			json_int_t v = json_integer_value(default_define);
-			if ( v < -100 || v > 100 )
-				throw_error_v(ErrorParamDefineError,
-					"default is not valid percent position for param:%s", name);
-
-			DECLARE_CONST_MEM_MODIFIER(imod,default_pos,int*);
-			*imod = json_integer_value(default_define);
+		json_t* pos_relative_je = json_object_get(define_detail, "relative");
+		if ( pos_relative_je && json_is_false(pos_relative_je)) {
+			DECLARE_CONST_MEM_MODIFIER(xxmod, pos_relative, bool*);
+			*xxmod  = false;
 		}
-	}*/
+	}
 	else if ( type[0] == '#' ) {
 		*pmodifier = EnumParam;
 		const char* enum_str= type + 1;

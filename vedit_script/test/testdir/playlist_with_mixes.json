@@ -1,0 +1,88 @@
+{
+	"proctype": "playlist",
+	"procname": "playlist_with_mixes",
+	"params":{
+		"mixlen":{
+			"optional":true,
+			"type":"scalar",
+			"default": 3000
+		},
+		"dir":{
+			"optional":true,
+			"type":"scalar",
+			"default":"/opt/lilei/"
+		}
+	},
+	"slices":[
+		{
+			"ctrl": {"blank_time":2000}
+		},
+		{
+			"$call(simple_video)":{"resource":"$(dir)/merge_langyabang_30.flv","in":70000, "out":90000},
+			"ctrl": {"mix_time": "$(mixlen)"},
+			"mixes":[
+				{"$call(trans_composite1)":{"in":0,"out":"$(mixlen)","style":"l2r"}},
+				{"$call(trans_audio_mix)":{"in":0,"out":"$(mixlen)","style":"l2r"}}
+			]
+		},
+		{
+			"$call(simple_video)":{"resource":"$(dir)/merge_langyabang_30.flv","in":180000, "out":200000},
+			"ctrl": {"mix_time": "$(mixlen)"},
+			"mixes":[
+				{"$call(trans_composite1)":{"in":0,"out":"$(mixlen)","style":"r2l"}},
+				{"$call(trans_audio_mix)":{"in":0,"out":"$(mixlen)"}}
+			]
+		},
+		{
+			"$call(simple_video)":{"resource":"$(dir)/merge_langyabang_30.flv","in":280000, "out":300000},
+			"ctrl": {"mix_time": "$(mixlen)"},
+			"mixes":[
+				{"$call(trans_composite1)":{"in":0,"out":"$(mixlen)","style":"t2b"}},
+				{"$call(trans_audio_mix)":{"in":0,"out":"$(mixlen)"}}
+			]
+		},
+		{
+			"$call(simple_video)":{"resource":"$(dir)/merge_langyabang_30.flv","in":380000, "out":400000},
+			"ctrl": {"mix_time": "$(mixlen)"},
+			"mixes":[
+				{"$call(trans_composite1)":{"in":0,"out":"$(mixlen)","style":"b2t"}},
+				{"$call(trans_audio_mix)":{"in":0,"out":"$(mixlen)"}}
+			]
+		},
+		{
+			"$call(simple_video)":{"resource":"$(dir)/merge_langyabang_30.flv","in":480000, "out":500000},
+			"ctrl": {"mix_time": "$(mixlen)"},
+			"mixes":[
+				{"$call(trans_composite1)":{"in":0,"out":"$(mixlen)","style":"lt2rb"}},
+				{"$call(trans_audio_mix)":{"in":0,"out":"$(mixlen)"}}
+			]
+		},
+		{
+			"$call(simple_video)":{"resource":"$(dir)/merge_langyabang_30.flv","in":580000, "out":600000},
+			"ctrl": {"mix_time": "$(mixlen)"},
+			"mixes":[
+				{"$call(trans_composite1)":{"in":0,"out":"$(mixlen)","style":"lb2rt"}},
+				{"$call(trans_audio_mix)":{"in":0,"out":"$(mixlen)"}}
+			]
+		},
+		{
+			"$call(simple_video)":{"resource":"$(dir)/merge_langyabang_30.flv","in":680000, "out":700000},
+			"ctrl": {"mix_time": "$(mixlen)"},
+			"mixes":[
+				{"$call(trans_composite1)":{"in":0,"out":"$(mixlen)","style":"rt2lb"}},
+				{"$call(trans_audio_mix)":{"in":0,"out":"$(mixlen)"}}
+			]
+		},
+		{
+			"$call(simple_video)":{"resource":"$(dir)/merge_langyabang_30.flv","in":780000, "out":800000},
+			"ctrl": {"mix_time": "$(mixlen)"},
+			"mixes":[
+				{"$call(trans_composite1)":{"in":0,"out":"$(mixlen)","style":"rb2lt"}},
+				{"$call(trans_audio_mix)":{"in":0,"out":"$(mixlen)"}}
+			]
+		},
+		{
+			"ctrl":{"blank_time":2000}
+		}
+	]
+}

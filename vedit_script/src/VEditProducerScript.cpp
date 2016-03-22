@@ -478,13 +478,13 @@ mlt_service SingleResourceLoader::get_image(JsonWrap js)
 
 int SingleResourceLoader::declare() {
 	MltLoader::regist_loader<SingleResourceLoader>("video",
-		static_cast<MltLoader::LoadMltMemFp>(&SingleResourceLoader::get_video) );
+		&SingleResourceLoader::get_video );
 	MltLoader::regist_loader<SingleResourceLoader>("audio",
-		static_cast<MltLoader::LoadMltMemFp>(&SingleResourceLoader::get_audio) );
+		&SingleResourceLoader::get_audio );
 	MltLoader::regist_loader<SingleResourceLoader>("image",
-		static_cast<MltLoader::LoadMltMemFp>(&SingleResourceLoader::get_image) );
+		&SingleResourceLoader::get_image );
 	MltLoader::regist_loader<SingleResourceLoader>( "gif",
-		static_cast<MltLoader::LoadMltMemFp>(&SingleResourceLoader::get_gif) );
+		&SingleResourceLoader::get_gif );
 	return 4;
 }
 

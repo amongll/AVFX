@@ -9,6 +9,7 @@
 #define VEDITTRANSITIONSCRIPT_H_
 
 #include "VEditScript.h"
+#include "VEditMltRun.h"
 
 NMSP_BEGIN(vedit)
 
@@ -20,12 +21,18 @@ public:
 	{}
 
 	virtual ~TransitionScript();
+	virtual void pre_judge() throw (Exception);
 	virtual json_t* compile() throw (Exception);
 	virtual void parse_specific() throw (Exception);
 };
 
+struct TransitionLoader : public MltLoader
+{
+	static void declare() ;
+
+	mlt_service get_transition(JsonWrap js) throw (Exception);
+};
+
 NMSP_END(vedit)
-
-
 
 #endif /* VEDITTRANSITIONSCRIPT_H_ */

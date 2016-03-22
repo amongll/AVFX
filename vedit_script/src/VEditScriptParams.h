@@ -57,6 +57,7 @@ public:
 				define_detail(NULL),
 				param_style(UnknownParamStyle),
 				pos_type(UnknownPosType),
+				pos_relative(true),
 				enum_name(NULL),
 				default_pos(0),
 				default_scalar(NULL),
@@ -72,6 +73,7 @@ public:
 				define_detail(NULL),
 				param_style(UnknownParamStyle),
 				pos_type(UnknownPosType),
+				pos_relative(true),
 				enum_name(NULL),
 				default_pos(0),
 				default_scalar(NULL),
@@ -87,6 +89,7 @@ public:
 				define_detail(NULL),
 				param_style(UnknownParamStyle),
 				pos_type(UnknownPosType),
+				pos_relative(true),
 				enum_name(NULL),
 				default_pos(0),
 				default_scalar(NULL),
@@ -102,6 +105,7 @@ public:
 		const char* const name;
 		const ParamStyle param_style;
 		const ParamPosType pos_type;
+		const bool pos_relative;
 		const char* const enum_name;
 		const int default_pos;
 		const char* const default_selector;

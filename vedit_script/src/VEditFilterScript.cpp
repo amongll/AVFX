@@ -29,9 +29,15 @@ void FilterScript::parse_specific() throw (Exception)
 
 void FilterScript::pre_judge() throw (Exception)
 {
+	assert(type_spec_props);
+
+	ScriptProps::Property& filter_prop = type_spec_props->get_property("filter");
+	if (!filter_prop.Evaluable::finished()) {
+		throw_error_v(ErrorScriptFmtError, "filter name do not support macro/param expandable");
+	}
+
 	const ScriptParam* inparam = get_param_info("in");
 	const ScriptParam* outparam = get_param_info("out");
-	const ScriptParam* resparam = get_param_info("argument");
 
 	if ( !inparam || inparam->param_style != ScriptParams::PosParam ||
 		!outparam || outparam->param_style != ScriptParams::PosParam) {
@@ -39,12 +45,6 @@ void FilterScript::pre_judge() throw (Exception)
 			Vm::proc_type_names[FILTER_SCRIPT]);
 	}
 
-	if ( resparam && resparam->param_style != ScriptParams::ScalarParam ) {
-		throw_error_v(ErrorScriptArgInvalid, "argument param should be scalre if exists for %s script",
-			Vm::proc_type_names[FILTER_SCRIPT]);
-	}
-
-	json_t* res_arg = get_arg_value("argument");
 	json_t* in = get_arg_value("in");
 	json_t* out = get_arg_value("out");
 
@@ -70,14 +70,20 @@ void FilterScript::pre_judge() throw (Exception)
 
 	switch (inparam->pos_type) {
 	case ScriptParams::TimePos: {
-		inframe = (double)inframe / 40 ;
+		if (inframe % 40 == 0 && inframe > 0)
+			inframe = inframe/40 - 1;
+		else
+			inframe = inframe / 40 ;
 		break;
 	}
 	}
 
 	switch (outparam->pos_type) {
 	case ScriptParams::TimePos: {
-		outframe = (double)outframe / 40 ;
+		if (outframe % 40 == 0 && outframe > 0)
+			outframe = outframe/40 -1;
+		else
+			outframe = outframe / 40 ;
 		break;
 	}
 	}
@@ -87,6 +93,14 @@ void FilterScript::pre_judge() throw (Exception)
 	}
 
 	set_frame_range(inframe,outframe);
+
+	const ScriptParam* resparam = get_param_info("argument");
+	if ( resparam && resparam->param_style != ScriptParams::ScalarParam ) {
+		throw_error_v(ErrorScriptArgInvalid, "argument param should be scalre if exists for %s script",
+			Vm::proc_type_names[FILTER_SCRIPT]);
+	}
+
+	json_t* res_arg = get_arg_value("argument");
 
 	if (res_arg) {
 		if ( !type_spec_props.get() ) {
@@ -182,7 +196,9 @@ mlt_service FilterLoader::get_filter(JsonWrap js) throw (Exception)
 	}
 
 #ifdef DEBUG
+	std::cout << "======filter========" << json_string_value(json_object_get(js.h,"uuid"))<< "===filter====" <<endl;
 	std::cout << mlt_filter_properties(obj);
+	std::cout << "##############################################################" << endl;
 #endif
 
 	return mlt_filter_service(obj);
