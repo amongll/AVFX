@@ -268,7 +268,7 @@ void PlaylistScript::pre_judge() throw (Exception)
 			}
 
 			if (playlist == NULL) {
-				mlt_profile profile = mlt_profile_init(NULL);
+				mlt_profile profile = mlt_profile_clone(MltLoader::global_profile);
 				playlist = mlt_playlist_new(profile);
 				playlist_wrap.obj = mlt_playlist_service(playlist);
 			}
@@ -278,7 +278,7 @@ void PlaylistScript::pre_judge() throw (Exception)
 		else {
 
 			if (playlist == NULL) {
-				mlt_profile profile = mlt_profile_init(NULL);
+				mlt_profile profile = mlt_profile_clone(MltLoader::global_profile);
 				playlist = mlt_playlist_new(profile);
 				playlist_wrap.obj = mlt_playlist_service(playlist);
 			}
@@ -437,7 +437,7 @@ mlt_service PlaylistLoader::load_playlist(JsonWrap js) throw (Exception)
 
 		if (slice_mlt) {
 			if (playlist==NULL) {
-				mlt_profile profile = mlt_profile_init(NULL);
+				mlt_profile profile = mlt_profile_clone(global_profile);
 				playlist = mlt_playlist_new(profile);
 				playlist_wrap.obj = mlt_playlist_service(playlist);
 			}

@@ -47,6 +47,7 @@
 
 	"props": 
 	{
+		"distort":1,
 		"$apply_props": 
 		[
 			"$(style)"

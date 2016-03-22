@@ -359,6 +359,11 @@ string Vm::uuid()
 	return string(buf);
 }
 
+void Vm::init(const char* profilenm) throw (Exception)
+{
+	instance();
+	MltLoader::global_profile = mlt_profile_init(profilenm);
+}
 
 NMSP_END(vedit)
 

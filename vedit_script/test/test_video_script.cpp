@@ -56,6 +56,8 @@ int main(int argc, char* argv[])
     	call_args = json_loads(argv[3],0, &jserr);
     }
 
+    Vm::init("my_720p_25");
+
     //try {
     	Vm::load_script_dir(argv[1]);
     	//ScriptSerialized  a = Vm::call_script(argv[2], vedit::VIDEO_RESOURCE_SCRIPT, call_args);

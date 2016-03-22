@@ -148,7 +148,7 @@ mlt_service TransitionLoader::get_transition(JsonWrap js) throw (Exception)
 
 	const char* filter_id = json_string_value(je);
 
-	mlt_profile profile = mlt_profile_init(NULL);
+	mlt_profile profile = mlt_profile_clone(global_profile);
 	mlt_transition obj = mlt_factory_transition(profile, filter_id, arg_str);
 
 	if ( !obj ) {

@@ -429,6 +429,8 @@ const JsonPath* MltRuntime::get_runtime_entry_path(const string& uuid)
 	return it == uuid_pathmap.end()? NULL : &it->second;
 }
 
+mlt_profile MltLoader::global_profile = NULL;
+
 json_t* MltRuntime::run() throw (Exception)
 {
 	stop();
@@ -439,21 +441,17 @@ json_t* MltRuntime::run() throw (Exception)
 	json_t* uuid_je = json_object_get(json_serialize, "uuid");
 	assert(uuid_je && json_is_string(uuid_je) && strlen(json_string_value(uuid_je)));
 
-//	mlt_producer tmp_producer = MLT_PRODUCER( MltLoader::pop_mlt_registry(json_string_value(uuid_je)));
-//	if (tmp_producer == NULL) {
 	mlt_producer	tmp_producer = (mlt_producer) MltLoader::load_mlt(JsonWrap(json_serialize));
-//	}
-
 	producer_version = json_version;
 
 	if (producer)mlt_producer_close(producer);
 	if (consumer)mlt_consumer_close(consumer);
 
 	producer = tmp_producer;
-	mlt_profile profile = mlt_profile_init(NULL);
+	mlt_profile profile = mlt_profile_clone(MltLoader::global_profile);
 	consumer = mlt_factory_consumer(profile, "sdl", NULL); //todo
 
-	//mlt_producer_optimise(producer);
+	mlt_producer_optimise(producer);
 	mlt_consumer_connect(consumer, mlt_producer_service(producer));
 	mlt_consumer_start(consumer);
 	status = StatusRunning;

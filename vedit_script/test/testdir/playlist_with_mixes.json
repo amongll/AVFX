@@ -22,7 +22,7 @@
 			"ctrl": {"mix_time": "$(mixlen)"},
 			"mixes":[
 				{"$call(trans_composite1)":{"in":0,"out":"$(mixlen)","style":"l2r"}},
-				{"$call(trans_audio_mix)":{"in":0,"out":"$(mixlen)","style":"l2r"}}
+				{"$call(trans_audio_mix)":{"in":0,"out":"$(mixlen)"}}
 			]
 		},
 		{

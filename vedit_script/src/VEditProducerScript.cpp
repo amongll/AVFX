@@ -99,7 +99,7 @@ void VideoScript::pre_judge() throw (Exception)
 
 	string path(json_string_value(res_arg));
 
-	mlt_profile profile = mlt_profile_init(NULL);
+	mlt_profile profile = mlt_profile_clone(MltLoader::global_profile);
 	mlt_producer prod = mlt_factory_producer(profile, "loader", path.c_str());
 
 	if  ( prod == NULL ) {
@@ -402,7 +402,7 @@ mlt_service SingleResourceLoader::get_video(JsonWrap js)
 
 	mlt_producer obj = MLT_PRODUCER(MltLoader::pop_mlt_registry(json_string_value(uuid_je)));
 	if (obj == NULL) {
-		mlt_profile profile = mlt_profile_init(NULL);
+		mlt_profile profile = mlt_profile_clone(global_profile);
 		obj = mlt_factory_producer(profile, "loader", json_string_value(je));
 #ifdef DEBUG
 		std::cout << mlt_producer_properties(obj);

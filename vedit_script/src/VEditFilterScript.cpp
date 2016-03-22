@@ -144,7 +144,7 @@ mlt_service FilterLoader::get_filter(JsonWrap js) throw (Exception)
 
 	const char* filter_id = json_string_value(je);
 
-	mlt_profile profile = mlt_profile_init(NULL);
+	mlt_profile profile = mlt_profile_clone(MltLoader::global_profile);
 	mlt_filter obj = mlt_factory_filter(profile, filter_id, arg_str);
 
 	if ( !obj ) {

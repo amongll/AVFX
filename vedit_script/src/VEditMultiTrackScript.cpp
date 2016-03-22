@@ -280,7 +280,7 @@ mlt_service MultitrackLoader::get_tractro(JsonWrap js) throw (Exception)
 	}
 
 	if ( tractor_svc == NULL ) {
-		mlt_profile profile = mlt_profile_init(NULL);
+		mlt_profile profile = mlt_profile_clone(MltLoader::global_profile);
 		tractor_svc = mlt_tractor_new();
 		tractor_wrap.obj = mlt_tractor_service(tractor_svc);
 	}
