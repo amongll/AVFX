@@ -32,10 +32,20 @@ private:
 		shared_ptr<ScriptCallable> call;
 		ScriptPropsPtr ctrls;
 		JsonWrap ctrl_result;
+
+		struct MixWrap
+		{
+			ScriptSerialized call_result;
+			shared_ptr<ScriptCallable> call;
+		};
+
+		int mix_len;
+		list<MixWrap> mixes;
 	};
 
-	typedef vector<SliceWrap>::iterator SliceIter;
-	vector<SliceWrap> slices;
+	typedef list<SliceWrap::MixWrap>::iterator MixIter;
+	typedef list<SliceWrap>::iterator SliceIter;
+	list<SliceWrap> slices;
 };
 
 struct PlaylistLoader : public MltLoader

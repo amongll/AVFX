@@ -26,10 +26,12 @@ VideoScript::~VideoScript()
 
 json_t* VideoScript::compile() throw (Exception)
 {
-	mlt_producer prod = Vm::get_stream_resource(path);
+	//mlt_producer prod = Vm::get_stream_resource(path);
 	//todo: format info
 
-	return NULL;
+	json_t* ret = json_object();
+	json_object_set_new(ret, "uuid", json_string(uuid.c_str()));
+	return ret;
 }
 
 AudioScript::~AudioScript()
@@ -38,6 +40,9 @@ AudioScript::~AudioScript()
 
 json_t* AudioScript::compile() throw (Exception)
 {
+	json_t* ret = json_object();
+	json_object_set_new(ret, "uuid", json_string(uuid.c_str()));
+	return ret;
 }
 
 ImageScript::~ImageScript()
@@ -93,7 +98,19 @@ void VideoScript::pre_judge() throw (Exception)
 	}
 
 	string path(json_string_value(res_arg));
-	mlt_producer prod = Vm::get_stream_resource(path);
+
+	mlt_profile profile = mlt_profile_clone(MltLoader::global_profile);
+	mlt_producer prod = mlt_factory_producer(profile, "loader", path.c_str());
+
+	if  ( prod == NULL ) {
+		throw_error_v(ErrorScriptArgInvalid, "out arg is required for %s script",
+			Vm::proc_type_names[VIDEO_RESOURCE_SCRIPT]);
+	}
+
+	uuid = Vm::uuid();
+	MltLoader::push_mlt_registry(mlt_producer_service(prod), uuid.c_str());
+
+	//mlt_producer prod = Vm::get_stream_resource(path);
 	int length = mlt_producer_get_length(prod);
 	int inframe = json_integer_value(in), outframe = json_integer_value(out);
 
@@ -196,6 +213,11 @@ void VideoScript::pre_judge() throw (Exception)
 	mlt_props->add_property("out", jv);
 	json_decref(jv);
 
+	//mlt_producer_set_in_and_out(prod, inframe, outframe);
+#ifdef DEBUG
+	std::cout << mlt_producer_properties(prod);
+#endif
+
 	this->path  = path;
 	//todo: check format info
 	return;
@@ -238,7 +260,20 @@ void AudioScript::pre_judge() throw (Exception)
 	}
 
 	string path(json_string_value(res_arg));
-	mlt_producer prod = Vm::get_stream_resource(path);
+
+
+	mlt_profile profile = mlt_profile_init(NULL);
+	mlt_producer prod = mlt_factory_producer(profile, "loader", path.c_str());
+
+	if  ( prod == NULL ) {
+		throw_error_v(ErrorScriptArgInvalid, "out arg is required for %s script",
+			Vm::proc_type_names[VIDEO_RESOURCE_SCRIPT]);
+
+	}
+
+	uuid = Vm::uuid();
+	MltLoader::push_mlt_registry(mlt_producer_service(prod), uuid.c_str());
+
 	int length = mlt_producer_get_length(prod);
 	int inframe = json_integer_value(in), outframe = json_integer_value(out);
 
@@ -334,6 +369,11 @@ void AudioScript::pre_judge() throw (Exception)
 	mlt_props->add_property("out", jv);
 	json_decref(jv);
 
+
+	//mlt_producer_set_in_and_out(prod, inframe, outframe);
+#ifdef DEBUG
+	std::cout << mlt_producer_properties(prod);
+#endif
 	this->path  = path;
 	//todo: check format info
 	return;
@@ -355,11 +395,19 @@ mlt_service SingleResourceLoader::get_video(JsonWrap js)
 	defines_tmp=js;
 
 	json_t* je = json_object_get(defines, "resource");
+	json_t* uuid_je = json_object_get(defines, "uuid");
 
 	assert( je && json_is_string(je) && strlen(json_string_value(je)));
+	assert( uuid_je && json_is_string(uuid_je) && strlen(json_string_value(uuid_je)));
 
-	mlt_profile profile = mlt_profile_init(NULL);
-	mlt_producer obj = mlt_factory_producer(profile, "loader", json_string_value(je));
+	mlt_producer obj = MLT_PRODUCER(MltLoader::pop_mlt_registry(json_string_value(uuid_je)));
+	if (obj == NULL) {
+		mlt_profile profile = mlt_profile_clone(global_profile);
+		obj = mlt_factory_producer(profile, "loader", json_string_value(je));
+#ifdef DEBUG
+		std::cout << mlt_producer_properties(obj);
+#endif
+	}
 
 	if ( !obj ) {
 		throw_error_v(ErrorRuntimeLoadFailed, "video producer load failed:%s", json_string_value(je));
@@ -430,13 +478,13 @@ mlt_service SingleResourceLoader::get_image(JsonWrap js)
 
 int SingleResourceLoader::declare() {
 	MltLoader::regist_loader<SingleResourceLoader>("video",
-		static_cast<MltLoader::LoadMltMemFp>(&SingleResourceLoader::get_video) );
+		&SingleResourceLoader::get_video );
 	MltLoader::regist_loader<SingleResourceLoader>("audio",
-		static_cast<MltLoader::LoadMltMemFp>(&SingleResourceLoader::get_audio) );
+		&SingleResourceLoader::get_audio );
 	MltLoader::regist_loader<SingleResourceLoader>("image",
-		static_cast<MltLoader::LoadMltMemFp>(&SingleResourceLoader::get_image) );
+		&SingleResourceLoader::get_image );
 	MltLoader::regist_loader<SingleResourceLoader>( "gif",
-		static_cast<MltLoader::LoadMltMemFp>(&SingleResourceLoader::get_gif) );
+		&SingleResourceLoader::get_gif );
 	return 4;
 }
 

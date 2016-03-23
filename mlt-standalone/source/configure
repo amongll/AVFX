@@ -392,6 +392,8 @@ else
 	build_config
 fi
 
+export targetarch
+
 # Iterate through each of the components
 #for i in framework modules
 for i in framework modules

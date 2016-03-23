@@ -185,6 +185,8 @@ struct MltLoader
 	//为某些类型的脚本在脚本扩展期间需要实际的mlt service计算某些值时，暂存对应的mlt service，
 	//为后续的MltLoader创建service时，引用这些已经创建过的service
 	static hash_map<string, MltSvcWrap> mlt_register;
+
+	static mlt_profile global_profile;
 };
 
 template<class SubClass>

@@ -1,0 +1,58 @@
+{
+	"procname": "trans_composite1",
+	"proctype": "transition",
+	"desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
+	"params": 
+	{
+		"in": 
+		{
+			"type": "pos_time",
+			"desc": "在两个对其的track，该transition生效的开始点, 参数替换时，使用绝对帧位置",
+			"default": 0,
+			"relative": false
+		},
+
+		"out": 
+		{
+			"type": "pos_time",
+			"desc": "在两个对其的track，该transition生效的结束点, 参数替换时，使用绝对帧位置",
+			"default": 0,
+			"relative": false
+		},
+
+		"style": 
+		{
+			"type": "#move_styles",
+			"desc": "控制图像转场进入的方向",
+			"default":"l2r"
+		}
+	},
+	"macros":{
+		"finalgeometry":"$(out)=0/0:100%x100%;"
+	},
+	"enums": 
+	{
+		"move_styles": 
+		{
+			"l2r": {"geometry": "$(in)=-100%/0:100%x100%;#(finalgeometry)"},
+			"r2l": {"geometry": "$(in)=100%/0:100%x100%;#(finalgeometry)"},
+			"t2b": {"geometry": "$(in)=0/-100%:100%x100%;#(finalgeometry)"},
+			"b2t": {"geometry": "$(in)=0/100%:100%x100%;#(finalgeometry)"},
+			"lt2rb":{"geometry":"$(in)=-100%/-100%:100%x100%;#(finalgeometry)"},
+			"lb2rt":{"geometry":"$(in)=-100%/100%:100%x100%;#(finalgeometry)"},
+			"rt2lb":{"geometry":"$(in)=100%/-100%:100%x100%;#(finalgeometry)"},
+			"rb2lt":{"geometry":"$(in)=100%/100%:100%x100%;#(finalgeometry)"}
+		}
+	},
+
+	"props": 
+	{
+		"distort":1,
+		"$apply_props": 
+		[
+			"$(style)"
+		]
+	},
+
+	"transition": "composite"
+}

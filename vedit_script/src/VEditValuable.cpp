@@ -115,6 +115,9 @@ void Evaluable::parse(Script& script, json_t* detail) throw (Exception)
 
 	if ( param_idxes.size() == 1 && segments.size() == 1 ) {
 		const ScriptParam* param = script.get_param_info(segments[0].c_str());
+		if (param == NULL) {
+			throw_error_v(ErrorParamNotFount, "%s not found for param expandable entry", segments[0].c_str());
+		}
 		if ( param->param_style == ScriptParams::PosParam ) {
 			replace_type = EValuePositionReplace;
 		}

@@ -66,9 +66,12 @@ Vm* Vm::instance()
 	if ( !singleton ) {
 		Lock lk(&script_lock);
 		if (!singleton) {
+			srand(rand_seed);
 			SingleResourceLoader::declare();
 			FilterLoader::declare();
 			PlaylistLoader::declare();
+			TransitionLoader::declare();
+			MultitrackLoader::declare();
 			singleton = new Vm();
 			singleton_ptr.reset(singleton);
 			return singleton;
@@ -93,47 +96,6 @@ const char* Vm::proc_type_names[] = {
 	"multitrack",
 	"transition"
 };
-
-mlt_producer Vm::get_stream_resource(const string& path)
-	throw (Exception)
-{
-	Vm::instance();
-	StreamResourceCache* cache = static_cast<StreamResourceCache*>
-		(pthread_getspecific(thr_spec_cache_key));
-	if ( !cache ) {
-		cache = new StreamResourceCache();
-		pthread_setspecific(thr_spec_cache_key, cache);
-	}
-
-	hash_map<string, mlt_producer>::iterator it = cache->resources.find(path);
-	mlt_producer prod = NULL;
-	if ( it != cache->resources.end() ) {
-		prod = it->second;
-	}
-	else {
-		//todo: 可选择的profile，影响producer的包括fps, aspect_ratio
-		string abs_path = path;
-		if ( path.find("://") == string::npos )
-			get_absolute_path(path, abs_path);
-		if (abs_path.size() == 0) {
-			throw_error_v(ErrorImplError, "resource path is invalid:%s", path.c_str());
-		}
-
-		mlt_profile profile = mlt_profile_init(NULL);
-		prod = mlt_factory_producer(profile,"loader",(const void*)abs_path.c_str());
-		if (prod == NULL)
-			throw_error_v(ErrorStreamFileInvalid,
-					"audio/video stream file invalid:%s", path.c_str());
-
-#ifdef DEBUG
-		cout<<mlt_producer_properties(prod);
-#endif
-
-		cache->resources[path] = prod;
-	}
-
-	return prod;
-}
 
 void Vm::load_script_dir(const char* path) throw (Exception)
 {
@@ -183,20 +145,10 @@ void Vm::load_script_dir(const char* path) throw (Exception)
 			fclose(fp);
 			mlt_log_warning(NULL, "vedit_script:%s", e.what());
 		}
+		fclose(fp);
 	}
 
 	closedir(diobj);
-}
-
-void Vm::cleanup_stream_resources()
-{
-	Vm::instance();
-	StreamResourceCache* cache = static_cast<StreamResourceCache*>
-		(pthread_getspecific(thr_spec_cache_key));
-	if ( cache ) {
-		pthread_setspecific(thr_spec_cache_key, NULL);
-		delete cache;
-	}
 }
 
 Script* Vm::get_script_impl(const char* procname) throw (Exception)
@@ -234,12 +186,10 @@ Script* Vm::get_script_impl(const char* procname) throw (Exception)
 		obj = new PlaylistScript(it->second.defines.h); //todo args
 		break;
 	case MULTITRACK_SCRIPT:
-		//obj = new MultitrackScript(it->second.defines.h); //todo args
-		obj = NULL;
+		obj = new MultitrackScript(it->second.defines.h); //todo args
 		break;
 	case TRANSITION_SCRIPT:
-		//obj = new TransitionScript(it->second.defines.h); //todo args
-		obj = NULL;
+		obj = new TransitionScript(it->second.defines.h); //todo args
 		break;
 	default:
 		assert(0);
@@ -313,12 +263,10 @@ void Vm::regist_script(json_t* text)throw(Exception)
 		obj = new PlaylistScript(text); //todo args
 		break;
 	case MULTITRACK_SCRIPT:
-		//obj = new MultitrackScript(text); //todo args
-		obj = NULL;
+		obj = new MultitrackScript(text); //todo args
 		break;
 	case TRANSITION_SCRIPT:
-		//obj = new TransitionScript(text); //todo args
-		obj = NULL;
+		obj = new TransitionScript(text); //todo args
 		break;
 	default:
 		assert(0);
@@ -374,8 +322,8 @@ Vm::StreamResourceCache::~StreamResourceCache()
 
 string Vm::uuid()
 {
-	static uint16_t local_rand1 = (uint16_t)rand_r(&rand_seed)%0x10000;
-	static uint16_t local_rand2 = (uint16_t)rand_r(&rand_seed)%0x10000;
+	static uint16_t local_rand1 = (uint16_t)rand()%0x10000;
+	static uint16_t local_rand2 = (uint16_t)rand()%0x10000;
 	static int local_pid = htobe32(getpid());
 	Lock lk(&script_lock);
 	struct timeval tv;
@@ -383,7 +331,7 @@ string Vm::uuid()
 
 	uint64_t v = tv.tv_sec * 1000 + tv.tv_usec / 1000;
 	v *= 65536;
-	v += rand_r(&rand_seed)%65535;
+	v += rand()%65535;
 
 	v = htobe64(v);
 
@@ -413,6 +361,11 @@ string Vm::uuid()
 	return string(buf);
 }
 
+void Vm::init(const char* profilenm) throw (Exception)
+{
+	instance();
+	MltLoader::global_profile = mlt_profile_init(profilenm);
+}
 
 NMSP_END(vedit)
 

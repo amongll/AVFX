@@ -1,0 +1,40 @@
+{
+	"procname": "trans_audio_mix",
+	"proctype": "transition",
+	"desc": "两个track的音频数据合成",
+	"params": 
+	{
+		"in": 
+		{
+			"type": "pos_time",
+			"desc": "在两个对其的track，该transition生效的开始点, 参数替换时，使用绝对帧位置",
+			"default": 0,
+			"relative": false
+		},
+
+		"out": 
+		{
+			"type": "pos_time",
+			"desc": "在两个对其的track，该transition生效的结束点, 参数替换时，使用绝对帧位置",
+			"default": 0,
+			"relative": false
+		},
+		
+		"style":
+		{
+			"optional":true,
+			"type": "#audio_mix_style",
+			"default":"equal" 
+		}
+	},
+	"enums":{
+		"audio_mix_style":{
+			"equal":{"start":1,"end":1,"combine":1},
+			"mix_in":{"start":0,"end":1,"combine":1}
+		}
+	},
+	"transition": "mix",
+	"props":{
+		"$apply_props":["$(style)"]
+	}
+}

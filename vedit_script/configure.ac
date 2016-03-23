@@ -26,7 +26,7 @@ AC_CHECK_HEADER_STDBOOL
 AC_TYPE_SIZE_T
 
 # Checks for library functions.
-AC_CHECK_FUNCS([getcwd strcasecmp strdup])
+AC_CHECK_FUNCS([getcwd strcasecmp strdup rand_r rand srand])
 
 AC_CONFIG_FILES([Makefile src/Makefile test/Makefile])
 AC_OUTPUT

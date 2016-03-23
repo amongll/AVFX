@@ -1,4 +1,17 @@
 #!/bin/sh
-echo "framework	-I$prefix/include -I$prefix/include/mlt -D_REENTRANT	-L$libdir -lmlt" >> ../../packages.dat
+case ${targetarch} in
+    arm64-v8a)
+    echo "framework	-I$prefix/include -I$prefix/include/mlt -D_REENTRANT -DANDROID_XLOCALE	-L$libdir -lmlt -landroid -llog" >> ../../packages.dat
+    ;;
+    armv7-a)
+    echo "framework	-I$prefix/include -I$prefix/include/mlt -D_REENTRANT -DANDROID -L$libdir -lmlt -landroid -llog" >> ../../packages.dat
+    ;;
+    arm)
+    echo "framework	-I$prefix/include -I$prefix/include/mlt -D_REENTRANT -DANDROID -L$libdir -lmlt -landroid -llog" >> ../../packages.dat
+    ;;
+    *)
+    echo "framework	-I$prefix/include -I$prefix/include/mlt -D_REENTRANT	-L$libdir -lmlt" >> ../../packages.dat
+    ;;
+esac
 
 echo > config.mak
