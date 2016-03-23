@@ -66,6 +66,7 @@ Vm* Vm::instance()
 	if ( !singleton ) {
 		Lock lk(&script_lock);
 		if (!singleton) {
+			srand(rand_seed);
 			SingleResourceLoader::declare();
 			FilterLoader::declare();
 			PlaylistLoader::declare();
@@ -321,8 +322,8 @@ Vm::StreamResourceCache::~StreamResourceCache()
 
 string Vm::uuid()
 {
-	static uint16_t local_rand1 = (uint16_t)rand_r(&rand_seed)%0x10000;
-	static uint16_t local_rand2 = (uint16_t)rand_r(&rand_seed)%0x10000;
+	static uint16_t local_rand1 = (uint16_t)rand()%0x10000;
+	static uint16_t local_rand2 = (uint16_t)rand()%0x10000;
 	static int local_pid = htobe32(getpid());
 	Lock lk(&script_lock);
 	struct timeval tv;
@@ -330,7 +331,7 @@ string Vm::uuid()
 
 	uint64_t v = tv.tv_sec * 1000 + tv.tv_usec / 1000;
 	v *= 65536;
-	v += rand_r(&rand_seed)%65535;
+	v += rand()%65535;
 
 	v = htobe64(v);
 
