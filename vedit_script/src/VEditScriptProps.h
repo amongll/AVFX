@@ -48,7 +48,7 @@ public:
 			this->agent = agent;
 		}
 
-		json_t* compile() throw (Exception) {
+		json_t* compile() const throw (Exception) {
 			if ( !MacroExpandable::finished() ) {
 				throw_error_v(ErrorImplError, "property resolved incompletely");
 			}
@@ -79,6 +79,18 @@ public:
 	ScriptProps(Script& script, json_t* detail, const vector<string>& spec_props)throw(Exception);
 	ScriptProps(Script& script, json_t* detail, const char* enum_apply_tag="$apply_props")
 		throw(Exception);
+
+	typedef hash_map<string, shared_ptr<Property> >::const_iterator MapCIter;
+	typedef MapCIter PropIter;
+
+	PropIter begin() const
+	{
+		return props.begin();
+	}
+	PropIter end() const
+	{
+		return props.end();
+	}
 private:
 	friend class shared_ptr<ScriptProps>;
 	friend class ScriptProps::Property;
@@ -87,9 +99,8 @@ private:
 	Script& get_script() {
 		return script;
 	}
-
 	typedef hash_map<string, shared_ptr<Property> >::iterator MapIter;
-	typedef hash_map<string, shared_ptr<Property> >::const_iterator MapCIter;
+
 	hash_map<string, shared_ptr<Property> >  props;
 };
 

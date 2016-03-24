@@ -1,0 +1,21 @@
+{
+	"proctype":"asis_producer",
+	"procname":"color",
+	"params":{
+		"color":{
+			"type":"scalar",
+			"optional":true,
+			"default":"black"
+		},
+		"length":{
+			"type":"time_dura",
+			"optional":true,
+			"default": 2000
+		}
+	},
+	"service":"colour",
+	"resource":"$(color)",
+	"props":{
+		"out":"$(length)"
+	}
+}

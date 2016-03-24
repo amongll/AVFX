@@ -25,7 +25,8 @@ public:
 		UnknownParamStyle,
 		ScalarParam, //json 字面值标量替换 的参数
 		PosParam, // 位置类型参数
-		EnumParam // 属性集合 选择 参数
+		EnumParam, // 属性集合 选择 参数
+		DuraParam	//表示持续时长的参数
 	};
 	enum ParamPosType
 	{

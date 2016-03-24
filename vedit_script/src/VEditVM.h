@@ -74,6 +74,12 @@ public:
 		( get_script(procname, TRANSITION_SCRIPT)) );
 	}
 
+	static shared_ptr<AsisScript> get_asis_producer_script(const char* procname)
+	{
+		return shared_ptr<AsisScript>(dynamic_cast<AsisScript*>
+		( get_script(procname, ASIS_PRODUCER_SCRIPT)) );
+	}
+
 	static void regist_script(json_t* text)throw(Exception);
 	static void regist_script(int fd)throw(Exception);
 	static void regist_script(FILE* fp)throw(Exception);

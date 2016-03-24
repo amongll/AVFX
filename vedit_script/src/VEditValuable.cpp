@@ -60,6 +60,34 @@ void Evaluable::expand_scalar(const char* nm, const json_t* v) throw (Exception)
 	}
 }
 
+void Evaluable::expand_position(const char* nm,  int frame_seq) throw (Exception)
+{
+	if (evalued) return;
+	if ( replace_type == EValuePositionReplace) {
+		evalued = json_integer(frame_seq);
+	}
+	else if (replace_type == EValueStringCtxReplace2) {
+		char buf[50] = {0};
+		sprintf(buf, "%d", frame_seq);
+		pair<MapIter,MapIter> ranges = param_idxes.equal_range(string(nm));
+		MapIter it;
+		for ( it = ranges.first; it != ranges.second; it++ ) {
+			segments[it->second] = buf;
+		}
+		param_idxes.erase(ranges.first, ranges.second);
+
+		if ( param_idxes.size() == 0 ) {
+			string tmp;
+			vector<string>::iterator i;
+			for ( i = segments.begin(); i!= segments.end();i++)
+				tmp += *i;
+
+			evalued = json_string(tmp.c_str());
+			return;
+		}
+	}
+}
+
 void Evaluable::expand_position(const char* nm, const int& frame_in,
 		const int& frame_out, int frame_seq) throw (Exception)
 {
@@ -121,7 +149,8 @@ void Evaluable::parse(Script& script, json_t* detail) throw (Exception)
 		if ( param->param_style == ScriptParams::PosParam ) {
 			replace_type = EValuePositionReplace;
 		}
-		else if (param->param_style == ScriptParams::ScalarParam ) {
+		else if (param->param_style == ScriptParams::ScalarParam||
+			param->param_style == ScriptParams::DuraParam) {
 			replace_type = EValueScalarReplace;
 		}
 		script.regist_scalar_param_usage(segments[0].c_str(), this);

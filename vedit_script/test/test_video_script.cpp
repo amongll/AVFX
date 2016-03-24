@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
     	call_args = json_loads(argv[3],0, &jserr);
     }
 
-    Vm::init("my_720p_25");
+    Vm::init("my_720hd_25");
 
     //try {
     	Vm::load_script_dir(argv[1]);
@@ -68,11 +68,15 @@ int main(int argc, char* argv[])
 
     	MltRuntime run(a.second.h);
 
+    	run.init();
+    	int length = run.get_frame_length();
     	run.run();
     	register_stop((void*)&run, stop_mlt_run);
 
     	while(run.running()) {
     		struct timespec req = {1,0};
+    		int pos = run.get_frame_position();
+    		std::cerr << "position:" << pos << " pert:" << (double)pos/length * 100 << '\r';
     		nanosleep(&req, NULL);
     	}
     //}catch(const Exception& e){

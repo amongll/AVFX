@@ -52,7 +52,7 @@ void MultitrackScript::pre_judge() throw (Exception)
 		MltLoader::push_mlt_registry(svc_obj, it_track->track_call_results.first);
 
 		if ( mlt_tracs == NULL ) {
-			mlt_tracs = mlt_tractor_init();
+			mlt_tracs = mlt_tractor_new();
 			tractor_wrp.obj = mlt_tractor_service(mlt_tracs);
 		}
 
@@ -79,7 +79,7 @@ void MultitrackScript::pre_judge() throw (Exception)
 	}
 
 	if (!mlt_tracs) {
-		mlt_tracs = mlt_tractor_init();
+		mlt_tracs = mlt_tractor_new();
 		tractor_wrp.obj = mlt_tractor_service(mlt_tracs);
 	}
 	mlt_tractor_refresh(mlt_tracs);

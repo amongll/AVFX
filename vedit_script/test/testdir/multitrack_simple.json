@@ -1,0 +1,33 @@
+{
+	"proctype": "multitrack",
+	"procname": "simple_multi",
+	"tracks": 
+	[
+		{
+			"$call(color)": 
+			{
+				"color": "red",
+				"length": 2000
+			}
+		},
+
+		{
+			"$call(color)": 
+			{
+				"color": "green",
+				"length": 2000
+			},
+
+			"transitions": 
+			[
+				{
+					"$call(trans_composite1)": 
+					{
+						"in":0,
+						"out":2000
+					}
+				}
+			]
+		}
+	]
+}

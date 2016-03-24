@@ -94,7 +94,8 @@ const char* Vm::proc_type_names[] = {
 	"filter",
 	"playlist",
 	"multitrack",
-	"transition"
+	"transition",
+	"asis_producer"
 };
 
 void Vm::load_script_dir(const char* path) throw (Exception)
@@ -191,6 +192,9 @@ Script* Vm::get_script_impl(const char* procname) throw (Exception)
 	case TRANSITION_SCRIPT:
 		obj = new TransitionScript(it->second.defines.h); //todo args
 		break;
+	case ASIS_PRODUCER_SCRIPT:
+		obj = new AsisScript(it->second.defines.h); //todo args
+		break;
 	default:
 		assert(0);
 		break;
@@ -267,6 +271,9 @@ void Vm::regist_script(json_t* text)throw(Exception)
 		break;
 	case TRANSITION_SCRIPT:
 		obj = new TransitionScript(text); //todo args
+		break;
+	case ASIS_PRODUCER_SCRIPT:
+		obj = new AsisScript(text); //todo args
 		break;
 	default:
 		assert(0);

@@ -52,6 +52,8 @@ const char* error_desc(ErrorCode code)
 		return "<mlt runtime uuid path invalid>";
 	case ErrorRuntimeLoadFailed:
 		return "<mlt runtime load failed>";
+	case ErrorRuntimeStatusError:
+		return "<mlt runtime status invalid>";
 	default:
 		return "";
 	}
