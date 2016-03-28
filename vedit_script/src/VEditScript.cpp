@@ -65,7 +65,7 @@ void Script::call(json_t* args_value) throw (Exception)
 			param_enum_presents.equal_range(string(it->second->name));
 
 		const json_t* enum_detail = get_selector(it->second->enum_name, sel);
-		if ( !enum_detail && ranges.first == param_enum_presents.end() ) {
+		if ( !enum_detail && ranges.first != param_enum_presents.end() ) {
 			throw_error_v(ErrorScriptArgInvalid,"arg:%s is invalid enum selector",
 				it->second->name);
 		}

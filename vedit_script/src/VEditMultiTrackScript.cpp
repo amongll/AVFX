@@ -73,8 +73,8 @@ void MultitrackScript::pre_judge() throw (Exception)
 			}
 			MltLoader::push_mlt_registry(svc_obj, it_trans->trans_call_results.first);
 
-			mlt_field field = mlt_tractor_field(mlt_tracs);
-			mlt_field_plant_transition(field, MLT_TRANSITION(svc_obj), 0, track_idx-1);
+			//mlt_field field = mlt_tractor_field(mlt_tracs);
+			//mlt_field_plant_transition(field, MLT_TRANSITION(svc_obj), 0, track_idx-1);
 		}
 	}
 
@@ -243,9 +243,11 @@ mlt_service MultitrackLoader::get_tractro(JsonWrap js) throw (Exception)
 		assert(uuid_js && json_is_string(uuid_js) && strlen(json_string_value(uuid_js)));
 		assert(proctype_js && json_is_string(proctype_js) && strlen(json_string_value(proctype_js)));
 
+		bool loaded = false;
 		track_svc = MLT_PRODUCER(MltLoader::pop_mlt_registry(json_string_value(uuid_js)));
 		if (track_svc == NULL) {
 			track_svc = MLT_PRODUCER(MltLoader::load_mlt(JsonWrap(track_jso)));
+			loaded = true;
 		}
 
 		if ( tractor_svc == NULL){
@@ -338,7 +340,7 @@ mlt_service MultitrackLoader::get_tractro(JsonWrap js) throw (Exception)
 
 #ifdef DEBUG
 
-	std::cout << "======filter========" << json_string_value(json_object_get(js.h,"uuid"))<< "===filter====" <<endl;
+	std::cout << "======tractor========" << json_string_value(json_object_get(js.h,"uuid"))<< "===tractor====" <<endl;
 	std::cout << mlt_tractor_properties(tractor_svc);
 	std::cout << "##############################################################" << endl;
 #endif

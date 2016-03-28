@@ -1,0 +1,19 @@
+{
+	"proctype":"playlist",
+	"procname":"color_blank",
+	"params":{
+		"color":{
+			"type":"scalar"
+		},
+		"length":{
+			"type":"frame_dura"
+		},
+		"blank":{
+			"type":"frame_dura"
+		}
+	},
+	"slices":[
+		{"ctrl":{"blank_frames":"$(blank)"}},
+		{"$call(color)":{"color":"$(color)","length":"$(length)"}}
+	]
+}

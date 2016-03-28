@@ -144,6 +144,7 @@ void Vm::load_script_dir(const char* path) throw (Exception)
 		}
 		catch(const Exception& e) {
 			fclose(fp);
+			fp = NULL;
 			mlt_log_warning(NULL, "vedit_script:%s", e.what());
 		}
 		fclose(fp);

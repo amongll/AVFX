@@ -8,7 +8,7 @@
 			"default":"black"
 		},
 		"length":{
-			"type":"time_dura",
+			"type":"frame_dura",
 			"optional":true,
 			"default": 2000
 		}
