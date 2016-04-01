@@ -47,6 +47,32 @@ libvedit_script_la_SOURCES=\
 	VEditValuable.h \
 	VEditVM.cpp \
 	VEditVM.h
+
+include_HEADERS=\
+	VEditCallable.h\
+	VEditCommonDefine.h\
+	VEditCommon.h\
+	VEditCompilable.h\
+	VEditDefinable.h\
+	VEditEnumExpandable.h\
+	VEditError.h\
+	VEditException.h\
+	VEditExport.h\
+	VEditFilterScript.h\
+	VEditMacroExpandable.h\
+	VEditMltRun.h\
+	VEditMultiTrackScript.h\
+	VEditPlaylistScript.h\
+	VEditProducerScript.h\
+	VEditScriptEnums.h\
+	VEditScript.h\
+	VEditScriptMacros.h\
+	VEditScriptParams.h\
+	VEditScriptProps.h\
+	VEditTransitionScript.h\
+	VEditUtil.h\
+	VEditValuable.h\
+	VEditVM.h
     
 libvedit_script_la_CPPFLAGS=@jansson_CFLAGS@ @mlt_CFLAGS@
 libvedit_script_la_CXXFLAGS=-Wno-deprecated

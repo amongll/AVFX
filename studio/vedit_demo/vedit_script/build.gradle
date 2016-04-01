@@ -11,19 +11,25 @@ android {
         versionName "1.0"
     }
     buildTypes {
+<<<<<<< HEAD
         debug {
             debuggable true
             jniDebuggable true
         }
+=======
+>>>>>>> 0c857c3631815449c813496df181a71e4b918845
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+<<<<<<< HEAD
     sourceSets.main {
         jniLibs.srcDirs 'src/main/libs'
         jni.srcDirs = [] // This prevents the auto generation of Android.mk
     }
+=======
+>>>>>>> 0c857c3631815449c813496df181a71e4b918845
 }
 
 dependencies {
