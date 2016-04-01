@@ -56,7 +56,7 @@ typedef struct
 	mlt_properties mirror;
 	int ref_count;
 	pthread_mutex_t mutex;
-	locale_t locale;
+	//locale_t locale;
 }
 property_list;
 
@@ -69,7 +69,7 @@ static int properties_destroyed = 0;
 #endif
 
 /** Initialize a properties object that was already allocated.
- * ³õÊ¼»¯¡£×ÓÀà¶ÔÏó³õÊ¼»¯Ê±µ÷ÓÃ¡£childÊÇ×ÓÀà¶ÔÏóÊµÀýÖ¸Õë
+ * ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ã¡ï¿½childï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½Ö¸ï¿½ï¿½
  *
  * This does allocate its ::property_list, and it adds a reference count.
  * \public \memberof mlt_properties_s
@@ -126,7 +126,7 @@ mlt_properties mlt_properties_new( )
 }
 
 /** Set the numeric locale used for string/double conversions.
- * ÉèÖÃÊýÖµÀàÐÍ×Ö·û´®×ª»»Ê±Ê¹ÓÃµÄlocale
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½×ªï¿½ï¿½Ê±Ê¹ï¿½Ãµï¿½locale
  *
  * \public \memberof mlt_properties_s
  * \param self a properties list
@@ -141,7 +141,7 @@ int mlt_properties_set_lcnumeric( mlt_properties self, const char *locale )
 	if ( self && locale )
 	{
 		property_list *list = self->local;
-
+#if 0
 #if defined(__GLIBC__) || defined(__DARWIN__)
 		if ( list->locale )
 			freelocale( list->locale );
@@ -150,6 +150,7 @@ int mlt_properties_set_lcnumeric( mlt_properties self, const char *locale )
 
 		free( list->locale );
 		list->locale = strdup( locale );
+#endif
 #endif
 	}
 	else
@@ -172,7 +173,7 @@ const char* mlt_properties_get_lcnumeric( mlt_properties self )
 
 	property_list *list = self->local;
 	const char *result = NULL;
-
+#if 0
 	if ( list->locale )
 	{
 #if defined(__DARWIN__)
@@ -183,10 +184,11 @@ const char* mlt_properties_get_lcnumeric( mlt_properties self )
 		result = list->locale;
 #endif
     }
+#endif
 	return result;
 }
 
-//¿ÉÒÔ²Î¿¼$MLT_DATA/core/loader.dict
+//ï¿½ï¿½ï¿½Ô²Î¿ï¿½$MLT_DATA/core/loader.dict
 static int load_properties( mlt_properties self, const char *filename )
 {
 	// Convert filename string encoding.
@@ -238,7 +240,7 @@ static int load_properties( mlt_properties self, const char *filename )
 }
 
 /** Create a properties object by reading a .properties text file.
- * ´Ó±¾µØÎÄ¼þ³õÊ¼»¯properties¶ÔÏó
+ * ï¿½Ó±ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½propertiesï¿½ï¿½ï¿½ï¿½
  *
  * Free the properties object with mlt_properties_close().
  * \deprecated Please start using mlt_properties_parse_yaml().
@@ -272,10 +274,10 @@ mlt_properties mlt_properties_load( const char *filename )
  * preset with the same name as a more generic one is given a higher priority.
  * \todo Look in a user-specific location - somewhere in the home directory.
  *
- * Èç¹ûnameÊÇÎÄ¼þÃû£¬Ôò´ÓÎÄ¼þ³õÊ¼»¯
- * Èç¹û²»ÊÇ£¬Ôò´ÓPRESET_PATH/{type}/{service}/[{profile}/]{name}.³õÊ¼»¯properties¡£
- * ÆäÖÐprofile¿ÉÄÜÎª¿Õ¡£
- * type,service,provile¾ùÊÇ×ÓÀà¶ÔÏó¶ÔÓ¦µÄmtl_type,mlt_service/MLT_PROFILEÊôÐÔ
+ * ï¿½ï¿½ï¿½nameï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
+ * ï¿½ï¿½ï¿½ï¿½Ç£ï¿½ï¿½ï¿½ï¿½PRESET_PATH/{type}/{service}/[{profile}/]{name}.ï¿½ï¿½Ê¼ï¿½ï¿½propertiesï¿½ï¿½
+ * ï¿½ï¿½ï¿½ï¿½profileï¿½ï¿½ï¿½ï¿½Îªï¿½Õ¡ï¿½
+ * type,service,provileï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½mtl_type,mlt_service/MLT_PROFILEï¿½ï¿½ï¿½ï¿½
  *
  * \public \memberof mlt_properties_s
  * \param self a properties list
@@ -419,7 +421,7 @@ int mlt_properties_ref_count( mlt_properties self )
 }
 
 /** Set a properties list to be a mirror copy of another.
- * mirros¶ÔÏó½«»ñµÃ¸Ã¶ÔÏóºóÐøsetµÄËùÓÐÊôÐÔµÄÖµ
+ * mirrosï¿½ï¿½ï¿½ó½«»ï¿½Ã¸Ã¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½setï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôµï¿½Öµ
  *
  * Note that this does not copy all existing properties. Rather, you must
  * call this before setting the properties that you wish to copy.
@@ -436,7 +438,7 @@ void mlt_properties_mirror( mlt_properties self, mlt_properties that )
 }
 
 /** Copy all serializable properties to another properties list.
- * ¿½±´ËùÓÐthat¶ÔÏóµÄ¿ÉÐòÁÐ»¯µÄÊôÐÔµÄÖµ
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½thatï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½Ð»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôµï¿½Öµ
  *
  * \public \memberof mlt_properties_s
  * \param self The properties to copy to
@@ -462,7 +464,7 @@ int mlt_properties_inherit( mlt_properties self, mlt_properties that )
 }
 
 /** Pass all serializable properties that match a prefix to another properties object
- * »ñµÃthat¶ÔÏóËùÓÐ¿ÉÐòÁÐ»¯µÄÓÐprefixÇ°×ºµÄÊôÐÔÖµ¡£¿½±´Ê±£¬ÊôÐÔÎªÈ¥µôprefixµÄ²¿·Ö
+ * ï¿½ï¿½ï¿½thatï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¿ï¿½ï¿½ï¿½ï¿½Ð»ï¿½ï¿½ï¿½ï¿½ï¿½prefixÇ°×ºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎªÈ¥ï¿½ï¿½prefixï¿½Ä²ï¿½ï¿½ï¿½
  *
  * \warning The prefix is stripped from the name when it is set on the \p self properties list!
  * For example a property named "foo.bar" will match prefix "foo.", but the property
@@ -500,7 +502,7 @@ int mlt_properties_pass( mlt_properties self, mlt_properties that, const char *p
  * \param name the property to lookup by name
  * \return the property or NULL for failure
  *
- * propertiesÖ»ÐèÒª±£»¤hash½á¹¹±¾Éí¡£·µ»ØµÄmlt_property±¾Éí×Ô´øËø
+ * propertiesÖ»ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½hashï¿½á¹¹ï¿½ï¿½ï¿½?ï¿½ï¿½ï¿½Øµï¿½mlt_propertyï¿½ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½
  */
 
 static inline mlt_property mlt_properties_find( mlt_properties self, const char *name )
@@ -592,7 +594,7 @@ static mlt_property mlt_properties_fetch( mlt_properties self, const char *name 
 }
 
 /** Copy a property to another properties list.
- * »ñµÃthatµÄnameÊôÐÔµÄ¿½±´
+ * ï¿½ï¿½ï¿½thatï¿½ï¿½nameï¿½ï¿½ï¿½ÔµÄ¿ï¿½ï¿½ï¿½
  *
  * \public \memberof mlt_properties_s
  * \author Zach <zachary.drew@gmail.com>
@@ -791,7 +793,7 @@ char *mlt_properties_get( mlt_properties self, const char *name )
 	if ( value )
 	{
 		property_list *list = self->local;
-		result = mlt_property_get_string_l( value, list->locale );
+		result = mlt_property_get_string_l( value/*, list->locale*/ );
 	}
 	return result;
 }
@@ -828,7 +830,7 @@ char *mlt_properties_get_value( mlt_properties self, int index )
 	if ( !self ) return NULL;
 	property_list *list = self->local;
 	if ( index >= 0 && index < list->count )
-		return mlt_property_get_string_l( list->value[ index ], list->locale );
+		return mlt_property_get_string_l( list->value[ index ] /*list->locale*/ );
 	return NULL;
 }
 
@@ -927,7 +929,7 @@ int mlt_properties_get_int( mlt_properties self, const char *name )
 		mlt_profile profile = mlt_properties_get_data( self, "_profile", NULL );
 		double fps = mlt_profile_fps( profile );
 		property_list *list = self->local;
-		result = mlt_property_get_int( value, fps, list->locale );
+		result = mlt_property_get_int( value, fps/*list->locale*/ );
 	}
 	return result;
 }
@@ -1030,7 +1032,7 @@ double mlt_properties_get_double( mlt_properties self, const char *name )
 		mlt_profile profile = mlt_properties_get_data( self, "_profile", NULL );
 		double fps = mlt_profile_fps( profile );
 		property_list *list = self->local;
-		result = mlt_property_get_double( value, fps, list->locale );
+		result = mlt_property_get_double( value, fps /*list->locale*/ );
 	}
 	return result;
 }
@@ -1082,8 +1084,8 @@ mlt_position mlt_properties_get_position( mlt_properties self, const char *name 
 		mlt_profile profile = mlt_properties_get_data( self, "_profile", NULL );
 		double fps = mlt_profile_fps( profile );
 		property_list *list = self->local;
-		//Èç¹û×Ö¶ÎÖµ´æ´¢µÄÊÇ±íÊ¾Ê±´ÁµÄ×Ö·û´®£¬ÔòÐèÒªfps½«Æä×ª»»ÎªÖ¡±àºÅ
-		result = mlt_property_get_position( value, fps, list->locale );
+		//ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½Öµï¿½æ´¢ï¿½ï¿½ï¿½Ç±ï¿½Ê¾Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½Òªfpsï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ÎªÖ¡ï¿½ï¿½ï¿½
+		result = mlt_property_get_position( value, fps/*list->locale*/ );
 	}
 	return result;
 }
@@ -1419,7 +1421,7 @@ void mlt_properties_close( mlt_properties self )
 				mlt_property_close( list->value[ index ] );
 				free( list->name[ index ] );
 			}
-
+#if 0
 #if defined(__GLIBC__) || defined(__DARWIN__)
 			// Cleanup locale
 			if ( list->locale )
@@ -1427,6 +1429,7 @@ void mlt_properties_close( mlt_properties self )
 #else
 
 			free( list->locale );
+#endif
 #endif
 
 			// Clear up the list
@@ -1750,7 +1753,7 @@ static int parse_yaml( yaml_parser context, const char *namevalue )
 }
 
 /** Parse a YAML Tiny file by name.
- * ½âÎöYAMLÎÄ¼þÎªµÝ¹éµÄproperties¶ÔÏó
+ * ï¿½ï¿½ï¿½ï¿½YAMLï¿½Ä¼ï¿½Îªï¿½Ý¹ï¿½ï¿½propertiesï¿½ï¿½ï¿½ï¿½
  *
  * \public \memberof mlt_properties_s
  * \param filename the name of a text file containing YAML Tiny
@@ -2117,7 +2120,7 @@ char *mlt_properties_get_time( mlt_properties self, const char* name, mlt_time_f
 		double fps = mlt_profile_fps( profile );
 		mlt_property value = mlt_properties_find( self, name );
 		property_list *list = self->local;
-		return value == NULL ? NULL : mlt_property_get_time( value, format, fps, list->locale );
+		return value == NULL ? NULL : mlt_property_get_time( value, format, fps /*list->locale*/ );
 	}
 	return NULL;
 }
@@ -2174,8 +2177,8 @@ mlt_color mlt_properties_get_color( mlt_properties self, const char* name )
 	mlt_color result = { 0xff, 0xff, 0xff, 0xff };
 	if ( value )
 	{
-		const char *color = mlt_property_get_string_l( value, list->locale );
-		unsigned int color_int = mlt_property_get_int( value, fps, list->locale );
+		const char *color = mlt_property_get_string_l( value/*list->locale*/ );
+		unsigned int color_int = mlt_property_get_int( value, fps /*list->locale*/ );
 
 		if ( !strcmp( color, "red" ) )
 		{
@@ -2262,7 +2265,7 @@ char* mlt_properties_anim_get( mlt_properties self, const char *name, int positi
 	double fps = mlt_profile_fps( profile );
 	mlt_property value = mlt_properties_find( self, name );
 	property_list *list = self->local;
-	return value == NULL ? NULL : mlt_property_anim_get_string( value, fps, list->locale, position, length );
+	return value == NULL ? NULL : mlt_property_anim_get_string( value, fps, /*list->locale,*/ position, length );
 }
 
 /** Set a property to a string at a frame position.
@@ -2296,7 +2299,7 @@ int mlt_properties_anim_set( mlt_properties self, const char *name, const char *
 		double fps = mlt_profile_fps( profile );
 		property_list *list = self->local;
 		error = mlt_property_anim_set_string( property, value,
-			fps, list->locale, position, length );
+			fps, /*list->locale,*/ position, length );
 		mlt_properties_do_mirror( self, name );
 	}
 
@@ -2322,7 +2325,7 @@ int mlt_properties_anim_get_int( mlt_properties self, const char *name, int posi
 	double fps = mlt_profile_fps( profile );
 	property_list *list = self->local;
 	mlt_property value = mlt_properties_find( self, name );
-	return value == NULL ? 0 : mlt_property_anim_get_int( value, fps, list->locale, position, length );
+	return value == NULL ? 0 : mlt_property_anim_get_int( value, fps, /*list->locale,*/ position, length );
 }
 
 /** Set a property to an integer value at a frame position.
@@ -2354,7 +2357,7 @@ int mlt_properties_anim_set_int( mlt_properties self, const char *name, int valu
 		mlt_profile profile = mlt_properties_get_data( self, "_profile", NULL );
 		double fps = mlt_profile_fps( profile );
 		property_list *list = self->local;
-		error = mlt_property_anim_set_int( property, value, fps, list->locale, position, length, keyframe_type );
+		error = mlt_property_anim_set_int( property, value, fps, /*list->locale,*/ position, length, keyframe_type );
 		mlt_properties_do_mirror( self, name );
 	}
 
@@ -2380,7 +2383,7 @@ double mlt_properties_anim_get_double( mlt_properties self, const char *name, in
 	double fps = mlt_profile_fps( profile );
 	property_list *list = self->local;
 	mlt_property value = mlt_properties_find( self, name );
-	return value == NULL ? 0.0 : mlt_property_anim_get_double( value, fps, list->locale, position, length );
+	return value == NULL ? 0.0 : mlt_property_anim_get_double( value, fps, /*list->locale,*/ position, length );
 }
 
 /** Set a property to a real number at a frame position.
@@ -2412,7 +2415,7 @@ int mlt_properties_anim_set_double( mlt_properties self, const char *name, doubl
 		mlt_profile profile = mlt_properties_get_data( self, "_profile", NULL );
 		double fps = mlt_profile_fps( profile );
 		property_list *list = self->local;
-		error = mlt_property_anim_set_double( property, value, fps, list->locale, position, length, keyframe_type );
+		error = mlt_property_anim_set_double( property, value, fps, /*list->locale,*/ position, length, keyframe_type );
 		mlt_properties_do_mirror( self, name );
 	}
 
@@ -2478,7 +2481,7 @@ extern mlt_rect mlt_properties_get_rect( mlt_properties self, const char* name )
 	property_list *list = self->local;
 	mlt_property value = mlt_properties_find( self, name );
 	mlt_rect rect = { DBL_MIN, DBL_MIN, DBL_MIN, DBL_MIN, DBL_MIN };
-	return value == NULL ? rect : mlt_property_get_rect( value, list->locale );
+	return value == NULL ? rect : mlt_property_get_rect( value /*list->locale*/ );
 }
 
 /** Set a property to a rectangle value at a frame position.
@@ -2510,7 +2513,7 @@ extern int mlt_properties_anim_set_rect( mlt_properties self, const char *name, 
 		mlt_profile profile = mlt_properties_get_data( self, "_profile", NULL );
 		double fps = mlt_profile_fps( profile );
 		property_list *list = self->local;
-		error = mlt_property_anim_set_rect( property, value, fps, list->locale, position, length, keyframe_type );
+		error = mlt_property_anim_set_rect( property, value, fps, /*list->locale,*/ position, length, keyframe_type );
 		mlt_properties_do_mirror( self, name );
 	}
 
@@ -2537,7 +2540,7 @@ extern mlt_rect mlt_properties_anim_get_rect( mlt_properties self, const char *n
 	property_list *list = self->local;
 	mlt_property value = mlt_properties_find( self, name );
 	mlt_rect rect = { DBL_MIN, DBL_MIN, DBL_MIN, DBL_MIN, DBL_MIN };
-	return value == NULL ? rect : mlt_property_anim_get_rect( value, fps, list->locale, position, length );
+	return value == NULL ? rect : mlt_property_anim_get_rect( value, fps, /*list->locale,*/ position, length );
 }
 
 #ifndef WIN32

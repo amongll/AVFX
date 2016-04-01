@@ -58,8 +58,10 @@ extern "C"
 #include "mlt_cache.h"
 #include "mlt_version.h"
 
-#ifdef ANDROID
+#ifdef __ANDROID__
 #include "mlt_android_env.h"
+#include "mlt_android_audiotrack.h"
+#include "mlt_android_jni_util.h"
 #endif
 
 #ifdef __cplusplus

@@ -1,14 +1,14 @@
 /*
  * mlt_android_env.h
  *
- *  Created on: 2016Äê1ÔÂ18ÈÕ
+ *  Created on: 2016ï¿½ï¿½1ï¿½ï¿½18ï¿½ï¿½
  *      Author: L-F000000-PC
  */
 
 #ifndef FRAMEWORK_MLT_ANDROID_ENV_H_
 #define FRAMEWORK_MLT_ANDROID_ENV_H_
 
-#ifdef ANDROID
+#ifdef __ANDROID__
 #include <jni.h>
 #include <android/asset_manager_jni.h>
 #include <android/native_window.h>
@@ -20,15 +20,15 @@
 #include <string.h>
 #include "mlt_properties.h"
 
-extern mlt_properties mlt_properties_load_AAsset(AAssetManager* mgr, const char *assetName );
-extern int mlt_properties_preset_AAsset(AAssetManager* mgr, mlt_properties self, const char *assetName );
-extern bool mlt_android_check_data(AAssetManager* mgr, const char* files_path, char *err, size_t err_size);
+mlt_properties mlt_properties_load_AAsset(AAssetManager* mgr, const char *assetName );
+int mlt_properties_preset_AAsset(AAssetManager* mgr, mlt_properties self, const char *assetName );
+bool mlt_android_quick_copy_AAssets(AAssetManager* mgr, const char* files_path, char *err, size_t err_size);
 
-extern bool mlt_android_env_init(JavaVM* vm);
-extern void mlt_android_env_destroy();
-extern JNIEnv* mlt_android_get_jnienv();
-extern void mlt_android_jnienv_thrclean();
-extern int mlt_android_sdk_version();
+bool mlt_android_env_init(JavaVM* vm);
+void mlt_android_env_destroy();
+JNIEnv* mlt_android_get_jnienv();
+void mlt_android_jnienv_thrclean();
+int mlt_android_sdk_version();
 
 #ifdef DEBUG
 extern ANativeWindow* g_testAWindow;

@@ -1,12 +1,12 @@
 /*
  * mlt_android_audiotrack.c
  *
- *  Created on: 2016Äê2ÔÂ15ÈÕ
+ *  Created on: 2016ï¿½ï¿½2ï¿½ï¿½15ï¿½ï¿½
  *      Author: li.lei
  *
  */
 
-#ifdef ANDROID
+#ifdef __ANDROID__
 #include "mlt_android_audiotrack.h"
 #include "mlt_android_jni_util.h"
 #include "mlt_android_env.h"
@@ -132,7 +132,7 @@ static void SDL_Android_AudioTrack_get_default_spec(mlt_android_audiotrack_spec 
     spec->mode = MODE_STREAM;
 }
 
-int mlt_android_audiotrack_get_native_output_sample_rate(JNIEnv *env, enum StreamType type/* = NULL */)
+int mlt_android_audiotrack_get_native_output_sample_rate(JNIEnv *env, StreamType type/* = NULL */)
 {
     int retval = (*env)->CallStaticIntMethod(env, gAudioTrackJni.clazz, gAudioTrackJni.getNativeOutputSampleRate, type);
     if ((*env)->ExceptionCheck(env)) {

@@ -88,7 +88,8 @@ INCS = mlt_consumer.h \
 	   mlt_cache.h \
 	   mlt_animation.h \
 		mlt_android_env.h \
-		mlt_android_audiotrack.h
+		mlt_android_audiotrack.h\
+    mlt_android_jni_util.h
 
 SRCS := $(OBJS:.o=.c)
 
