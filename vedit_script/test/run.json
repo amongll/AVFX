@@ -1,51 +1,47 @@
 {
   "proctype": "playlist",
-  "procname": "playlist_langyabang",
+  "procname": "playlist_with_mixes",
   "props": {
-    "out": 3019786,
+    "out": 3558,
     "in": 0
   },
   "slices": [
     {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_0.flv",
+      "service": "colour",
+      "proctype": "asis_producer",
+      "uuid": "0153bccb-4a7f-6f10-fec5-4f2b0000138d",
+      "resource": "black",
+      "procname": "color",
       "props": {
-        "out": 65501,
-        "in": 2000
-      },
-      "uuid": "01539de3-8e45-5444-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
+        "out": 75,
+        "in": 0
       }
     },
     {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
       "proctype": "video",
+      "uuid": "0153bccb-4aa8-352f-fec5-4f2b0000138d",
+      "resource": "/opt/lilei//merge_langyabang_30.flv",
+      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
       "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_1.flv",
       "props": {
-        "out": 65021,
-        "in": 2000
+        "out": 2250,
+        "in": 1750
       },
-      "uuid": "01539de3-8e9e-96ab-a856-15c20001cc30",
       "ctrl": {
-        "mix_time": 3000
+        "mix_frames": 75
       },
       "mixes": [
         {
           "proctype": "transition",
           "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
           "transition": "composite",
           "props": {
-            "out": 74,
+            "out": 75,
             "in": 0,
             "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
+            "geometry": "0=-100%/0:100%x100%;0=-100%/0:100%x100%;75=0/0:100%x100%;"
           },
-          "uuid": "01539de3-8e9f-a1e1-a856-15c20001cc30"
+          "uuid": "0153bccb-4aa9-919f-fec5-4f2b0000138d"
         },
         {
           "proctype": "transition",
@@ -53,42 +49,41 @@
           "desc": "两个track的音频数据合成",
           "transition": "mix",
           "props": {
-            "out": 74,
+            "out": 75,
             "in": 0,
             "end": 1,
             "combine": 1,
             "start": 1
           },
-          "uuid": "01539de3-8e9f-d14a-a856-15c20001cc30"
+          "uuid": "0153bccb-4aa9-9990-fec5-4f2b0000138d"
         }
       ]
     },
     {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
       "proctype": "video",
+      "uuid": "0153bccb-4adb-776e-fec5-4f2b0000138d",
+      "resource": "/opt/lilei//merge_langyabang_30.flv",
+      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
       "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_2.flv",
       "props": {
-        "out": 65106,
-        "in": 2000
+        "out": 5000,
+        "in": 4500
       },
-      "uuid": "01539de3-8f06-f631-a856-15c20001cc30",
       "ctrl": {
-        "mix_time": 3000
+        "mix_frames": 75
       },
       "mixes": [
         {
           "proctype": "transition",
           "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
           "transition": "composite",
           "props": {
-            "out": 74,
+            "out": 75,
             "in": 0,
             "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
+            "geometry": "0=100%/0:100%x100%;0=100%/0:100%x100%;75=0/0:100%x100%;"
           },
-          "uuid": "01539de3-8f07-980e-a856-15c20001cc30"
+          "uuid": "0153bccb-4add-9817-fec5-4f2b0000138d"
         },
         {
           "proctype": "transition",
@@ -96,42 +91,41 @@
           "desc": "两个track的音频数据合成",
           "transition": "mix",
           "props": {
-            "out": 74,
+            "out": 75,
             "in": 0,
             "end": 1,
             "combine": 1,
             "start": 1
           },
-          "uuid": "01539de3-8f07-a8cd-a856-15c20001cc30"
+          "uuid": "0153bccb-4ade-b5cd-fec5-4f2b0000138d"
         }
       ]
     },
     {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
       "proctype": "video",
+      "uuid": "0153bccb-4b10-0b01-fec5-4f2b0000138d",
+      "resource": "/opt/lilei//merge_langyabang_30.flv",
+      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
       "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_3.flv",
       "props": {
-        "out": 65068,
-        "in": 2000
+        "out": 7500,
+        "in": 7000
       },
-      "uuid": "01539de3-8f69-26fd-a856-15c20001cc30",
       "ctrl": {
-        "mix_time": 3000
+        "mix_frames": 75
       },
       "mixes": [
         {
           "proctype": "transition",
           "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
           "transition": "composite",
           "props": {
-            "out": 74,
+            "out": 75,
             "in": 0,
             "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
+            "geometry": "0=0/-100%:100%x100%;0=0/-100%:100%x100%;75=0/0:100%x100%;"
           },
-          "uuid": "01539de3-8f6a-5771-a856-15c20001cc30"
+          "uuid": "0153bccb-4b11-65c0-fec5-4f2b0000138d"
         },
         {
           "proctype": "transition",
@@ -139,42 +133,41 @@
           "desc": "两个track的音频数据合成",
           "transition": "mix",
           "props": {
-            "out": 74,
+            "out": 75,
             "in": 0,
             "end": 1,
             "combine": 1,
             "start": 1
           },
-          "uuid": "01539de3-8f6a-8fa9-a856-15c20001cc30"
+          "uuid": "0153bccb-4b11-b1e0-fec5-4f2b0000138d"
         }
       ]
     },
     {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
       "proctype": "video",
+      "uuid": "0153bccb-4b40-b1c5-fec5-4f2b0000138d",
+      "resource": "/opt/lilei//merge_langyabang_30.flv",
+      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
       "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_4.flv",
       "props": {
-        "out": 65270,
-        "in": 2000
+        "out": 10000,
+        "in": 9500
       },
-      "uuid": "01539de3-8fd1-9902-a856-15c20001cc30",
       "ctrl": {
-        "mix_time": 3000
+        "mix_frames": 75
       },
       "mixes": [
         {
           "proctype": "transition",
           "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
           "transition": "composite",
           "props": {
-            "out": 74,
+            "out": 75,
             "in": 0,
             "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
+            "geometry": "0=0/100%:100%x100%;0=0/100%:100%x100%;75=0/0:100%x100%;"
           },
-          "uuid": "01539de3-8fd1-f8d7-a856-15c20001cc30"
+          "uuid": "0153bccb-4b42-e30e-fec5-4f2b0000138d"
         },
         {
           "proctype": "transition",
@@ -182,42 +175,41 @@
           "desc": "两个track的音频数据合成",
           "transition": "mix",
           "props": {
-            "out": 74,
+            "out": 75,
             "in": 0,
             "end": 1,
             "combine": 1,
             "start": 1
           },
-          "uuid": "01539de3-8fd2-1f88-a856-15c20001cc30"
+          "uuid": "0153bccb-4b43-cb8f-fec5-4f2b0000138d"
         }
       ]
     },
     {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
       "proctype": "video",
+      "uuid": "0153bccb-4b79-ad29-fec5-4f2b0000138d",
+      "resource": "/opt/lilei//merge_langyabang_30.flv",
+      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
       "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_5.flv",
       "props": {
-        "out": 65002,
-        "in": 2000
+        "out": 12500,
+        "in": 12000
       },
-      "uuid": "01539de3-9035-3bd5-a856-15c20001cc30",
       "ctrl": {
-        "mix_time": 3000
+        "mix_frames": 75
       },
       "mixes": [
         {
           "proctype": "transition",
           "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
           "transition": "composite",
           "props": {
-            "out": 74,
+            "out": 75,
             "in": 0,
             "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
+            "geometry": "0=-100%/-100%:100%x100%;0=-100%/-100%:100%x100%;75=0/0:100%x100%;"
           },
-          "uuid": "01539de3-9035-dd98-a856-15c20001cc30"
+          "uuid": "0153bccb-4b7b-642e-fec5-4f2b0000138d"
         },
         {
           "proctype": "transition",
@@ -225,42 +217,41 @@
           "desc": "两个track的音频数据合成",
           "transition": "mix",
           "props": {
-            "out": 74,
+            "out": 75,
             "in": 0,
             "end": 1,
             "combine": 1,
             "start": 1
           },
-          "uuid": "01539de3-9036-1898-a856-15c20001cc30"
+          "uuid": "0153bccb-4b7c-d1b3-fec5-4f2b0000138d"
         }
       ]
     },
     {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
       "proctype": "video",
+      "uuid": "0153bccb-4bb0-4917-fec5-4f2b0000138d",
+      "resource": "/opt/lilei//merge_langyabang_30.flv",
+      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
       "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_5.flv",
       "props": {
-        "out": 65002,
-        "in": 2000
+        "out": 15000,
+        "in": 14500
       },
-      "uuid": "01539de3-9094-45db-a856-15c20001cc30",
       "ctrl": {
-        "mix_time": 3000
+        "mix_frames": 75
       },
       "mixes": [
         {
           "proctype": "transition",
           "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
           "transition": "composite",
           "props": {
-            "out": 74,
+            "out": 75,
             "in": 0,
             "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
+            "geometry": "0=-100%/100%:100%x100%;0=-100%/100%:100%x100%;75=0/0:100%x100%;"
           },
-          "uuid": "01539de3-9095-2416-a856-15c20001cc30"
+          "uuid": "0153bccb-4bb3-3f50-fec5-4f2b0000138d"
         },
         {
           "proctype": "transition",
@@ -268,42 +259,41 @@
           "desc": "两个track的音频数据合成",
           "transition": "mix",
           "props": {
-            "out": 74,
+            "out": 75,
             "in": 0,
             "end": 1,
             "combine": 1,
             "start": 1
           },
-          "uuid": "01539de3-9096-7fbc-a856-15c20001cc30"
+          "uuid": "0153bccb-4bb3-2321-fec5-4f2b0000138d"
         }
       ]
     },
     {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
       "proctype": "video",
+      "uuid": "0153bccb-4be7-137e-fec5-4f2b0000138d",
+      "resource": "/opt/lilei//merge_langyabang_30.flv",
+      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
       "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_7.flv",
       "props": {
-        "out": 64878,
-        "in": 2000
+        "out": 17500,
+        "in": 17000
       },
-      "uuid": "01539de3-9112-9ea2-a856-15c20001cc30",
       "ctrl": {
-        "mix_time": 3000
+        "mix_frames": 75
       },
       "mixes": [
         {
           "proctype": "transition",
           "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
           "transition": "composite",
           "props": {
-            "out": 74,
+            "out": 75,
             "in": 0,
             "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
+            "geometry": "0=100%/-100%:100%x100%;0=100%/-100%:100%x100%;75=0/0:100%x100%;"
           },
-          "uuid": "01539de3-9112-b7aa-a856-15c20001cc30"
+          "uuid": "0153bccb-4be8-6252-fec5-4f2b0000138d"
         },
         {
           "proctype": "transition",
@@ -311,42 +301,41 @@
           "desc": "两个track的音频数据合成",
           "transition": "mix",
           "props": {
-            "out": 74,
+            "out": 75,
             "in": 0,
             "end": 1,
             "combine": 1,
             "start": 1
           },
-          "uuid": "01539de3-9113-532a-a856-15c20001cc30"
+          "uuid": "0153bccb-4be8-b0b3-fec5-4f2b0000138d"
         }
       ]
     },
     {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
       "proctype": "video",
+      "uuid": "0153bccb-4c1d-1297-fec5-4f2b0000138d",
+      "resource": "/opt/lilei//merge_langyabang_30.flv",
+      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
       "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_8.flv",
       "props": {
-        "out": 64416,
-        "in": 2000
+        "out": 20000,
+        "in": 19500
       },
-      "uuid": "01539de3-9176-89e3-a856-15c20001cc30",
       "ctrl": {
-        "mix_time": 3000
+        "mix_frames": 75
       },
       "mixes": [
         {
           "proctype": "transition",
           "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
           "transition": "composite",
           "props": {
-            "out": 74,
+            "out": 75,
             "in": 0,
             "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
+            "geometry": "0=100%/100%:100%x100%;0=100%/100%:100%x100%;75=0/0:100%x100%;"
           },
-          "uuid": "01539de3-9177-52c6-a856-15c20001cc30"
+          "uuid": "0153bccb-4c1f-50ba-fec5-4f2b0000138d"
         },
         {
           "proctype": "transition",
@@ -354,1693 +343,27 @@
           "desc": "两个track的音频数据合成",
           "transition": "mix",
           "props": {
-            "out": 74,
+            "out": 75,
             "in": 0,
             "end": 1,
             "combine": 1,
             "start": 1
           },
-          "uuid": "01539de3-9177-4cd7-a856-15c20001cc30"
+          "uuid": "0153bccb-4c1f-0f2f-fec5-4f2b0000138d"
         }
       ]
     },
     {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_9.flv",
+      "service": "colour",
+      "proctype": "asis_producer",
+      "uuid": "0153bccb-4c1f-dc4a-fec5-4f2b0000138d",
+      "resource": "black",
+      "procname": "color",
       "props": {
-        "out": 64731,
-        "in": 2000
-      },
-      "uuid": "01539de3-91d9-770c-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-91db-6aed-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-91db-7827-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_10.flv",
-      "props": {
-        "out": 64752,
-        "in": 2000
-      },
-      "uuid": "01539de3-9246-e2e1-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-9247-8a81-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-9247-f2a7-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_11.flv",
-      "props": {
-        "out": 65270,
-        "in": 2000
-      },
-      "uuid": "01539de3-92a7-c1ed-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-92a8-9ba7-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-92a8-10d4-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_12.flv",
-      "props": {
-        "out": 65566,
-        "in": 2000
-      },
-      "uuid": "01539de3-9309-5af2-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-930a-926b-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-930a-4d9d-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_13.flv",
-      "props": {
-        "out": 65135,
-        "in": 2000
-      },
-      "uuid": "01539de3-9365-66ba-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-9366-38fa-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-9366-e30a-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_14.flv",
-      "props": {
-        "out": 64534,
-        "in": 2000
-      },
-      "uuid": "01539de3-93d1-9fd3-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-93d2-d971-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-93d2-c42a-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_15.flv",
-      "props": {
-        "out": 65207,
-        "in": 2000
-      },
-      "uuid": "01539de3-9426-87ea-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-9427-e47b-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-9427-13a3-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_16.flv",
-      "props": {
-        "out": 64878,
-        "in": 2000
-      },
-      "uuid": "01539de3-9485-c98d-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-9486-fe43-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-9486-69c0-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_17.flv",
-      "props": {
-        "out": 64415,
-        "in": 2000
-      },
-      "uuid": "01539de3-94ef-7b4a-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-94f0-9759-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-94f0-a7ce-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_18.flv",
-      "props": {
-        "out": 64915,
-        "in": 2000
-      },
-      "uuid": "01539de3-9551-39ab-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-9552-d27a-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-9552-8207-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_19.flv",
-      "props": {
-        "out": 65178,
-        "in": 2000
-      },
-      "uuid": "01539de3-95ae-3139-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-95ae-d8ec-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-95af-c935-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_20.flv",
-      "props": {
-        "out": 64855,
-        "in": 2000
-      },
-      "uuid": "01539de3-961b-d604-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-961c-a435-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-961d-c06e-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_21.flv",
-      "props": {
-        "out": 65165,
-        "in": 2000
-      },
-      "uuid": "01539de3-9675-e0b3-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-9677-995c-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-9677-bdd7-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_22.flv",
-      "props": {
-        "out": 65158,
-        "in": 2000
-      },
-      "uuid": "01539de3-96d9-74da-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-96da-298b-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-96da-775e-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_23.flv",
-      "props": {
-        "out": 64845,
-        "in": 2000
-      },
-      "uuid": "01539de3-9739-a456-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-973a-fa58-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-973a-de15-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_24.flv",
-      "props": {
-        "out": 64909,
-        "in": 2000
-      },
-      "uuid": "01539de3-97bc-37d7-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-97bd-947f-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-97bd-b157-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_25.flv",
-      "props": {
-        "out": 64861,
-        "in": 2000
-      },
-      "uuid": "01539de3-9844-742d-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-9845-203d-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-9845-0b4f-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_26.flv",
-      "props": {
-        "out": 65174,
-        "in": 2000
-      },
-      "uuid": "01539de3-98a7-f775-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-98a8-c74c-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-98a9-0c3c-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_27.flv",
-      "props": {
-        "out": 65173,
-        "in": 2000
-      },
-      "uuid": "01539de3-9919-febb-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-991a-a6a9-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-991a-7171-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_28.flv",
-      "props": {
-        "out": 64944,
-        "in": 2000
-      },
-      "uuid": "01539de3-9989-fc35-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-998a-feb4-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-998a-eae7-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_29.flv",
-      "props": {
-        "out": 64693,
-        "in": 2000
-      },
-      "uuid": "01539de3-99f2-3ccf-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-99f3-3be0-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-99f3-d5af-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_30.flv",
-      "props": {
-        "out": 65112,
-        "in": 2000
-      },
-      "uuid": "01539de3-9a51-82d6-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-9a52-2829-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-9a52-6d99-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_31.flv",
-      "props": {
-        "out": 65095,
-        "in": 2000
-      },
-      "uuid": "01539de3-9ac0-aced-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-9ac1-933b-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-9ac1-849d-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_32.flv",
-      "props": {
-        "out": 65159,
-        "in": 2000
-      },
-      "uuid": "01539de3-9b1e-ef1a-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-9b1f-a4a1-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-9b1f-2151-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_33.flv",
-      "props": {
-        "out": 64612,
-        "in": 2000
-      },
-      "uuid": "01539de3-9b9e-50a2-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-9b9f-f9fa-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-9b9f-ebca-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_34.flv",
-      "props": {
-        "out": 64659,
-        "in": 2000
-      },
-      "uuid": "01539de3-9bf1-df47-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-9bf1-7196-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-9bf2-721b-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_35.flv",
-      "props": {
-        "out": 64845,
-        "in": 2000
-      },
-      "uuid": "01539de3-9c70-477f-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-9c70-682d-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-9c71-c2a6-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_36.flv",
-      "props": {
-        "out": 65633,
-        "in": 2000
-      },
-      "uuid": "01539de3-9ce8-5b4a-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-9ce9-46be-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-9ce9-e225-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_37.flv",
-      "props": {
-        "out": 65118,
-        "in": 2000
-      },
-      "uuid": "01539de3-9d56-3574-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-9d56-1942-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-9d57-2120-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_39.flv",
-      "props": {
-        "out": 64868,
-        "in": 2000
-      },
-      "uuid": "01539de3-9dcc-9be2-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-9dcc-dc6f-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-9dcd-8370-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_40.flv",
-      "props": {
-        "out": 65133,
-        "in": 2000
-      },
-      "uuid": "01539de3-9e59-59dd-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-9e5a-8039-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-9e5a-5b65-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_41.flv",
-      "props": {
-        "out": 64618,
-        "in": 2000
-      },
-      "uuid": "01539de3-9ec7-59ab-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-9ec7-b246-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-9ec8-94ac-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_42.flv",
-      "props": {
-        "out": 65133,
-        "in": 2000
-      },
-      "uuid": "01539de3-9f31-d0eb-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-9f31-41a6-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-9f32-43f0-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_43.flv",
-      "props": {
-        "out": 64617,
-        "in": 2000
-      },
-      "uuid": "01539de3-9f97-bb3c-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-9f97-ba98-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-9f98-dd5c-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_44.flv",
-      "props": {
-        "out": 65383,
-        "in": 2000
-      },
-      "uuid": "01539de3-a017-5782-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-a018-123e-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-a018-ba17-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_45.flv",
-      "props": {
-        "out": 64992,
-        "in": 2000
-      },
-      "uuid": "01539de3-a095-0e1f-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-a096-7956-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-a097-ff2a-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_46.flv",
-      "props": {
-        "out": 64825,
-        "in": 2000
-      },
-      "uuid": "01539de3-a118-c4a2-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-a119-7429-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-a119-e020-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_47.flv",
-      "props": {
-        "out": 64670,
-        "in": 2000
-      },
-      "uuid": "01539de3-a18d-74a5-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-a18e-ebda-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-a18e-5357-a856-15c20001cc30"
-        }
-      ]
-    },
-    {
-      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
-      "proctype": "video",
-      "procname": "simple_video",
-      "resource": "http://10.10.69.212/testphp/merge_langyabang_48.flv",
-      "props": {
-        "out": 65170,
-        "in": 2000
-      },
-      "uuid": "01539de3-a1f0-d1d5-a856-15c20001cc30",
-      "ctrl": {
-        "mix_time": 3000
-      },
-      "mixes": [
-        {
-          "proctype": "transition",
-          "procname": "trans_composite1",
-          "desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
-          "transition": "composite",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "distort": 1,
-            "geometry": "0=-100%/0:100%x100%;74=0/0:100%x100%;"
-          },
-          "uuid": "01539de3-a1f1-da57-a856-15c20001cc30"
-        },
-        {
-          "proctype": "transition",
-          "procname": "trans_audio_mix",
-          "desc": "两个track的音频数据合成",
-          "transition": "mix",
-          "props": {
-            "out": 74,
-            "in": 0,
-            "end": 1,
-            "combine": 1,
-            "start": 1
-          },
-          "uuid": "01539de3-a1f1-f05c-a856-15c20001cc30"
-        }
-      ]
+        "out": 75,
+        "in": 0
+      }
     }
   ],
-  "uuid": "01539de3-a21a-ac30-a856-15c20001cc30"
+  "uuid": "0153bccb-4c26-6130-fec5-4f2b0000138d"
 }

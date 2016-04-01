@@ -50,7 +50,7 @@ private:
 	void parse(json_t* values) throw (Exception);
 };
 
-typedef shared_ptr<EnumExpandable> EnumExpandablePtr;
+typedef std::tr1::shared_ptr<EnumExpandable> EnumExpandablePtr;
 
 NMSP_END(vedit)
 

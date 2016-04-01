@@ -59,7 +59,7 @@ private:
 
 	json_t* defines;
 	Script& parent;
-	typedef hash_map<string, shared_ptr<JsonWrap> > Enum;
+	typedef hash_map<string, std::tr1::shared_ptr<JsonWrap> > Enum;
 	typedef Enum::iterator EnumIter;
 	typedef Enum::const_iterator EnumCIter;
 	hash_map<string, Enum>  enums;
@@ -67,7 +67,7 @@ private:
 	typedef hash_map<string, Enum >::const_iterator MapCIter;
 };
 
-typedef shared_ptr<ScriptEnums> ScriptEnumsPtr;
+typedef std::tr1::shared_ptr<ScriptEnums> ScriptEnumsPtr;
 
 NMSP_END(vedit)
 

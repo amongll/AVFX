@@ -48,7 +48,7 @@ struct mlt_animation_s
 	char *data;           /**< the string representing the animation */
 	int length;           /**< the maximum number of frames to use when interpreting negative keyframe positions */
 	double fps;           /**< framerate to use when converting time clock strings to frame units */
-	locale_t locale;      /**< pointer to a locale to use when converting strings to numeric values */
+	//locale_t locale;      /**< pointer to a locale to use when converting strings to numeric values */
 	animation_node nodes; /**< a linked list of keyframes (and possibly non-keyframe values) */
 };
 
@@ -102,7 +102,7 @@ void mlt_animation_interpolate( mlt_animation self )
 				progress = current->item.frame - prev->item.frame;
 				progress /= next->item.frame - prev->item.frame;
 				mlt_property_interpolate( current->item.property, points, progress,
-					self->fps, self->locale, current->item.keyframe_type );
+					self->fps/*, self->locale*/, current->item.keyframe_type );
 			}
 
 			// Move to the next item
@@ -175,7 +175,7 @@ static void mlt_animation_clean( mlt_animation self )
  * \return true if there was an error
  */
 
-int mlt_animation_parse(mlt_animation self, const char *data, int length, double fps, locale_t locale )
+int mlt_animation_parse(mlt_animation self, const char *data, int length, double fps/*, locale_t locale*/ )
 {
 	int error = 0;
 	int i = 0;
@@ -190,7 +190,7 @@ int mlt_animation_parse(mlt_animation self, const char *data, int length, double
 		self->data = strdup( data );
 	self->length = length;
 	self->fps = fps;
-	self->locale = locale;
+	//self->locale = locale;
 	item.property = mlt_property_init();
 
 	// Tokenise
@@ -237,7 +237,7 @@ int mlt_animation_parse(mlt_animation self, const char *data, int length, double
 int mlt_animation_refresh( mlt_animation self, const char *data, int length )
 {
 	if ( ( length != self->length )|| ( data && ( !self->data || strcmp( data, self->data ) ) ) )
-		return mlt_animation_parse( self, data, length, self->fps, self->locale );
+		return mlt_animation_parse( self, data, length, self->fps/*, self->locale */);
 	return 0;
 }
 
@@ -318,7 +318,7 @@ int mlt_animation_parse_item( mlt_animation self, mlt_animation_item item, const
 			char *p = strchr( s, '=' );
 			p[0] = '\0';
 			mlt_property_set_string( item->property, s );
-			item->frame = mlt_property_get_int( item->property, self->fps, self->locale );
+			item->frame = mlt_property_get_int( item->property, self->fps/*, self->locale*/ );
 			free( s );
 
 			// The character preceeding the equal sign indicates interpolation method.
@@ -405,7 +405,7 @@ int mlt_animation_get_item( mlt_animation self, mlt_animation_item item, int pos
 			progress = position - node->item.frame;
 			progress /= node->next->item.frame - node->item.frame;
 			mlt_property_interpolate( item->property, points, progress,
-				self->fps, self->locale, item->keyframe_type );
+				self->fps/*, self->locale*/, item->keyframe_type );
 			item->is_key = 0;
 		}
 	}
@@ -634,7 +634,7 @@ char *mlt_animation_serialize_cut( mlt_animation self, int in, int out )
 			if ( item.frame - in != 0 )
 				item_len += 20;
 			if ( item.is_key )
-				item_len += strlen( mlt_property_get_string_l( item.property, self->locale ) );
+				item_len += strlen( mlt_property_get_string_l( item.property/*, self->locale */) );
 
 			// Reallocate return string to be long enough.
 			while ( used + item_len + 2 > size ) // +2 for ';' and NULL
@@ -668,7 +668,7 @@ char *mlt_animation_serialize_cut( mlt_animation self, int in, int out )
 
 				// Append item value.
 				if ( item.is_key )
-					strcat( ret, mlt_property_get_string_l( item.property, self->locale ) );
+					strcat( ret, mlt_property_get_string_l( item.property/*, self->locale*/ ) );
 				used = strlen( ret );
 			}
 			item.frame ++;

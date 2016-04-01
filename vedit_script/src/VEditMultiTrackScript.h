@@ -28,12 +28,12 @@ public:
 private:
 	struct TrackWrap
 	{
-		shared_ptr<ScriptCallable> track_calls;
+		std::tr1::shared_ptr<ScriptCallable> track_calls;
 		ScriptSerialized track_call_results;
 
 		struct TransWrap
 		{
-			shared_ptr<ScriptCallable> trans_calls;
+			std::tr1::shared_ptr<ScriptCallable> trans_calls;
 			ScriptSerialized trans_call_results;
 		};
 

@@ -1899,6 +1899,8 @@ static void producer_set_up_video( producer_avformat self, mlt_frame frame )
 	// Get the video_index
 	int index = mlt_properties_get_int( properties, "video_index" );
 
+	int audio_only = mlt_properties_get_int(properties, "audio_only");
+
 	int unlock_needed = 0;
 
 	// Reopen the file if necessary
@@ -1944,7 +1946,7 @@ static void producer_set_up_video( producer_avformat self, mlt_frame frame )
 	mlt_properties frame_properties = MLT_FRAME_PROPERTIES( frame );
 
 	// Get the codec
-	if ( context && index > -1 && video_codec_init( self, index, properties ) )
+	if ( context && index > -1 && audio_only == 0 && video_codec_init( self, index, properties ) )
 	{
 		// Set the frame properties
 		double force_aspect_ratio = mlt_properties_get_double( properties, "force_aspect_ratio" );
@@ -2507,6 +2509,7 @@ static void producer_set_up_audio( producer_avformat self, mlt_frame frame )
 
 	// Get the audio_index
 	int index = mlt_properties_get_int( properties, "audio_index" );
+	int video_only = mlt_properties_get_int( properties, "video_only");
 
 	// Handle all audio tracks
 	if ( self->audio_index > -1 &&
@@ -2558,7 +2561,7 @@ static void producer_set_up_audio( producer_avformat self, mlt_frame frame )
 		index = -1;
 
 	// Get the codec(s)
-	if ( context && index == INT_MAX )
+	if ( context && video_only == 0 && index == INT_MAX )
 	{
 		mlt_properties_set_int( frame_properties, "audio_frequency", self->max_frequency );
 		mlt_properties_set_int( frame_properties, "audio_channels", self->total_channels );
@@ -2568,17 +2571,20 @@ static void producer_set_up_audio( producer_avformat self, mlt_frame frame )
 				audio_codec_init( self, index, properties );
 		}
 	}
-	else if ( context && index > -1 && index < MAX_AUDIO_STREAMS &&
+	else if ( context && index > -1 && video_only==0 && index < MAX_AUDIO_STREAMS &&
 		audio_codec_init( self, index, properties ) )
 	{
 		mlt_properties_set_int( frame_properties, "audio_frequency", self->audio_codec[ index ]->sample_rate );
 		mlt_properties_set_int( frame_properties, "audio_channels", self->audio_codec[ index ]->channels );
 	}
-	if ( context && index > -1 )
+	if ( context && index > -1 && video_only == 0 )
 	{
 		// Add our audio operation
 		mlt_frame_push_audio( frame, self );
 		mlt_frame_push_audio( frame, producer_get_audio );
+	}
+	else {
+		mlt_properties_set_int( mlt_frame_properties(frame), "test_audio", 1);
 	}
 }
 

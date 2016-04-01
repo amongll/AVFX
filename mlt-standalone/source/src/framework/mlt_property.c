@@ -269,7 +269,7 @@ int mlt_property_set_data( mlt_property self, void *value, int length, mlt_destr
  * \return position in frames
  */
 
-static int time_clock_to_frames( mlt_property self, const char *s, double fps, locale_t locale )
+static int time_clock_to_frames( mlt_property self, const char *s, double fps/*, locale_t locale */)
 {
 	char *pos, *copy = strdup( s );
 	int hours = 0, minutes = 0;
@@ -278,6 +278,7 @@ static int time_clock_to_frames( mlt_property self, const char *s, double fps, l
 	s = copy;
 	pos = strrchr( s, ':' );
 
+#if 0
 #if !defined(__GLIBC__) && !defined(__DARWIN__) && !defined(ANDROID_XLOCALE)
 	char *orig_localename = NULL;
 	if ( locale )
@@ -292,12 +293,15 @@ static int time_clock_to_frames( mlt_property self, const char *s, double fps, l
 		setlocale( LC_NUMERIC, locale );
 	}
 #endif
+#endif
 
 	if ( pos ) {
+#if 0
 #if defined(__GLIBC__) || defined(__DARWIN__)
 		if ( locale )
 			seconds = strtod_l( pos + 1, NULL, locale );
 		else
+#endif
 #endif
 			seconds = strtod( pos + 1, NULL );
 		*pos = 0;
@@ -312,14 +316,16 @@ static int time_clock_to_frames( mlt_property self, const char *s, double fps, l
 		}
 	}
 	else {
+#if 0
 #if defined(__GLIBC__) || defined(__DARWIN__)
 		if ( locale )
 			seconds = strtod_l( s, NULL, locale );
 		else
 #endif
+#endif
 			seconds = strtod( s, NULL );
 	}
-
+#if 0
 #if !defined(__GLIBC__) && !defined(__DARWIN__) && !defined(ANDROID_XLOCALE)
 	if ( locale ) {
 		// Restore the current locale
@@ -327,6 +333,7 @@ static int time_clock_to_frames( mlt_property self, const char *s, double fps, l
 		free( orig_localename );
 		pthread_mutex_unlock( &self->mutex );
 	}
+#endif
 #endif
 
 	free( copy );
@@ -404,7 +411,7 @@ static int time_code_to_frames( mlt_property self, const char *s, double fps )
  * \param locale the locale to use when converting from time clock value
  * \return the resultant integer
  */
-static int mlt_property_atoi( mlt_property self, double fps, locale_t locale )
+static int mlt_property_atoi( mlt_property self, double fps/*, locale_t locale*/ )
 {
 	const char *value = self->prop_string;
 	
@@ -424,7 +431,7 @@ static int mlt_property_atoi( mlt_property self, double fps, locale_t locale )
 	else if ( fps > 0 && strchr( value, ':' ) )
 	{
 		if ( strchr( value, '.' ) || strchr( value, ',' ) )
-			return time_clock_to_frames( self, value, fps, locale );
+			return time_clock_to_frames( self, value, fps/*, locale*/ );
 		else
 			return time_code_to_frames( self, value, fps );
 	}
@@ -443,7 +450,7 @@ static int mlt_property_atoi( mlt_property self, double fps, locale_t locale )
  * \return an integer value
  */
 
-int mlt_property_get_int( mlt_property self, double fps, locale_t locale )
+int mlt_property_get_int( mlt_property self, double fps/*, locale_t locale*/ )
 {
 	if ( self->types & mlt_prop_int )
 		return self->prop_int;
@@ -456,7 +463,7 @@ int mlt_property_get_int( mlt_property self, double fps, locale_t locale )
 	else if ( self->types & mlt_prop_rect && self->data )
 		return ( int ) ( (mlt_rect*) self->data )->x;
 	else if ( ( self->types & mlt_prop_string ) && self->prop_string )
-		return mlt_property_atoi( self, fps, locale );
+		return mlt_property_atoi( self, fps/*, locale*/ );
 	return 0;
 }
 
@@ -473,14 +480,14 @@ int mlt_property_get_int( mlt_property self, double fps, locale_t locale )
  * \param locale the locale to use when converting from time clock value
  * \return the resultant real number
  */
-static double mlt_property_atof( mlt_property self, double fps, locale_t locale )
+static double mlt_property_atof( mlt_property self, double fps/*, locale_t locale*/ )
 {
 	const char *value = self->prop_string;
 
     if ( fps > 0 && strchr( value, ':' ) )
 	{
 		if ( strchr( value, '.' ) || strchr( value, ',' ) )
-			return time_clock_to_frames( self, value, fps, locale );
+			return time_clock_to_frames( self, value, fps/*, locale*/ );
 		else
 			return time_code_to_frames( self, value, fps );
 	}
@@ -488,7 +495,7 @@ static double mlt_property_atof( mlt_property self, double fps, locale_t locale 
 	{
 		char *end = NULL;
 		double result;
-
+#if 0
 #if defined(__GLIBC__) || defined(__DARWIN__)
 		if ( locale )
 			result = strtod_l( value, &end, locale );
@@ -506,11 +513,12 @@ static double mlt_property_atof( mlt_property self, double fps, locale_t locale 
 			setlocale( LC_NUMERIC, locale );
 		}
 #endif
+#endif
 
 			result = strtod( value, &end );
 		if ( end && end[0] == '%' )
 			result /= 100.0;
-
+#if 0
 #if !defined(__GLIBC__) && !defined(__DARWIN__) && !defined(ANDROID_XLOCALE)
 		if ( locale ) {
 			// Restore the current locale
@@ -518,6 +526,7 @@ static double mlt_property_atof( mlt_property self, double fps, locale_t locale 
 			free( orig_localename );
 			pthread_mutex_unlock( &self->mutex );
 		}
+#endif
 #endif
 
 		return result;
@@ -533,7 +542,7 @@ static double mlt_property_atof( mlt_property self, double fps, locale_t locale 
  * \return a floating point value
  */
 
-double mlt_property_get_double( mlt_property self, double fps, locale_t locale )
+double mlt_property_get_double( mlt_property self, double fps/*, locale_t locale*/ )
 {
 	if ( self->types & mlt_prop_double )
 		return self->prop_double;
@@ -546,7 +555,7 @@ double mlt_property_get_double( mlt_property self, double fps, locale_t locale )
 	else if ( self->types & mlt_prop_rect && self->data )
 		return ( (mlt_rect*) self->data )->x;
 	else if ( ( self->types & mlt_prop_string ) && self->prop_string )
-		return mlt_property_atof( self, fps, locale );
+		return mlt_property_atof( self, fps/*, locale*/ );
 	return 0;
 }
 
@@ -560,7 +569,7 @@ double mlt_property_get_double( mlt_property self, double fps, locale_t locale )
  * \return the position in frames
  */
 
-mlt_position mlt_property_get_position( mlt_property self, double fps, locale_t locale )
+mlt_position mlt_property_get_position( mlt_property self, double fps/*, locale_t locale*/ )
 {
 	if ( self->types & mlt_prop_position )
 		return self->prop_position;
@@ -573,7 +582,7 @@ mlt_position mlt_property_get_position( mlt_property self, double fps, locale_t 
 	else if ( self->types & mlt_prop_rect && self->data )
 		return ( mlt_position ) ( (mlt_rect*) self->data )->x;
 	else if ( ( self->types & mlt_prop_string ) && self->prop_string )
-		return ( mlt_position )mlt_property_atoi( self, fps, locale );
+		return ( mlt_position )mlt_property_atoi( self, fps/*, locale*/ );
 	return 0;
 }
 
@@ -684,10 +693,10 @@ char *mlt_property_get_string( mlt_property self )
  * \return a string representation of the property or NULL if failed
  */
 
-char *mlt_property_get_string_l( mlt_property self, locale_t locale )
+char *mlt_property_get_string_l( mlt_property self/*, locale_t locale*/ )
 {
 	// Optimization for no locale
-	if ( !locale )
+	//if ( !locale )
 		return mlt_property_get_string( self );
 
 	// Construct a string if need be
@@ -695,6 +704,7 @@ char *mlt_property_get_string_l( mlt_property self, locale_t locale )
 	{
 		// TODO: when glibc gets sprintf_l, start using it! For now, hack on setlocale.
 		// Save the current locale
+#if 0
 #if defined(__DARWIN__)
 		const char *localename = querylocale( LC_NUMERIC, locale );
 #elif defined(__GLIBC__)
@@ -709,6 +719,7 @@ char *mlt_property_get_string_l( mlt_property self, locale_t locale )
 
 		// Set the new locale
 		setlocale( LC_NUMERIC, localename );
+#endif
 #endif
 
 		if ( self->types & mlt_prop_int )
@@ -740,11 +751,13 @@ char *mlt_property_get_string_l( mlt_property self, locale_t locale )
 			self->types |= mlt_prop_string;
 			self->prop_string = self->serialiser( self->data, self->length );
 		}
+#if 0
 		// Restore the current locale
 #if !defined(ANDROID_XLOCALE)
 		setlocale( LC_NUMERIC, orig_localename );
 		free( orig_localename );
 		pthread_mutex_unlock( &self->mutex );
+#endif
 #endif
 	}
 
@@ -912,20 +925,21 @@ static void time_clock_from_frames( int frames, double fps, char *s )
  * \return a string representation of the property or NULL if failed
  */
 
-char *mlt_property_get_time( mlt_property self, mlt_time_format format, double fps, locale_t locale )
+char *mlt_property_get_time( mlt_property self, mlt_time_format format, double fps/*, locale_t locale*/ )
 {
 	char *orig_localename = NULL;
 	int frames = 0;
 
 	// Optimization for mlt_time_frames
 	if ( format == mlt_time_frames )
-		return mlt_property_get_string_l( self, locale );
+		return mlt_property_get_string_l( self/*, locale*/ );
 
 	// Remove existing string
 	if ( self->prop_string )
-		mlt_property_set_int( self, mlt_property_get_int( self, fps, locale ) );
+		mlt_property_set_int( self, mlt_property_get_int( self, fps/*, locale*/ ) );
 
 	// Use the specified locale
+#if 0
 	if ( locale )
 	{
 		// TODO: when glibc gets sprintf_l, start using it! For now, hack on setlocale.
@@ -949,9 +963,10 @@ char *mlt_property_get_time( mlt_property self, mlt_time_format format, double f
 	}
 	else
 	{
+#endif
 		// Make sure we have a lock before accessing self->types
 		pthread_mutex_lock( &self->mutex );
-	}
+	//}
 
 	// Convert number to string
 	if ( self->types & mlt_prop_int )
@@ -987,6 +1002,7 @@ char *mlt_property_get_time( mlt_property self, mlt_time_format format, double f
 		time_smpte_from_frames( frames, fps, self->prop_string, 1 );
 
 	// Restore the current locale
+#if 0
 	if ( locale )
 	{
 #if !defined(ANDROID_XLOCALE)
@@ -997,9 +1013,10 @@ char *mlt_property_get_time( mlt_property self, mlt_time_format format, double f
 	}
 	else
 	{
+#endif
 		// Make sure we have a lock before accessing self->types
 		pthread_mutex_unlock( &self->mutex );
-	}
+	//}
 
 	// Return the string (may be NULL)
 	return self->prop_string;
@@ -1013,7 +1030,7 @@ char *mlt_property_get_time( mlt_property self, mlt_time_format format, double f
  * \return true if it is numeric
  */
 
-static int is_property_numeric( mlt_property self, locale_t locale )
+static int is_property_numeric( mlt_property self/*, locale_t locale*/ )
 {
 	int result = ( self->types & mlt_prop_int ) ||
 			( self->types & mlt_prop_int64 ) ||
@@ -1026,7 +1043,7 @@ static int is_property_numeric( mlt_property self, locale_t locale )
 	{
 		double temp;
 		char *p = NULL;
-		
+#if 0
 #if defined(__GLIBC__) || defined(__DARWIN__)
 		if ( locale )
 			temp = strtod_l( self->prop_string, &p, locale );
@@ -1044,9 +1061,9 @@ static int is_property_numeric( mlt_property self, locale_t locale )
 			setlocale( LC_NUMERIC, locale );
 		}
 #endif
-
+#endif
 		temp = strtod( self->prop_string, &p );
-
+#if 0
 #if !defined(__GLIBC__) && !defined(__DARWIN__) && !defined(ANDROID_XLOCALE)
 		if ( locale ) {
 			// Restore the current locale
@@ -1054,6 +1071,7 @@ static int is_property_numeric( mlt_property self, locale_t locale )
 			free( orig_localename );
 			pthread_mutex_unlock( &self->mutex );
 		}
+#endif
 #endif
 
 		result = ( p != self->prop_string );
@@ -1103,11 +1121,11 @@ static inline double catmull_rom_interpolate( double y0, double y1, double y2, d
  */
 
 int mlt_property_interpolate( mlt_property self, mlt_property p[],
-	double progress, double fps, locale_t locale, mlt_keyframe_type interp )
+	double progress, double fps/*, locale_t locale*/, mlt_keyframe_type interp )
 {
 	int error = 0;
 	if ( interp != mlt_keyframe_discrete &&
-		is_property_numeric( p[1], locale ) && is_property_numeric( p[2], locale ) )
+		is_property_numeric( p[1]/*, locale*/ ) && is_property_numeric( p[2]/*, locale */) )
 	{
 		if ( self->types & mlt_prop_rect )
 		{
@@ -1116,10 +1134,10 @@ int mlt_property_interpolate( mlt_property self, mlt_property p[],
 			{
 				mlt_rect points[2];
 				mlt_rect zero = {0, 0, 0, 0, 0};
-				points[0] = p[1]? mlt_property_get_rect( p[1], locale ) : zero;
+				points[0] = p[1]? mlt_property_get_rect( p[1]/*, locale */) : zero;
 				if ( p[2] )
 				{
-					points[1] = mlt_property_get_rect( p[2], locale );
+					points[1] = mlt_property_get_rect( p[2]/*, locale */);
 					value.x = linear_interpolate( points[0].x, points[1].x, progress );
 					value.y = linear_interpolate( points[0].y, points[1].y, progress );
 					value.w = linear_interpolate( points[0].w, points[1].w, progress );
@@ -1135,12 +1153,12 @@ int mlt_property_interpolate( mlt_property self, mlt_property p[],
 			{
 				mlt_rect points[4];
 				mlt_rect zero = {0, 0, 0, 0, 0};
-				points[1] = p[1]? mlt_property_get_rect( p[1], locale ) : zero;
+				points[1] = p[1]? mlt_property_get_rect( p[1]/*, locale*/ ) : zero;
 				if ( p[2] )
 				{
-					points[0] = p[0]? mlt_property_get_rect( p[0], locale ) : zero;
-					points[2] = p[2]? mlt_property_get_rect( p[2], locale ) : zero;
-					points[3] = p[3]? mlt_property_get_rect( p[3], locale ) : zero;
+					points[0] = p[0]? mlt_property_get_rect( p[0]/*, locale */) : zero;
+					points[2] = p[2]? mlt_property_get_rect( p[2]/*, locale*/ ) : zero;
+					points[3] = p[3]? mlt_property_get_rect( p[3]/*, locale*/ ) : zero;
 					value.x = catmull_rom_interpolate( points[0].x, points[1].x, points[2].x, points[3].x, progress );
 					value.y = catmull_rom_interpolate( points[0].y, points[1].y, points[2].y, points[3].y, progress );
 					value.w = catmull_rom_interpolate( points[0].w, points[1].w, points[2].w, points[3].w, progress );
@@ -1160,17 +1178,17 @@ int mlt_property_interpolate( mlt_property self, mlt_property p[],
 			if ( interp == mlt_keyframe_linear )
 			{
 				double points[2];
-				points[0] = p[1]? mlt_property_get_double( p[1], fps, locale ) : 0;
-				points[1] = p[2]? mlt_property_get_double( p[2], fps, locale ) : 0;
+				points[0] = p[1]? mlt_property_get_double( p[1], fps/*, locale*/ ) : 0;
+				points[1] = p[2]? mlt_property_get_double( p[2], fps/*, locale*/ ) : 0;
 				value = p[2]? linear_interpolate( points[0], points[1], progress ) : points[0];
 			}
 			else if ( interp == mlt_keyframe_smooth )
 			{
 				double points[4];
-				points[0] = p[0]? mlt_property_get_double( p[0], fps, locale ) : 0;
-				points[1] = p[1]? mlt_property_get_double( p[1], fps, locale ) : 0;
-				points[2] = p[2]? mlt_property_get_double( p[2], fps, locale ) : 0;
-				points[3] = p[3]? mlt_property_get_double( p[3], fps, locale ) : 0;
+				points[0] = p[0]? mlt_property_get_double( p[0], fps/*, locale*/ ) : 0;
+				points[1] = p[1]? mlt_property_get_double( p[1], fps/*, locale*/ ) : 0;
+				points[2] = p[2]? mlt_property_get_double( p[2], fps/*, locale*/ ) : 0;
+				points[3] = p[3]? mlt_property_get_double( p[3], fps/*, locale*/ ) : 0;
 				value = p[2]? catmull_rom_interpolate( points[0], points[1], points[2], points[3], progress ) : points[1];
 			}
 			error = mlt_property_set_double( self, value );
@@ -1193,14 +1211,14 @@ int mlt_property_interpolate( mlt_property self, mlt_property p[],
  *  <=0 if you don't care or need that
  */
 
-static void refresh_animation( mlt_property self, double fps, locale_t locale, int length  )
+static void refresh_animation( mlt_property self, double fps/*, locale_t locale*/, int length  )
 {
 	if ( !self->animation )
 	{
 		self->animation = mlt_animation_new();
 		if ( self->prop_string )
 		{
-			mlt_animation_parse( self->animation, self->prop_string, length, fps, locale );
+			mlt_animation_parse( self->animation, self->prop_string, length, fps/*, locale*/ );
 		}
 		else
 		{
@@ -1228,7 +1246,7 @@ static void refresh_animation( mlt_property self, double fps, locale_t locale, i
  * \return the real number
  */
 
-double mlt_property_anim_get_double( mlt_property self, double fps, locale_t locale, int position, int length )
+double mlt_property_anim_get_double( mlt_property self, double fps/*, locale_t locale*/, int position, int length )
 {
 	double result;
 	if ( self->animation || ( ( self->types & mlt_prop_string ) && self->prop_string ) )
@@ -1237,16 +1255,16 @@ double mlt_property_anim_get_double( mlt_property self, double fps, locale_t loc
 		item.property = mlt_property_init();
 
 		pthread_mutex_lock( &self->mutex );
-		refresh_animation( self, fps, locale, length );
+		refresh_animation( self, fps/*, locale*/, length );
 		mlt_animation_get_item( self->animation, &item, position );
 		pthread_mutex_unlock( &self->mutex );
-		result = mlt_property_get_double( item.property, fps, locale );
+		result = mlt_property_get_double( item.property, fps/*, locale*/ );
 
 		mlt_property_close( item.property );
 	}
 	else
 	{
-		result = mlt_property_get_double( self, fps, locale );
+		result = mlt_property_get_double( self, fps/*, locale*/ );
 	}
 	return result;
 }
@@ -1263,7 +1281,7 @@ double mlt_property_anim_get_double( mlt_property self, double fps, locale_t loc
  * \return an integer value
  */
 
-int mlt_property_anim_get_int( mlt_property self, double fps, locale_t locale, int position, int length )
+int mlt_property_anim_get_int( mlt_property self, double fps/*, locale_t locale*/, int position, int length )
 {
 	int result;
 	if ( self->animation || ( ( self->types & mlt_prop_string ) && self->prop_string ) )
@@ -1272,16 +1290,16 @@ int mlt_property_anim_get_int( mlt_property self, double fps, locale_t locale, i
 		item.property = mlt_property_init();
 
 		pthread_mutex_lock( &self->mutex );
-		refresh_animation( self, fps, locale, length );
+		refresh_animation( self, fps/*, locale*/, length );
 		mlt_animation_get_item( self->animation, &item, position );
 		pthread_mutex_unlock( &self->mutex );
-		result = mlt_property_get_int( item.property, fps, locale );
+		result = mlt_property_get_int( item.property, fps/*, locale */);
 
 		mlt_property_close( item.property );
 	}
 	else
 	{
-		result = mlt_property_get_int( self, fps, locale );
+		result = mlt_property_get_int( self, fps/*, locale */);
 	}
 	return result;
 }
@@ -1298,7 +1316,7 @@ int mlt_property_anim_get_int( mlt_property self, double fps, locale_t locale, i
  * \return the string representation of the property or NULL if failed
  */
 
-char* mlt_property_anim_get_string( mlt_property self, double fps, locale_t locale, int position, int length )
+char* mlt_property_anim_get_string( mlt_property self, double fps/*, locale_t locale*/, int position, int length )
 {
 	char *result;
 	if ( self->animation || ( ( self->types & mlt_prop_string ) && self->prop_string ) )
@@ -1308,13 +1326,13 @@ char* mlt_property_anim_get_string( mlt_property self, double fps, locale_t loca
 
 		pthread_mutex_lock( &self->mutex );
 		if ( !self->animation )
-			refresh_animation( self, fps, locale, length );
+			refresh_animation( self, fps/*, locale*/, length );
 		mlt_animation_get_item( self->animation, &item, position );
 
 		free( self->prop_string );
 
 		pthread_mutex_unlock( &self->mutex );
-		self->prop_string = mlt_property_get_string_l( item.property, locale );
+		self->prop_string = mlt_property_get_string_l( item.property/*, locale*/ );
 		pthread_mutex_lock( &self->mutex );
 
 		if ( self->prop_string )
@@ -1327,7 +1345,7 @@ char* mlt_property_anim_get_string( mlt_property self, double fps, locale_t loca
 	}
 	else
 	{
-		result = mlt_property_get_string_l( self, locale );
+		result = mlt_property_get_string_l( self/*, locale*/ );
 	}
 	return result;
 }
@@ -1346,7 +1364,7 @@ char* mlt_property_anim_get_string( mlt_property self, double fps, locale_t loca
  * \return false if successful, true to indicate error
  */
 
-int mlt_property_anim_set_double( mlt_property self, double value, double fps, locale_t locale,
+int mlt_property_anim_set_double( mlt_property self, double value, double fps/*, locale_t locale*/,
 	int position, int length, mlt_keyframe_type keyframe_type )
 {
 	int result;
@@ -1358,7 +1376,7 @@ int mlt_property_anim_set_double( mlt_property self, double value, double fps, l
 	mlt_property_set_double( item.property, value );
 
 	pthread_mutex_lock( &self->mutex );
-	refresh_animation( self, fps, locale, length );
+	refresh_animation( self, fps/*, locale*/, length );
 	result = mlt_animation_insert( self->animation, &item );
 	mlt_animation_interpolate( self->animation );
 	pthread_mutex_unlock( &self->mutex );
@@ -1381,7 +1399,7 @@ int mlt_property_anim_set_double( mlt_property self, double value, double fps, l
  * \return false if successful, true to indicate error
  */
 
-int mlt_property_anim_set_int( mlt_property self, int value, double fps, locale_t locale,
+int mlt_property_anim_set_int( mlt_property self, int value, double fps/*, locale_t locale*/,
 	int position, int length, mlt_keyframe_type keyframe_type )
 {
 	int result;
@@ -1393,7 +1411,7 @@ int mlt_property_anim_set_int( mlt_property self, int value, double fps, locale_
 	mlt_property_set_int( item.property, value );
 
 	pthread_mutex_lock( &self->mutex );
-	refresh_animation( self, fps, locale, length );
+	refresh_animation( self, fps/*, locale*/, length );
 	result = mlt_animation_insert( self->animation, &item );
 	mlt_animation_interpolate( self->animation );
 	pthread_mutex_unlock( &self->mutex );
@@ -1418,7 +1436,7 @@ int mlt_property_anim_set_int( mlt_property self, int value, double fps, locale_
  * \return false if successful, true to indicate error
  */
 
-int mlt_property_anim_set_string( mlt_property self, const char *value, double fps, locale_t locale, int position, int length )
+int mlt_property_anim_set_string( mlt_property self, const char *value, double fps, /*locale_t locale, */int position, int length )
 {
 	int result;
 	struct mlt_animation_item_s item;
@@ -1429,7 +1447,7 @@ int mlt_property_anim_set_string( mlt_property self, const char *value, double f
 	mlt_property_set_string( item.property, value );
 
 	pthread_mutex_lock( &self->mutex );
-	refresh_animation( self, fps, locale, length );
+	refresh_animation( self, fps/*, locale*/, length );
 	result = mlt_animation_insert( self->animation, &item );
 	mlt_animation_interpolate( self->animation );
 	pthread_mutex_unlock( &self->mutex );
@@ -1512,7 +1530,7 @@ int mlt_property_set_rect( mlt_property self, mlt_rect value )
  * \return a rectangle value
  */
 
-mlt_rect mlt_property_get_rect( mlt_property self, locale_t locale )
+mlt_rect mlt_property_get_rect( mlt_property self/*, locale_t locale*/ )
 {
 	mlt_rect rect = { DBL_MIN, DBL_MIN, DBL_MIN, DBL_MIN, DBL_MIN };
 	if ( self->types & mlt_prop_rect )
@@ -1530,7 +1548,7 @@ mlt_rect mlt_property_get_rect( mlt_property self, locale_t locale )
 		char *value = self->prop_string;
 		char *p = NULL;
 		int count = 0;
-
+#if 0
 #if !defined(__GLIBC__) && !defined(__DARWIN__) && !defined(ANDROID_XLOCALE)
 		char *orig_localename = NULL;
 		if ( locale ) {
@@ -1544,14 +1562,17 @@ mlt_rect mlt_property_get_rect( mlt_property self, locale_t locale )
 			setlocale( LC_NUMERIC, locale );
 		}
 #endif
+#endif
 
 		while ( *value )
 		{
 			double temp;
+#if 0
 #if defined(__GLIBC__) || defined(__DARWIN__)
 			if ( locale )
 				temp = strtod_l( value, &p, locale );
             else
+#endif
 #endif
 				temp = strtod( value, &p );
 			if ( p != value )
@@ -1582,7 +1603,7 @@ mlt_rect mlt_property_get_rect( mlt_property self, locale_t locale )
 			value = p;
 			count ++;
 		}
-
+#if 0
 #if !defined(__GLIBC__) && !defined(__DARWIN__) && !defined(ANDROID_XLOCALE)
 		if ( locale ) {
 			// Restore the current locale
@@ -1590,6 +1611,7 @@ mlt_rect mlt_property_get_rect( mlt_property self, locale_t locale )
 			free( orig_localename );
 			pthread_mutex_unlock( &self->mutex );
 		}
+#endif
 #endif
     }
 	return rect;
@@ -1609,7 +1631,7 @@ mlt_rect mlt_property_get_rect( mlt_property self, locale_t locale )
  * \return false if successful, true to indicate error
  */
 
-int mlt_property_anim_set_rect( mlt_property self, mlt_rect value, double fps, locale_t locale,
+int mlt_property_anim_set_rect( mlt_property self, mlt_rect value, double fps,/* locale_t locale,*/
 	int position, int length, mlt_keyframe_type keyframe_type )
 {
 	int result;
@@ -1621,7 +1643,7 @@ int mlt_property_anim_set_rect( mlt_property self, mlt_rect value, double fps, l
 	mlt_property_set_rect( item.property, value );
 
 	pthread_mutex_lock( &self->mutex );
-	refresh_animation( self, fps, locale, length );
+	refresh_animation( self, fps, /*locale, */length );
 	result = mlt_animation_insert( self->animation, &item );
 	mlt_animation_interpolate( self->animation );
 	pthread_mutex_unlock( &self->mutex );
@@ -1642,7 +1664,7 @@ int mlt_property_anim_set_rect( mlt_property self, mlt_rect value, double fps, l
  * \return the rectangle
  */
 
-mlt_rect mlt_property_anim_get_rect( mlt_property self, double fps, locale_t locale, int position, int length )
+mlt_rect mlt_property_anim_get_rect( mlt_property self, double fps,/* locale_t locale,*/ int position, int length )
 {
 	mlt_rect result;
 	if ( self->animation || ( ( self->types & mlt_prop_string ) && self->prop_string ) )
@@ -1652,16 +1674,16 @@ mlt_rect mlt_property_anim_get_rect( mlt_property self, double fps, locale_t loc
 		item.property->types = mlt_prop_rect;
 
 		pthread_mutex_lock( &self->mutex );
-		refresh_animation( self, fps, locale, length );
+		refresh_animation( self, fps, /*locale,*/ length );
 		mlt_animation_get_item( self->animation, &item, position );
 		pthread_mutex_unlock( &self->mutex );
-		result = mlt_property_get_rect( item.property, locale );
+		result = mlt_property_get_rect( item.property/*, locale*/ );
 
 		mlt_property_close( item.property );
 	}
 	else
 	{
-		result = mlt_property_get_rect( self, locale );
+		result = mlt_property_get_rect( self/*, locale*/ );
 	}
 	return result;
 }

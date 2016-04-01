@@ -65,7 +65,7 @@ void Script::call(json_t* args_value) throw (Exception)
 			param_enum_presents.equal_range(string(it->second->name));
 
 		const json_t* enum_detail = get_selector(it->second->enum_name, sel);
-		if ( !enum_detail && ranges.first == param_enum_presents.end() ) {
+		if ( !enum_detail && ranges.first != param_enum_presents.end() ) {
 			throw_error_v(ErrorScriptArgInvalid,"arg:%s is invalid enum selector",
 				it->second->name);
 		}
@@ -83,25 +83,26 @@ void Script::call(json_t* args_value) throw (Exception)
 
 	for ( it = params->params.begin(); it != params->params.end(); it++ ) {
 		if ( it->second->param_style == ScriptParams::EnumParam ) continue;
+		if ( it->second->param_style == ScriptParams::PosParam ) continue;
 
 		const json_t* arg = t ? json_object_get(t, it->second->name) : NULL;
 
 		if ( it->second->param_style == ScriptParams::ScalarParam ) {
 			if ( !arg ) {
 				arg = it->second->default_scalar;
-				if ( !arg ) {
-					throw_error_v(ErrorScriptArgInvalid,
-						"arg:%s empty and has no default", it->second->name);
-				}
+				//if ( !arg ) {
+				//	throw_error_v(ErrorScriptArgInvalid,
+				//		"arg:%s empty and has no default", it->second->name);
+				//}
 			}
-			else if ( json_is_object(arg) || json_is_array(arg) ) {
+			if (!arg || json_is_object(arg) || json_is_array(arg) ) {
 				throw_error_v(ErrorScriptArgInvalid,"arg:%s should be scalar",
 					it->second->name);
 			}
 			pair<EvaluableIter, EvaluableIter> ranges =
 					param_evalue_presents.equal_range(string(it->second->name));
 
-			if (!arg && ranges.first == param_evalue_presents.end() ) {
+			if (!arg && ranges.first != param_evalue_presents.end() ) {
 				throw_error_v(ErrorScriptArgInvalid,"arg:%s is needed",
 					it->second->name);
 			}
@@ -109,6 +110,31 @@ void Script::call(json_t* args_value) throw (Exception)
 			EvaluableIter eit;
 			for ( eit = ranges.first; eit != ranges.second; eit++ ) {
 				eit->second->expand_scalar(eit->first.c_str(),arg);
+			}
+		}
+		else if ( it->second->param_style == ScriptParams::DuraParam ) {
+			int iarg = it->second->default_pos;
+			if ( arg )  {
+				if ( json_is_integer(arg)) {
+					iarg = json_integer_value(arg);
+				}
+				else {
+					throw_error_v(ErrorScriptArgInvalid,"arg:%s should be integer",
+						it->second->name);
+				}
+			}
+
+			if ( it->second->pos_type == ScriptParams::TimePos ) {
+				iarg /= 40;
+			}
+
+			pair<EvaluableIter, EvaluableIter> ranges =
+				param_evalue_presents.equal_range(string(it->second->name));
+
+			JsonWrap iwrap(json_integer(iarg), 1);
+			EvaluableIter eit;
+			for ( eit = ranges.first; eit != ranges.second; eit++ ) {
+				eit->second->expand_scalar(eit->first.c_str(),iwrap.h);
 			}
 		}
 	}
@@ -121,6 +147,8 @@ void Script::call(json_t* args_value) throw (Exception)
 
 	for ( it = params->params.begin(); it != params->params.end(); it++ ) {
 		if ( it->second->param_style == ScriptParams::EnumParam ) continue;
+		if ( it->second->param_style == ScriptParams::ScalarParam ) continue;
+		if ( it->second->param_style == ScriptParams::DuraParam ) continue;
 
 		const json_t* arg = t ? json_object_get(t, it->second->name) : NULL;
 
@@ -188,7 +216,12 @@ void Script::call(json_t* args_value) throw (Exception)
 					param_evalue_presents.equal_range(string(it->second->name));
 			EvaluableIter eit;
 			for ( eit = ranges.first; eit != ranges.second; eit++ ) {
-				eit->second->expand_position(eit->first.c_str(),frame_in, frame_out, iarg);
+				if ( it->second->pos_relative == false) {
+					eit->second->expand_position(eit->first.c_str(), iarg + frame_in);
+				}
+				else{
+					eit->second->expand_position(eit->first.c_str(),frame_in, frame_out, iarg);
+				}
 			}
 		}
 	}
@@ -325,7 +358,8 @@ void Script::regist_scalar_param_usage(const char* param, Evaluable* obj)
 	}
 
 	if (param_obj->param_style != ScriptParams::ScalarParam &&
-			param_obj->param_style != ScriptParams::PosParam ) {
+			param_obj->param_style != ScriptParams::PosParam &&
+			param_obj->param_style != ScriptParams::DuraParam) {
 		throw_error_v(ErrorInvalidParam, "param:%s not scalar", param);
 	}
 

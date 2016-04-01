@@ -60,7 +60,7 @@ private:
 	Script& parent;
 };
 
-typedef shared_ptr<ScriptMacros> ScriptMacrosPtr;
+typedef std::tr1::shared_ptr<ScriptMacros> ScriptMacrosPtr;
 
 NMSP_END(vedit)
 

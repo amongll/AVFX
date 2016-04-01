@@ -25,7 +25,8 @@ public:
 		UnknownParamStyle,
 		ScalarParam, //json 字面值标量替换 的参数
 		PosParam, // 位置类型参数
-		EnumParam // 属性集合 选择 参数
+		EnumParam, // 属性集合 选择 参数
+		DuraParam	//表示持续时长的参数
 	};
 	enum ParamPosType
 	{
@@ -42,7 +43,6 @@ public:
 		}
 	private:
 		friend class ScriptParams;
-		friend class shared_ptr<Param>;
 		/**
 		 *	\�����л����캯��
 		 */
@@ -123,7 +123,7 @@ public:
 		return it == params.end() ? NULL : (it->second.get());
 	}
 
-	void define_param(const char* name, shared_ptr<Param> param)throw(Exception) {
+	void define_param(const char* name, std::tr1::shared_ptr<Param> param)throw(Exception) {
 		throw_error(ErrorFeatureNotImpl); //todo: script define feature
 	}
 
@@ -137,16 +137,16 @@ private:
 	void parse_param_defines() throw(Exception);
 
 	json_t* defines;
-	hash_map<string, shared_ptr<Param> > params;
+	hash_map<string, std::tr1::shared_ptr<Param> > params;
 
-	typedef hash_map<string, shared_ptr<Param> >::iterator MapIter;
-	typedef hash_map<string, shared_ptr<Param> >::const_iterator MapCIter;
+	typedef hash_map<string, std::tr1::shared_ptr<Param> >::iterator MapIter;
+	typedef hash_map<string, std::tr1::shared_ptr<Param> >::const_iterator MapCIter;
 	Script& parent;
 };
 
 typedef vedit::ScriptParams::Param ScriptParam;
-typedef shared_ptr<ScriptParam> ParamPtr;
-typedef shared_ptr<ScriptParams> ScriptParamsPtr;
+typedef std::tr1::shared_ptr<ScriptParam> ParamPtr;
+typedef std::tr1::shared_ptr<ScriptParams> ScriptParamsPtr;
 
 NMSP_END(vedit)
 

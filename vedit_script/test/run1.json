@@ -1,0 +1,64 @@
+{
+  "proctype": "playlist",
+  "procname": "playlist_with_mixes",
+  "props": {
+    "out": 4251,
+    "in": 0
+  },
+  "slices": [
+    {
+      "proctype": "asis_producer",
+      "procname": "color",
+      "uuid": "0153ace9-8859-8df9-dfa4-d5e10001258c",
+      "props": {
+        "out": 175,
+        "in": 0
+      },
+      "resource": "black",
+      "service": "colour"
+    },
+    {
+      "proctype": "video",
+      "procname": "simple_video",
+      "desc": "一个对音频片段开始结尾有音量逐渐增大，结尾音量逐渐减小的特效",
+      "uuid": "0153ace9-8885-795d-dfa4-d5e10001258c",
+      "props": {
+        "out": 2250,
+        "in": 1750
+      },
+      "resource": "/opt/lilei//merge_langyabang_30.flv",
+      "ctrl": {
+        "mix_frames": 75
+      },
+      "mixes": [
+        {
+          "proctype": "transition",
+          "procname": "trans_composite1",
+          "transition": "composite",
+          "props": {
+            "out": 75,
+            "in": 0,
+            "distort": 1,
+            "geometry": "0=-100%/0:100%x100%;75=0/0:100%x100%;"
+          },
+          "uuid": "0153ace9-8886-3c6a-dfa4-d5e10001258c"
+        },
+        {
+          "proctype": "transition",
+          "procname": "trans_audio_mix",
+          "desc": "两个track的音频数据合成",
+          "transition": "mix",
+          "props": {
+            "out": 75,
+            "in": 0,
+            "end": 1,
+            "combine": 1,
+            "start": 1
+          },
+          "uuid": "0153ace9-8886-dfbb-dfa4-d5e10001258c"
+        }
+      ]
+    }
+  ],
+  "uuid": "0153ace9-89f1-83ef-dfa4-d5e10001258c"
+}

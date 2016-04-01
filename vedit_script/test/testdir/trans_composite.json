@@ -1,47 +1,80 @@
 {
 	"procname": "trans_composite1",
 	"proctype": "transition",
-	"desc": "composite示例1， 图像横向或者竖向移动进入，覆盖上一个图像",
 	"params": 
 	{
 		"in": 
 		{
-			"type": "pos_time",
-			"desc": "在两个对其的track，该transition生效的开始点, 参数替换时，使用绝对帧位置",
-			"default": 0,
-			"relative": false
+			"type": "pos_frame",
+			"default": 0
 		},
 
 		"out": 
 		{
-			"type": "pos_time",
-			"desc": "在两个对其的track，该transition生效的结束点, 参数替换时，使用绝对帧位置",
-			"default": 0,
-			"relative": false
+			"type": "pos_frame",
+			"default": 0
 		},
 
 		"style": 
 		{
 			"type": "#move_styles",
-			"desc": "控制图像转场进入的方向",
 			"default":"l2r"
+		},
+		
+		"hold":
+		{
+			"type":"position",
+			"default":0
 		}
 	},
 	"macros":{
-		"finalgeometry":"$(out)=0/0:100%x100%;"
+		"startcenter":"$(in)=0/0:100%x100%;$(hold)=0/0:100%x100;",
+		"startleft":"$(in)=-100%/0:100%x100%;$(hold)=-100%/0:100%x100%;",
+		"startright":"$(in)=100%/0:100%x100%;$(hold)=100%/0:100%x100%;",
+		"starttop":"$(in)=0/-100%:100%x100%;$(hold)=0/-100%:100%x100%;",
+		"startbuttom":"$(in)=0/100%:100%x100%;$(hold)=0/100%:100%x100%;",
+		"startlt":"$(in)=-100%/-100%:100%x100%;$(hold)=-100%/-100%:100%x100%;",
+		"startlb":"$(in)=-100%/100%:100%x100%;$(hold)=-100%/100%:100%x100%;",
+		"startrt":"$(in)=100%/-100%:100%x100%;$(hold)=100%/-100%:100%x100%;",
+		"startrb":"$(in)=100%/100%:100%x100%;$(hold)=100%/100%:100%x100%;",
+		"finalcenter":"$(out)=0/0:100%x100%;",
+		"finalleft":"$(out)=-100%/0:100%x100%;",
+		"finalright":"$(out)=100%/0:100%x100%;",
+		"finaltop":"$(out)=0/-100%:100%x100%;",
+		"finalbuttom":"$(out)=0/100%:100%x100%;",
+		"finallt":"$(out)=-100%/-100%:100%x100%;",
+		"finallb":"$(out)=-100%/100%:100%x100%;",
+		"finalrt":"$(out)=100%/-100%:100%x100%;",
+		"finalrb":"$(out)=100%/100%:100%x100%;"
 	},
 	"enums": 
 	{
 		"move_styles": 
 		{
-			"l2r": {"geometry": "$(in)=-100%/0:100%x100%;#(finalgeometry)"},
-			"r2l": {"geometry": "$(in)=100%/0:100%x100%;#(finalgeometry)"},
-			"t2b": {"geometry": "$(in)=0/-100%:100%x100%;#(finalgeometry)"},
-			"b2t": {"geometry": "$(in)=0/100%:100%x100%;#(finalgeometry)"},
-			"lt2rb":{"geometry":"$(in)=-100%/-100%:100%x100%;#(finalgeometry)"},
-			"lb2rt":{"geometry":"$(in)=-100%/100%:100%x100%;#(finalgeometry)"},
-			"rt2lb":{"geometry":"$(in)=100%/-100%:100%x100%;#(finalgeometry)"},
-			"rb2lt":{"geometry":"$(in)=100%/100%:100%x100%;#(finalgeometry)"}
+			"c2l":{"geometry": "#(startcenter)#(finalleft)"},
+			"c2r":{"geometry": "#(startcenter)#(finalright)"},
+			"c2t":{"geometry": "#(startcenter)#(finaltop)"},
+			"c2b":{"geometry": "#(startcenter)#(finalbuttom)"},
+			"l2c": {"geometry": "#(startleft)#(finalcenter)"},
+			"r2c": {"geometry": "#(startright)#(finalcenter)"},
+			"t2c": {"geometry": "#(starttop)#(finalcenter)"},
+			"b2c": {"geometry": "#(startbuttom)#(finalcenter)"},
+			"lt2c":{"geometry":"#(startlt)#(finalcenter)"},
+			"lb2c":{"geometry":"#(startlb)#(finalcenter)"},
+			"rt2c":{"geometry":"#(startrt)#(finalcenter)"},
+			"rb2c":{"geometry":"#(startrb)#(finalcenter)"},
+			"c2lt":{"geometry": "#(startcenter)#(finallt)"},
+			"c2lb":{"geometry": "#(startcenter)#(finallb)"},
+			"c2rt":{"geometry": "#(startcenter)#(finalrt)"},
+			"c2rb":{"geometry": "#(startcenter)#(finalrb)"},
+			"l2r": {"geometry": "#(startleft)#(finalright)"},
+			"r2l": {"geometry": "#(startright)#(finalleft)"},
+			"t2b": {"geometry": "#(starttop)#(finalbuttom)"},
+			"b2t": {"geometry": "#(startbuttom)#(finaltop)"},
+			"lt2rb":{"geometry":"#(startlt)#(finalrb)"},
+			"lb2rt":{"geometry":"#(startlb)#(finalrt)"},
+			"rt2lb":{"geometry":"#(startrt)#(finallb)"},
+			"rb2lt":{"geometry":"#(startrb)#(finallt)"}
 		}
 	},
 

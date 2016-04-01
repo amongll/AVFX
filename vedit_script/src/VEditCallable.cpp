@@ -24,7 +24,7 @@ ScriptSerialized ScriptCallable::compile() throw (Exception)
 	ScriptSerialized call_get;
 	try {
 		call_args = args->compile();
-		shared_ptr<Script> script = Vm::get_script(name.c_str());
+		std::tr1::shared_ptr<Script> script = Vm::get_script(name.c_str());
 		script->call(call_args);
 		call_get = script->get_mlt_serialize();
 		json_decref(call_args);

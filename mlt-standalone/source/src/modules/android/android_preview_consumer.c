@@ -1,7 +1,7 @@
 /*
  * android_preview_consumer.c
  *
- *  Created on: 2016Äê1ÔÂ22ÈÕ
+ *  Created on: 2016ï¿½ï¿½1ï¿½ï¿½22ï¿½ï¿½
  *      Author: li.lei
  */
 
@@ -208,10 +208,10 @@ typedef struct consumer_local_S {
 	uint64_t start_time;
 	uint64_t elapse_time;
 	double fps;
-	uint64_t delay_threshold; //¶ÓÁÐrendererÓÐÑÓ³ÙÊ±£¬ÔÚ´ËÑÓ³Ù·¶Î§ÄÚ¿ÉÒÔÖð¸örender£¬·ñÔòÌø¹ýÈô¸ÉÖ¡
+	uint64_t delay_threshold; //ï¿½ï¿½ï¿½ï¿½rendererï¿½ï¿½ï¿½Ó³ï¿½Ê±ï¿½ï¿½ï¿½Ú´ï¿½ï¿½Ó³Ù·ï¿½Î§ï¿½Ú¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½renderï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¡
 
-	int play_speed; //²¥·ÅËÙ¶È£¬Ä¬ÈÏ1.0.
-	int process_preview:1; //ÒÔ×î´óËÙ¶È½øÐÐÊý¾Ý´¦ÀíÊ±µÄpreview
+	int play_speed; //ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶È£ï¿½Ä¬ï¿½ï¿½1.0.
+	int process_preview:1; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶È½ï¿½ï¿½ï¿½ï¿½ï¿½Ý´ï¿½ï¿½ï¿½Ê±ï¿½ï¿½preview
 	int play_preview:1;
 
 	int edit_preview:1;
@@ -389,20 +389,15 @@ static void* video_thread( void* arg )
 	queue_thread_startup(&local->video_queue);
 	render_queue_t* queue = &local->video_queue;
 
-#ifdef DEBUG
-	int win_w = ANativeWindow_getWidth(g_testAWindow);
-	int win_h = ANativeWindow_getHeight(g_testAWindow);
-	int win_fmt = ANativeWindow_getFormat(g_testAWindow);
+	int win_w = ANativeWindow_getWidth(local->native_vout);
+	int win_h = ANativeWindow_getHeight(local->native_vout);
+	int win_fmt = ANativeWindow_getFormat(local->native_vout);
 
-	//if ( win_fmt != 20 ) {
 	if ( win_fmt != 842094169 ) {
-
 		assert(0);
 	}
 
 	mlt_log_warning(NULL, "NativeWindow:%x %dx%d", win_fmt, win_w, win_h);
-
-#endif
 
 	uint8_t* image_raw;
 	mlt_image_format fmt = mlt_image_yuv420p;
@@ -420,9 +415,7 @@ static void* video_thread( void* arg )
 		frame_props = mlt_frame_properties(entry->frame);
 		position = mlt_properties_get_position(frame_props, "_position");
 		mlt_image_format infmt = mlt_image_yuv420p;
-		//if ( mlt_frame_is_test_card(entry->frame) && mlt_properties_get_data(frame_props, "image", NULL) ) {
-		//	mlt_properties_set_data(frame_props, "image", NULL, 0, NULL, NULL);
-		//}
+
 		mlt_frame_get_image(entry->frame,&image_raw,&infmt,&image_w,&image_h,0);
 		int img_sz = mlt_image_format_size(mlt_image_yuv420p, image_w, image_h, NULL);
 
@@ -433,7 +426,6 @@ static void* video_thread( void* arg )
 
 			write(local->video_info_fd, info_buf, sz);
 		}
-#ifdef DEBUG
 #define ALIGN(x, align) ((( x ) + (align) - 1) / (align) * (align))
 		if ( p_rect == NULL ) {
 			mlt_profile profile = mlt_service_profile(mlt_consumer_service(&local->parent));
@@ -442,7 +434,7 @@ static void* video_thread( void* arg )
 			video_rect.left = 0;
 			video_rect.right = win_w;
 
-			ANativeWindow_setBuffersGeometry(g_testAWindow, profile->width, profile->height, win_fmt);
+			ANativeWindow_setBuffersGeometry(local->native_vout, profile->width, profile->height, win_fmt);
 
 			p_rect = &io_rect;
 		}
@@ -451,32 +443,10 @@ static void* video_thread( void* arg )
 
 		ANativeWindow_Buffer render_buf;
 
-		ANativeWindow_lock(g_testAWindow,&render_buf, /*p_rect*/NULL);
+		ANativeWindow_lock(local->native_vout,&render_buf, /*p_rect*/NULL);
 		android_render_yuv420p_on_yv12(&render_buf, image_raw, image_w, image_h);
-		/**
-		int i;
-		size_t sz;
-		int y_size = render_buf.stride * render_buf.height;
-		int c_stride = ALIGN(render_buf.stride/2,16);
-		int c_size = c_stride * render_buf.height /2;
 
-		size_t plain_off[3] = {
-				0,
-			y_size,
-			y_size + c_size
-		};
-		memcpy(render_buf.bits, image_raw, y_size);
-		memcpy(render_buf.bits, image_raw + y_size + c_size, c_size);
-		memcpy(render_buf.bits, image_raw + y_size , c_size);
-		//memset(render_buf.bits, 0xa0, y_size);
-		//memset(render_buf.bits + y_size, 0x00, c_size);
-		//memset(render_buf.bits + y_size + c_size, 0x00, c_size);
-		 *
-		 */
-		//mlt_log_info(NULL, "ANativeWindowInfo: stride:%d w:%d h:%d", render_buf.stride, render_buf.width, render_buf.height);
-		//memcpy(render_buf.bits, image_raw, mlt_image_format_size(mlt_image_yuv422,image_w,image_h-1,NULL));
-		ANativeWindow_unlockAndPost(g_testAWindow);
-#endif
+		ANativeWindow_unlockAndPost(local->native_vout);
 
 		mlt_frame_close(entry->frame);
 		if ( is_stop)
@@ -581,49 +551,6 @@ static void* audio_thread( void* arg )
 	return NULL;
 }
 
-/**
-int mlt_apreview_consumer_vout_created(mlt_consumer obj, JNIEnv* env, jobject out)
-{
-	if (obj == NULL || out == NULL)
-		return -1;
-	consumer_local_t *local_obj = (consumer_local_t*)obj->local;
-	if ( local_obj == NULL || local_obj->_magic != __MAGIC_LOCAL__ ) {
-		return -1;
-	}
-
-	pthread_mutex_lock(&local_obj->window_lock);
-	ANativeWindow* _tmp_out = ANativeWindow_fromSurface(env, out);
-	if (_tmp_out == NULL) {
-		pthread_mutex_unlock(&local_obj->window_lock);
-		return -1;
-	}
-	if (local_obj->native_vout) {
-		ANativeWindow_release(local_obj->native_vout);
-	}
-	ANativeWindow_acquire(_tmp_out);
-	local_obj->native_vout = _tmp_out;
-	pthread_mutex_unlock(&local_obj->window_lock);
-	return 0;
-}
-
-int mlt_apreview_consumer_vout_destroyed(mlt_consumer obj)
-{
-	if (obj == NULL)
-		return -1;
-	consumer_local_t *local_obj = (consumer_local_t*)obj->local;
-	if ( local_obj == NULL || local_obj->_magic != __MAGIC_LOCAL__ ) {
-		return -1;
-	}
-	pthread_mutex_lock(&local_obj->window_lock);
-	if (local_obj->native_vout)
-		ANativeWindow_release(local_obj->native_vout);
-
-	local_obj->native_vout = NULL;
-	pthread_mutex_unlock(&local_obj->window_lock);
-	return 0;
-}*/
-
-
 static int consumer_start(mlt_consumer consumer)
 {
 	consumer_local_t* local = consumer->child;
@@ -648,7 +575,7 @@ static int consumer_start(mlt_consumer consumer)
 
 	int render_prepared = 0;
 	pthread_mutex_lock(&local->window_lock);
-	local->native_vout = g_testAWindow;
+	local->native_vout = (ANativeWindow*)mlt_properties_get_data(mlt_consumer_properties(consumer),"native_window",NULL);
 	if ( local->native_vout )
 		render_prepared = 1;
 	pthread_mutex_unlock(&local->window_lock);
@@ -670,7 +597,7 @@ static int consumer_start(mlt_consumer consumer)
 	}
 	pthread_mutex_unlock(&local->run_lock);
 
-	 return 0;
+	return 0;
 }
 
 static int consumer_stop(mlt_consumer consumer)
@@ -716,11 +643,13 @@ static void consumer_close(mlt_consumer consumer)
 	pthread_mutex_destroy(&local->run_lock);
 	pthread_cond_destroy(&local->run_cond);
 	mlt_consumer_close(&local->parent);
+	if (local->native_vout) {
+		ANativeWindow_release(local->native_vout);
+		mlt_properties_set_data(mlt_consumer_properties(consumer),"native_window", NULL, sizeof(void*), NULL, NULL);
+		local->native_vout = NULL;
+	}
 	free(local);
 
-	ANativeWindow_release(g_testAWindow);
-
-	//mlt_apreview_consumer_vout_destroyed(consumer);
 }
 
 mlt_consumer consumer_apreview_init( mlt_profile profile, mlt_service_type type, const char *id, char *arg )

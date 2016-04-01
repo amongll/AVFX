@@ -75,7 +75,8 @@ void vedit::ScriptParams::Param::parse(const Script& script) throw (Exception)
 		}
 	}
 	else if ( !strcasecmp(type, "pos_frame") || !strcasecmp(type,"position_frame")
-			|| !strcasecmp(type, "frame_pos") || !strcasecmp(type,"frame_position") ) {
+			|| !strcasecmp(type, "frame_pos") || !strcasecmp(type,"frame_position")
+			|| !strcasecmp(type, "pos") || !strcasecmp(type,"position") ) {
 
 		*pmodifier = PosParam;
 		DECLARE_CONST_MEM_MODIFIER(xmod, pos_type, ParamPosType*);
@@ -113,6 +114,35 @@ void vedit::ScriptParams::Param::parse(const Script& script) throw (Exception)
 		if ( pos_relative_je && json_is_false(pos_relative_je)) {
 			DECLARE_CONST_MEM_MODIFIER(xxmod, pos_relative, bool*);
 			*xxmod  = false;
+		}
+	}
+	else if ( !strcasecmp(type, "dura_time") || !strcasecmp(type, "duration_time")
+			|| !strcasecmp(type, "time_dura") || !strcasecmp(type,"time_duration")) {
+		*pmodifier = DuraParam;
+		DECLARE_CONST_MEM_MODIFIER(xmod, pos_type, ParamPosType*);
+		*xmod = TimePos;
+
+		if (default_define) {
+			if (!json_is_integer(default_define)) throw_error_v(ErrorParamDefineError,
+				"default is not duration for param:%s", name);
+
+			DECLARE_CONST_MEM_MODIFIER(imod,default_pos,int*);
+			*imod = json_integer_value(default_define);
+		}
+	}
+	else if ( !strcasecmp(type, "dura_frame") || !strcasecmp(type, "duration_frame")
+			|| !strcasecmp(type, "frame_dura") || !strcasecmp(type,"frame_duration")||
+			!strcasecmp(type,"dura") || !strcasecmp(type,"duration")) {
+		*pmodifier = DuraParam;
+		DECLARE_CONST_MEM_MODIFIER(xmod, pos_type, ParamPosType*);
+		*xmod = FramePos;
+
+		if (default_define) {
+			if (!json_is_integer(default_define)) throw_error_v(ErrorParamDefineError,
+				"default is not duration for param:%s", name);
+
+			DECLARE_CONST_MEM_MODIFIER(imod,default_pos,int*);
+			*imod = json_integer_value(default_define);
 		}
 	}
 	else if ( type[0] == '#' ) {

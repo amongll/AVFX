@@ -39,6 +39,19 @@ public:
 	virtual void pre_judge() throw (Exception);
 };
 
+class AsisScript: public SingleResourceScript
+{
+public:
+	AsisScript(json_t* text):
+		SingleResourceScript(text)
+	{}
+
+	virtual ~AsisScript();
+	virtual json_t* compile() throw (Exception);
+	virtual void pre_judge() throw (Exception);
+	virtual void parse_specific() throw (Exception);
+};
+
 class AudioScript : public SingleResourceScript
 {
 public:
@@ -86,6 +99,7 @@ struct SingleResourceLoader : public MltLoader
 	mlt_service get_audio(JsonWrap js) throw (Exception);
 	mlt_service get_image(JsonWrap js) throw (Exception);
 	mlt_service get_gif(JsonWrap js) throw (Exception);
+	mlt_service get_asis_producer(JsonWrap js) throw (Exception);
 private:
 	void parse_filters() throw (Exception);
 	mlt_filter get_filter(json_t* defines) throw (Exception);

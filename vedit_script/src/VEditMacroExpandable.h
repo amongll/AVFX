@@ -31,7 +31,7 @@ protected:
 	hash_multimap<string,int> macro_idxes;
 	vector<string> segments;
 
-	bool finished() {
+	bool finished() const {
 		return macro_idxes.size() == 0;
 	}
 private:

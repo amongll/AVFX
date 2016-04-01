@@ -36,7 +36,6 @@ public:
 	class Property : public Evaluable, public MacroExpandable
 	{
 		friend class ScriptProps;
-		friend class shared_ptr<Property>;
 	public:
 		virtual void expand_macro(const char* nm, const json_t* value) throw (Exception);
 
@@ -44,11 +43,11 @@ public:
 		virtual void expand_position(const char* nm, const int& frame_in, const int& frame_out,
 				int frame_seq) throw(Exception);
 
-		void regist_delegate(shared_ptr<PropertyAgent> agent) {
+		void regist_delegate(std::tr1::shared_ptr<PropertyAgent> agent) {
 			this->agent = agent;
 		}
 
-		json_t* compile() throw (Exception) {
+		json_t* compile() const throw (Exception) {
 			if ( !MacroExpandable::finished() ) {
 				throw_error_v(ErrorImplError, "property resolved incompletely");
 			}
@@ -61,7 +60,7 @@ public:
 	private:
 		Property(ScriptProps& p, const char* nm, json_t* detail) throw (Exception);
 
-		shared_ptr<PropertyAgent> agent;
+		std::tr1::shared_ptr<PropertyAgent> agent;
 		ScriptProps& parent;
 	};
 
@@ -79,23 +78,33 @@ public:
 	ScriptProps(Script& script, json_t* detail, const vector<string>& spec_props)throw(Exception);
 	ScriptProps(Script& script, json_t* detail, const char* enum_apply_tag="$apply_props")
 		throw(Exception);
+
+	typedef hash_map<string, std::tr1::shared_ptr<Property> >::const_iterator MapCIter;
+	typedef MapCIter PropIter;
+
+	PropIter begin() const
+	{
+		return props.begin();
+	}
+	PropIter end() const
+	{
+		return props.end();
+	}
 private:
-	friend class shared_ptr<ScriptProps>;
 	friend class ScriptProps::Property;
 	friend class Script;
 
 	Script& get_script() {
 		return script;
 	}
+	typedef hash_map<string, std::tr1::shared_ptr<Property> >::iterator MapIter;
 
-	typedef hash_map<string, shared_ptr<Property> >::iterator MapIter;
-	typedef hash_map<string, shared_ptr<Property> >::const_iterator MapCIter;
-	hash_map<string, shared_ptr<Property> >  props;
+	hash_map<string, std::tr1::shared_ptr<Property> >  props;
 };
 
-typedef shared_ptr<ScriptProps> ScriptPropsPtr;
+typedef std::tr1::shared_ptr<ScriptProps> ScriptPropsPtr;
 typedef ScriptProps::Property ScriptProp;
-typedef shared_ptr<ScriptProp> PropPtr;
+typedef std::tr1::shared_ptr<ScriptProp> PropPtr;
 
 NMSP_END(vedit)
 

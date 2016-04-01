@@ -1,10 +1,10 @@
 /*
  * mlt_android_env.c
  *
- *  Created on: 2016Äê1ÔÂ18ÈÕ
+ *  Created on: 2016ï¿½ï¿½1ï¿½ï¿½18ï¿½ï¿½
  *      Author: L-F000000-PC
  */
-#ifdef ANDROID
+#ifdef __ANDROID__
 #include "mlt_android_env.h"
 #include "mlt_factory.h"
 #include <libgen.h>
@@ -486,7 +486,7 @@ static bool copy_asset_file(int fd, AAsset* asset)
 	return true;
 }
 
-extern bool mlt_android_check_data(AAssetManager* mgr, const char* files_path, char *err, size_t err_size)
+bool mlt_android_quick_copy_AAssets(AAssetManager* mgr, const char* files_path, char *err, size_t err_size)
 {
 	char path[1024];
 	char real_path[1024];
@@ -564,6 +564,8 @@ failed:
 	if (assMd5s)mlt_properties_close(assMd5s);
 	return false;
 }
+
+const char* LOGTAG=NULL;
 
 static mlt_properties g_aenv = NULL;
 static pthread_mutex_t g_aenv_lock = PTHREAD_MUTEX_INITIALIZER;

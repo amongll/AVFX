@@ -1175,7 +1175,7 @@ static void consumer_work_start( mlt_consumer self )
 	if ( mlt_properties_get( MLT_CONSUMER_PROPERTIES( self ), "priority" ) )
 	{
 
-#ifndef ANDROID
+#ifndef __ANDROID__
 		struct sched_param priority;
 		pthread_attr_t thread_attributes;
 
@@ -1770,7 +1770,7 @@ static void mlt_thread_create( mlt_consumer self, thread_function_t function )
 		if ( mlt_events_fire( properties, "consumer-thread-create",
 		     &priv->ahead_thread, &priority.sched_priority, function, self, NULL ) < 1 )
 		{
-#ifndef ANDROID
+#ifndef __ANDROID__
 			pthread_attr_t thread_attributes;
 			pthread_attr_init( &thread_attributes );
 			pthread_attr_setschedpolicy( &thread_attributes, SCHED_OTHER );

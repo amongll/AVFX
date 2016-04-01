@@ -6,7 +6,7 @@
 	{
 		"in": 
 		{
-			"type": "pos_time",
+			"type": "pos_frame",
 			"desc": "在两个对其的track，该transition生效的开始点, 参数替换时，使用绝对帧位置",
 			"default": 0,
 			"relative": false
@@ -14,7 +14,7 @@
 
 		"out": 
 		{
-			"type": "pos_time",
+			"type": "pos_frame",
 			"desc": "在两个对其的track，该transition生效的结束点, 参数替换时，使用绝对帧位置",
 			"default": 0,
 			"relative": false

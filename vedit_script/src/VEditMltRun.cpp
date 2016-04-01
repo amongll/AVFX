@@ -192,6 +192,7 @@ MltRuntime::MltRuntime(json_t* script_serialed, int give) throw(Exception):
 {
 	if ( !script_serialed || !json_is_object(script_serialed)
 			|| !json_object_size(script_serialed)) {
+		if ( give && script_serialed ) json_decref(script_serialed);
 		throw_error_v(ErrorImplError,"Init MltRuntime with empty json");
 	}
 	if (give)
@@ -199,7 +200,14 @@ MltRuntime::MltRuntime(json_t* script_serialed, int give) throw(Exception):
 	else
 		json_serialize = json_incref(script_serialed);
 
-	parse_struct(json_serialize, JsonPath(), uuid_pathmap);
+	try {
+		parse_struct(json_serialize, JsonPath(), uuid_pathmap);
+	}
+	catch(Exception& e)
+	{
+		if (give && json_serialize) json_decref(json_serialize);
+		throw;
+	}
 	json_version++;
 	pthread_mutex_init(&run_lock,NULL);
 }
@@ -431,36 +439,126 @@ const JsonPath* MltRuntime::get_runtime_entry_path(const string& uuid)
 
 mlt_profile MltLoader::global_profile = NULL;
 
-json_t* MltRuntime::run() throw (Exception)
+void MltRuntime::init() throw(Exception)
 {
 	stop();
 	Lock lk(&run_lock);
+	Status svst = status;
+	status = StatusCreated;
+	if ( producer_version != json_version) {
+		if (producer)mlt_producer_close(producer);
+		producer = NULL;
+	}
+	else {
+		if (producer && svst == StatusLoaded) {
+			status = StatusLoaded;
+			return;
+		}
+		else if (producer ){
+			if (producer)mlt_producer_close(producer);
+			producer = NULL;
+		}
+	}
+
+	status = StatusLoadFailed;
 	if ( json_serialize == NULL)
 		throw_error_v(ErrorImplError, "running with empty json_serailzed");
 
-	json_t* uuid_je = json_object_get(json_serialize, "uuid");
-	assert(uuid_je && json_is_string(uuid_je) && strlen(json_string_value(uuid_je)));
-
-	mlt_producer	tmp_producer = (mlt_producer) MltLoader::load_mlt(JsonWrap(json_serialize));
+	producer = (mlt_producer) MltLoader::load_mlt(JsonWrap(json_serialize));
 	producer_version = json_version;
+	mlt_producer_optimise(producer);
+	status = StatusLoaded;
+}
 
-	if (producer)mlt_producer_close(producer);
+void MltRuntime::run() throw (Exception)
+{
+	init();
+
+	Lock lk(&run_lock);
 	if (consumer)mlt_consumer_close(consumer);
 
-	producer = tmp_producer;
 	mlt_profile profile = mlt_profile_clone(MltLoader::global_profile);
+#ifndef __ANDROID__
 	consumer = mlt_factory_consumer(profile, "sdl", NULL); //todo
+#else
+	assert(0);
+#endif
 
-	mlt_producer_optimise(producer);
 	mlt_consumer_connect(consumer, mlt_producer_service(producer));
 	mlt_consumer_start(consumer);
 	status = StatusRunning;
-	return json_incref(json_serialize);
 }
+
+#ifdef __ANDROID__
+
+static void release_native_window(void* vnw)
+{
+	if (vnw==NULL) return;
+	ANativeWindow* nw = static_cast<ANativeWindow*>(vnw);
+	ANativeWindow_release(nw);
+}
+
+void MltRuntime::run(ANativeWindow* nw) throw(Exception)
+{
+	init();
+
+	Lock lk(&run_lock);
+	if ( consumer) mlt_consumer_close(consumer);
+
+	mlt_profile profile = mlt_profile_clone(MltLoader::global_profile);
+	consumer = mlt_factory_consumer(profile, "android_surface_preview", NULL);
+
+	if ( consumer ==  NULL) {
+		mlt_profile_close(profile);
+		throw_error_v(ErrorRuntimeLoadFailed, "consumer init failed");
+	}
+
+	mlt_properties props = mlt_consumer_properties(consumer);
+	ANativeWindow_acquire(nw);
+	mlt_properties_set_data(props, "native_window", nw , sizeof(void*),release_native_window , NULL);
+
+	mlt_consumer_connect(consumer, mlt_producer_service(producer));
+	mlt_consumer_start(consumer);
+	status = StatusRunning;
+}
+
+void MltRuntime::run(const string& outpath) throw(Exception)
+{
+	init();
+
+	Lock lk(&run_lock);
+	if ( consumer) mlt_consumer_close(consumer);
+
+	mlt_profile profile = mlt_profile_clone(MltLoader::global_profile);
+	consumer = mlt_factory_consumer(profile, "avformat", outpath.c_str());
+
+	if ( consumer ==  NULL) {
+		mlt_profile_close(profile);
+		throw_error_v(ErrorRuntimeLoadFailed, "consumer init failed");
+	}
+
+	mlt_consumer_connect(consumer, mlt_producer_service(producer));
+	mlt_consumer_start(consumer);
+	status = StatusRunning;
+}
+#endif
 
 void MltRuntime::seek(int framePos) throw (Exception)
 {
-	throw_error(ErrorFeatureNotImpl);
+	Lock lk(&run_lock);
+	if (producer == NULL)
+		throw_error(ErrorRuntimeStatusError);
+
+	mlt_producer_seek(producer, framePos);
+}
+
+void MltRuntime::set_speed(double sp) throw(Exception)
+{
+	Lock lk(&run_lock);
+	if (producer == NULL)
+		throw_error(ErrorRuntimeStatusError);
+
+	mlt_producer_set_speed(producer, sp);
 }
 
 void MltRuntime::stop_ulk() throw (Exception)
@@ -474,11 +572,11 @@ void MltRuntime::stop_ulk() throw (Exception)
 			nanosleep(&req,NULL);
 		}
 		status = StatusStopped;
+	}
 
+	if (consumer) {
 		mlt_consumer_close(consumer);
 		consumer = NULL;
-		mlt_producer_close(producer);
-		producer = NULL;
 	}
 }
 void MltRuntime::stop() throw (Exception)
@@ -489,30 +587,20 @@ void MltRuntime::stop() throw (Exception)
 
 uint32_t MltRuntime::get_frame_length() throw (Exception)
 {
-
+	Lock lk(&run_lock);
+	if (producer)
+		return mlt_producer_get_playtime(producer);
+	else
+		throw_error_v(ErrorRuntimeStatusError, "not loaded.");
 }
 
 uint32_t MltRuntime::get_frame_position() throw (Exception)
 {
-
-}
-
-int MltRuntime::get_runtime_entry_property_int(const string& uuid,
-		const string& procname)
-{
-
-}
-
-int MltRuntime::get_runtime_entry_property_double(const string& uuid,
-		const string& procname)
-{
-
-}
-
-string MltRuntime::get_runtime_entry_property_string(const string& uuid,
-		const string& procname)
-{
-
+	Lock lk(&run_lock);
+	if (producer)
+		return mlt_producer_position(producer);
+	else
+		throw_error_v(ErrorRuntimeStatusError, "not loaded.");
 }
 
 

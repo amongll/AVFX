@@ -32,6 +32,7 @@ public:
 	virtual void expand_scalar(const char* nm, const json_t* v) throw(Exception);
 	virtual void expand_position(const char* nm, const int& frame_in, const int& frame_out,
 			int frame_seq) throw(Exception);
+	virtual void expand_position(const char* nm, int frame_position) throw(Exception);
 
 	//void apply_params(Script& script, json_t* args) throw (Exception);
 
@@ -52,7 +53,7 @@ protected:
 	std::string temp; //�����м�ֵ
 
 	EValueReplaceType replace_type;
-	json_t* evalued;
+	mutable json_t* evalued;
 
 	typedef  hash_multimap<string,int>::iterator MapIter;
 	hash_multimap<string,int> param_idxes;

@@ -80,7 +80,7 @@ void ScriptProps::expand_enum(const char* ename, const char* sname,
 		const char* pnm = json_object_iter_key(it);
 		json_t* v = json_object_iter_value(it);
 		Property* pobj = new Property(*this, pnm, v);
-		props.insert( make_pair(string(pnm), shared_ptr<Property>(pobj)) ) ;
+		props.insert( make_pair(string(pnm), std::tr1::shared_ptr<Property>(pobj)) ) ;
 		it = json_object_iter_next(after_enum_expand, it);
 	}
 }
@@ -138,7 +138,7 @@ ScriptProps::ScriptProps(Script& script, json_t* detail,
 		const char* pnm = json_object_iter_key(it);
 		json_t* v = json_object_iter_value(it);
 		Property* pobj = new Property(*this, pnm, v);
-		props.insert( make_pair(string(pnm), shared_ptr<Property>(pobj)) ) ;
+		props.insert( make_pair(string(pnm), std::tr1::shared_ptr<Property>(pobj)) ) ;
 		it = json_object_iter_next(after_enum_expand, it);
 	}
 }

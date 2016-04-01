@@ -11,6 +11,10 @@
 #include "VEditUtil.h"
 #include "VEditException.h"
 
+#ifdef __ANDROID__
+#include <android/native_window.h>
+#endif
+
 NMSP_BEGIN(vedit)
 
 class Script;
@@ -216,8 +220,16 @@ public:
 
 	const JsonPath* get_runtime_entry_path(const string& uuid);
 
-	json_t* run() throw (Exception);
+	void init() throw(Exception);
+
+	void run() throw (Exception);
+
+#ifdef __ANDROID__
+	void run(ANativeWindow* nwindow) throw (Exception);
+	void run(const string& outpath) throw (Exception);
+#endif
 	void seek(int framePos) throw (Exception);
+	void set_speed(double speed) throw (Exception);
 	void stop() throw (Exception);
 
 	bool running() {
@@ -227,10 +239,6 @@ public:
 
 	uint32_t get_frame_length() throw (Exception);
 	uint32_t get_frame_position() throw (Exception);
-
-	int get_runtime_entry_property_int(const string& uuid, const string& procname);
-	int get_runtime_entry_property_double(const string& uuid, const string& procname);
-	string get_runtime_entry_property_string(const string& uuid, const string& procname);
 
 private:
 	void stop_ulk() throw (Exception);
@@ -258,6 +266,7 @@ private:
 	enum Status {
 		StatusCreated,
 		StatusLoadFailed,
+		StatusLoaded,
 		StatusRunning,
 		StatusStopped
 	};
@@ -269,7 +278,7 @@ private:
 	mlt_consumer consumer;
 };
 
-typedef shared_ptr<MltRuntime> MltRuntimePtr;
+typedef std::tr1::shared_ptr<MltRuntime> MltRuntimePtr;
 
 NMSP_END(vedit)
 

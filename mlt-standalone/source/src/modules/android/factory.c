@@ -1,7 +1,7 @@
 /*
  * factory.c
  *
- *  Created on: 2016Äê1ÔÂ25ÈÕ
+ *  Created on: 2016ï¿½ï¿½1ï¿½ï¿½25ï¿½ï¿½
  *      Author: li.lei
  */
 #include <string.h>
@@ -12,7 +12,7 @@ extern mlt_consumer consumer_apreview_init( mlt_profile profile, mlt_service_typ
 
 MLT_REPOSITORY
 {
-	MLT_REGISTER( consumer_type, "android_preview", consumer_apreview_init );
+	MLT_REGISTER( consumer_type, "android_surface_preview", consumer_apreview_init );
 }
 
 

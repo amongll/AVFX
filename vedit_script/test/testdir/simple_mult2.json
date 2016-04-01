@@ -1,0 +1,55 @@
+{
+	"proctype": "multitrack",
+	"procname": "simple_multi2",
+	"tracks": 
+	[
+		{
+			"$call(color)":{
+				"color":"black",
+				"length": 200
+			}
+		},
+		{
+			"$call(color)": 
+			{
+				"color": "red",
+				"length": 200
+			},
+			"transitions":[
+				{"$call(trans_composite1)":{
+					"in":0,
+					"out":200,
+					"style":"r2c"
+				}}
+			]
+		},
+		{
+			"$call(color)":{
+				"color":"green",
+				"length":200
+			},
+			"transitions":[
+				{"$call(trans_composite1)":{
+					"in":0,
+					"hold":25,
+					"out":200,
+					"style":"r2c"
+				}}
+			]
+		},
+		{
+			"$call(color)":{
+				"color":"blue",
+				"length":200
+			},
+			"transitions":[
+				{"$call(trans_composite1)":{
+					"in":0,
+					"hold":50,
+					"out":200,
+					"style":"r2c"
+				}}
+			]
+		}
+	]
+}
