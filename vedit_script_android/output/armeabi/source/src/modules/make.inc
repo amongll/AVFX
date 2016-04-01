@@ -1,0 +1,1 @@
+SUBDIRS = xml lumas vid.stab xine motion_est normalize sdl linsys rtaudio gtk2 plus kdenlive dv decklink core vmfx swfdec resample opengl sox qt android jackrack vorbis plusgpl avformat videostab frei0r feeds oldfilm kino

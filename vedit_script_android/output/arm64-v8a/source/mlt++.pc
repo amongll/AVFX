@@ -1,0 +1,16 @@
+prefix=/opt/lilei/AVFX/vedit_script_android/output/arm64-v8a/install
+exec_prefix=/opt/lilei/AVFX/vedit_script_android/output/arm64-v8a/install
+libdir=/opt/lilei/AVFX/vedit_script_android/output/arm64-v8a/install/lib
+includedir=/opt/lilei/AVFX/vedit_script_android/output/arm64-v8a/install/include
+datadir=/opt/lilei/AVFX/vedit_script_android/output/arm64-v8a/install/share
+mandir=/opt/lilei/AVFX/vedit_script_android/output/arm64-v8a/install/share/man
+version=0.9.9
+cflags=
+libs=
+
+Name: mlt++
+Description: C++ API for MLT multimedia framework
+Version: ${version}
+Requires: mlt-framework
+Libs: -L${libdir} ${libs}
+Cflags: ${cflags}

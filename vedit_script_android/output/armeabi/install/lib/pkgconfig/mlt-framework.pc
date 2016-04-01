@@ -1,0 +1,19 @@
+prefix=/opt/lilei/AVFX/vedit_script_android/output/armeabi/install
+exec_prefix=/opt/lilei/AVFX/vedit_script_android/output/armeabi/install
+libdir=/opt/lilei/AVFX/vedit_script_android/output/armeabi/install/lib
+includedir=/opt/lilei/AVFX/vedit_script_android/output/armeabi/install/include
+datadir=/opt/lilei/AVFX/vedit_script_android/output/armeabi/install/share
+mandir=/opt/lilei/AVFX/vedit_script_android/output/armeabi/install/share/man
+version=0.9.9
+cflags=-I/opt/lilei/AVFX/vedit_script_android/output/armeabi/install/include -I/opt/lilei/AVFX/vedit_script_android/output/armeabi/install/include/mlt -D_REENTRANT -DANDROID
+libs=-L/opt/lilei/AVFX/vedit_script_android/output/armeabi/install/lib -lmlt -landroid -llog
+moduledir=/opt/lilei/AVFX/vedit_script_android/output/armeabi/install/lib/mlt
+mltdatadir=/opt/lilei/AVFX/vedit_script_android/output/armeabi/install/share/mlt
+meltbin=/opt/lilei/AVFX/vedit_script_android/output/armeabi/install/bin/melt
+
+Name: mlt-framework
+Description: MLT multimedia framework
+Version: ${version}
+Requires:
+Libs: -L${libdir} ${libs}
+Cflags: ${cflags}
