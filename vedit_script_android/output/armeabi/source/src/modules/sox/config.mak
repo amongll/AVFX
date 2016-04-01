@@ -1,3 +1,0 @@
-CFLAGS +=  
-LDFLAGS += -lsox  
-CFLAGS += -DSOX14

@@ -1,2 +1,0 @@
-
-WITH_SDL_IMAGE=1

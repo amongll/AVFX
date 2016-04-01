@@ -1,1 +1,0 @@
-framework	-I/opt/lilei/AVFX/vedit_script_android/output/armeabi/install/include -I/opt/lilei/AVFX/vedit_script_android/output/armeabi/install/include/mlt -D_REENTRANT -DANDROID	-L/opt/lilei/AVFX/vedit_script_android/output/armeabi/install/lib -lmlt -landroid -llog

@@ -1,1 +1,0 @@
-framework	-I/opt/lilei/AVFX/vedit_script_android/output/arm64-v8a/install/include -I/opt/lilei/AVFX/vedit_script_android/output/arm64-v8a/install/include/mlt -D_REENTRANT -DANDROID_XLOCALE	-L/opt/lilei/AVFX/vedit_script_android/output/arm64-v8a/install/lib -lmlt -landroid -llog
