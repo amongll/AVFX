@@ -192,6 +192,7 @@ MltRuntime::MltRuntime(json_t* script_serialed, int give) throw(Exception):
 {
 	if ( !script_serialed || !json_is_object(script_serialed)
 			|| !json_object_size(script_serialed)) {
+		if ( give && script_serialed ) json_decref(script_serialed);
 		throw_error_v(ErrorImplError,"Init MltRuntime with empty json");
 	}
 	if (give)
@@ -199,7 +200,14 @@ MltRuntime::MltRuntime(json_t* script_serialed, int give) throw(Exception):
 	else
 		json_serialize = json_incref(script_serialed);
 
-	parse_struct(json_serialize, JsonPath(), uuid_pathmap);
+	try {
+		parse_struct(json_serialize, JsonPath(), uuid_pathmap);
+	}
+	catch(Exception& e)
+	{
+		if (give && json_serialize) json_decref(json_serialize);
+		throw;
+	}
 	json_version++;
 	pthread_mutex_init(&run_lock,NULL);
 }
@@ -470,12 +478,70 @@ void MltRuntime::run() throw (Exception)
 	if (consumer)mlt_consumer_close(consumer);
 
 	mlt_profile profile = mlt_profile_clone(MltLoader::global_profile);
+#ifndef __ANDROID__
 	consumer = mlt_factory_consumer(profile, "sdl", NULL); //todo
+#else
+	assert(0);
+#endif
 
 	mlt_consumer_connect(consumer, mlt_producer_service(producer));
 	mlt_consumer_start(consumer);
 	status = StatusRunning;
 }
+
+#ifdef __ANDROID__
+
+static void release_native_window(void* vnw)
+{
+	if (vnw==NULL) return;
+	ANativeWindow* nw = static_cast<ANativeWindow*>(vnw);
+	ANativeWindow_release(nw);
+}
+
+void MltRuntime::run(ANativeWindow* nw) throw(Exception)
+{
+	init();
+
+	Lock lk(&run_lock);
+	if ( consumer) mlt_consumer_close(consumer);
+
+	mlt_profile profile = mlt_profile_clone(MltLoader::global_profile);
+	consumer = mlt_factory_consumer(profile, "android_surface_preview", NULL);
+
+	if ( consumer ==  NULL) {
+		mlt_profile_close(profile);
+		throw_error_v(ErrorRuntimeLoadFailed, "consumer init failed");
+	}
+
+	mlt_properties props = mlt_consumer_properties(consumer);
+	ANativeWindow_acquire(nw);
+	mlt_properties_set_data(props, "native_window", nw , sizeof(void*),release_native_window , NULL);
+
+	mlt_consumer_connect(consumer, mlt_producer_service(producer));
+	mlt_consumer_start(consumer);
+	status = StatusRunning;
+}
+
+void MltRuntime::run(const string& outpath) throw(Exception)
+{
+	init();
+
+	Lock lk(&run_lock);
+	if ( consumer) mlt_consumer_close(consumer);
+
+	mlt_profile profile = mlt_profile_clone(MltLoader::global_profile);
+	consumer = mlt_factory_consumer(profile, "avformat", outpath.c_str());
+
+	if ( consumer ==  NULL) {
+		mlt_profile_close(profile);
+		throw_error_v(ErrorRuntimeLoadFailed, "consumer init failed");
+	}
+
+	mlt_consumer_connect(consumer, mlt_producer_service(producer));
+	mlt_consumer_start(consumer);
+	status = StatusRunning;
+}
+#endif
 
 void MltRuntime::seek(int framePos) throw (Exception)
 {
@@ -493,7 +559,6 @@ void MltRuntime::set_speed(double sp) throw(Exception)
 		throw_error(ErrorRuntimeStatusError);
 
 	mlt_producer_set_speed(producer, sp);
-
 }
 
 void MltRuntime::stop_ulk() throw (Exception)

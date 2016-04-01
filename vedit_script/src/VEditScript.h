@@ -77,7 +77,6 @@ public:
 
 	virtual ~Script();
 protected:
-	friend class shared_ptr<Script>;
 	friend class ScriptProps;
 	friend class Vm;
 	friend class MacroExpandable;
@@ -148,7 +147,7 @@ private:
 	struct FilterWrap
 	{
 		ScriptSerialized call_result;
-		shared_ptr<ScriptCallable> call;
+		std::tr1::shared_ptr<ScriptCallable> call;
 	};
 
 	typedef vector<FilterWrap>::iterator FilterIter;
@@ -169,7 +168,7 @@ private:
 	typedef hash_set<Evaluable*>::iterator EvaluableCheckIter;
 };
 
-typedef shared_ptr<Script> ScriptPtr;
+typedef std::tr1::shared_ptr<Script> ScriptPtr;
 
 NMSP_END(vedit)
 

@@ -29,14 +29,14 @@ private:
 	struct SliceWrap
 	{
 		ScriptSerialized call_result;
-		shared_ptr<ScriptCallable> call;
+		std::tr1::shared_ptr<ScriptCallable> call;
 		ScriptPropsPtr ctrls;
 		JsonWrap ctrl_result;
 
 		struct MixWrap
 		{
 			ScriptSerialized call_result;
-			shared_ptr<ScriptCallable> call;
+			std::tr1::shared_ptr<ScriptCallable> call;
 		};
 
 		int mix_len;

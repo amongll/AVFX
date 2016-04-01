@@ -11,6 +11,10 @@
 #include "VEditUtil.h"
 #include "VEditException.h"
 
+#ifdef __ANDROID__
+#include <android/native_window.h>
+#endif
+
 NMSP_BEGIN(vedit)
 
 class Script;
@@ -219,6 +223,11 @@ public:
 	void init() throw(Exception);
 
 	void run() throw (Exception);
+
+#ifdef __ANDROID__
+	void run(ANativeWindow* nwindow) throw (Exception);
+	void run(const string& outpath) throw (Exception);
+#endif
 	void seek(int framePos) throw (Exception);
 	void set_speed(double speed) throw (Exception);
 	void stop() throw (Exception);
@@ -269,7 +278,7 @@ private:
 	mlt_consumer consumer;
 };
 
-typedef shared_ptr<MltRuntime> MltRuntimePtr;
+typedef std::tr1::shared_ptr<MltRuntime> MltRuntimePtr;
 
 NMSP_END(vedit)
 

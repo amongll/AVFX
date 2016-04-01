@@ -17,15 +17,19 @@
 
 #include <dirent.h>
 
+#ifdef __ANDROID__
+#include <android/log.h>
+#endif
+
 NMSP_BEGIN(vedit)
 
 pthread_mutex_t Vm::script_lock = PTHREAD_MUTEX_INITIALIZER;
-shared_ptr<Vm> Vm::singleton_ptr;
+std::tr1::shared_ptr<Vm> Vm::singleton_ptr;
 unsigned int Vm::rand_seed = time(NULL);
 
 ScriptSerialized Vm::call_script(const char* procname, json_t* args) throw (Exception)
 {
-	shared_ptr<Script> script = get_script(procname);
+	std::tr1::shared_ptr<Script> script = get_script(procname);
 	script->call(args);
 	return script->get_mlt_serialize();
 }
@@ -33,15 +37,15 @@ ScriptSerialized Vm::call_script(const char* procname, json_t* args) throw (Exce
 ScriptSerialized Vm::call_script(const char* procname, vedit::ScriptType type, json_t* args)
 	throw (Exception)
 {
-	shared_ptr<Script> script(get_script(procname, type));
+	std::tr1::shared_ptr<Script> script(get_script(procname, type));
 	script->call(args);
 	return script->get_mlt_serialize();
 }
 
-shared_ptr<Script> Vm::get_script(const char* procname)
+std::tr1::shared_ptr<Script> Vm::get_script(const char* procname)
 	throw (Exception)
 {
-	return shared_ptr<Script>(get_script_impl(procname));
+	return std::tr1::shared_ptr<Script>(get_script_impl(procname));
 }
 
 pthread_key_t Vm::thr_spec_cache_key;
@@ -152,6 +156,184 @@ void Vm::load_script_dir(const char* path) throw (Exception)
 
 	closedir(diobj);
 }
+
+int Vm::mltLogLevel = MLT_LOG_INFO;
+string Vm::mltLogTag="vedit_script";
+
+Vm::MltRepoWrap Vm::mltFactory;
+
+
+#ifdef __ANDROID__
+
+void Vm::android_init(AAssetManager* amgr,
+		const char* files_root, const vector<string>& plugins) throw(Exception)
+{
+	if ( !files_root || !strlen(files_root) || !amgr ||  plugins.size()==0)
+		throw_error_v(ErrorImplError, "vedit_script init failed");
+
+	char tmp[1024];
+	snprintf(tmp,sizeof(tmp),"%s/mlt",files_root);
+	setenv("MLT_DATA", tmp, 1);
+
+	if (!mlt_android_quick_copy_AAssets(amgr, files_root, tmp, sizeof(tmp)) ) {
+		throw_error_v(ErrorImplError, "vedit_script MLT ENGINE presets problem.");
+	}
+
+	const char* __plugins[256] = {NULL};
+	vector<string>::const_iterator it;
+	const char** p = __plugins;
+	for ( it = plugins.begin(); it!= plugins.end() ;it++, p++) {
+		*p = it->c_str();
+	}
+	mltFactory.repo = mlt_factory_init2(__plugins, p - __plugins);
+	if (mltFactory.repo == NULL) {
+		throw_error_v(ErrorImplError, "MLT ENGINE factory init failed.");
+	}
+}
+
+void Vm::android_log_init(const char* logtag, int loglevel)
+{
+	switch (loglevel) {
+	case ANDROID_LOG_VERBOSE:
+		mltLogLevel = MLT_LOG_INFO;
+		break;
+	case ANDROID_LOG_DEBUG:
+		mltLogLevel = MLT_LOG_INFO;
+		break;
+	case ANDROID_LOG_INFO:
+		mltLogLevel = MLT_LOG_INFO;
+		break;
+	case ANDROID_LOG_WARN:
+		mltLogLevel = MLT_LOG_WARNING;
+		break;
+	case ANDROID_LOG_ERROR:
+		mltLogLevel = MLT_LOG_ERROR;
+		break;
+	case ANDROID_LOG_FATAL:
+		mltLogLevel = MLT_LOG_FATAL;
+		break;
+	}
+	if (logtag && strlen(logtag))
+		mltLogTag = logtag;
+
+	LOGTAG = mltLogTag.c_str();
+
+	mlt_log_set_level(mltLogLevel);
+	mlt_log_set_callback(logCallback);
+ }
+
+void Vm::logCallback(void* ptr, int level, const char* fmt, va_list vl)
+{
+	int print_prefix = 1;
+	mlt_properties properties = ptr ? MLT_SERVICE_PROPERTIES( ( mlt_service )ptr ) : NULL;
+	char prefixbuf[512] = "";
+	char logbuf[1024] = "";
+
+	static const char* prefix_fmt1= "[%s %s] %s\n";
+	static const char* prefix_fmt2= "[%s %p] %s\n";
+
+	if ( level > mltLogLevel ) {
+		return;
+	}
+	if ( print_prefix && properties )
+	{
+		char *mlt_type = mlt_properties_get( properties, "mlt_type" );
+		char *mlt_service = mlt_properties_get( properties, "mlt_service" );
+		char *resource = mlt_properties_get( properties, "resource" );
+
+		if ( !( resource && *resource && resource[0] == '<' && resource[ strlen(resource) - 1 ] == '>' ) )
+			mlt_type = mlt_properties_get( properties, "mlt_type" );
+		if (mlt_service) {
+			snprintf(prefixbuf, sizeof(prefixbuf), prefix_fmt1, mlt_type, mlt_service, resource);
+		}
+		else {
+			snprintf(prefixbuf, sizeof(prefixbuf), prefix_fmt2, mlt_type, ptr, resource);
+		}
+	}
+	print_prefix = strstr( fmt, "\n" ) != NULL;
+	vsnprintf( logbuf,sizeof(logbuf), fmt, vl );
+
+	int aLevel = ANDROID_LOG_INFO;
+	switch(level)
+	{
+	case MLT_LOG_DEBUG:
+	case MLT_LOG_VERBOSE:
+		aLevel = ANDROID_LOG_DEBUG;
+		break;
+	case MLT_LOG_INFO:
+		aLevel = ANDROID_LOG_INFO;
+		break;
+	case MLT_LOG_WARNING:
+		aLevel = ANDROID_LOG_WARN;
+		break;
+	case MLT_LOG_ERROR:
+		aLevel = ANDROID_LOG_ERROR;
+		break;
+	case MLT_LOG_FATAL:
+		aLevel = ANDROID_LOG_FATAL;
+		break;
+	default:
+		break;
+	}
+
+	if (print_prefix) {
+		__android_log_print(aLevel, mltLogTag.c_str(), "%s%s", prefixbuf, logbuf);
+	}
+	else {
+		__android_log_print(aLevel, mltLogTag.c_str(), "%s", logbuf);
+	}
+}
+
+void Vm::load_script_assets_dir(AAssetManager *amgr, const char* path) throw(Exception)
+{
+	if ( amgr == NULL || path == NULL ) {
+		return;
+	}
+
+	AAssetDir* adir = AAssetManager_openDir(amgr, path);
+	if (adir == NULL) {
+		throw_error_v(ErrorInvalidParam, "open assets dir:%s failed", path);
+	}
+
+	const char* filenm = NULL;
+	while (( filenm = AAssetDir_getNextFileName(adir) ) ) {
+		if (strlen(filenm) <= strlen(".json"))
+			continue;
+		if (strcmp(".json", filenm + strlen(filenm) - strlen(".json"))
+			!= 0)
+			continue;
+
+		AAsset* aset = AAssetManager_open(amgr, filenm, O_RDONLY);
+		if (!aset) continue;
+		off_t aset_size = AAsset_getLength(aset);
+		if (aset_size == 0) continue;
+		char * buf = new char[aset_size+1];
+		AAsset_read(aset, buf, aset_size);
+		buf[aset_size]=0;
+		AAsset_close(aset);
+
+		json_error_t jserr;
+		json_t* jsobj = json_loads(buf, 0, &jserr);
+		free(buf);
+
+		if (!jsobj) {
+			ALOGW("parse json failed when load asset template:%s, cause: %d:%d at<%s> %s", filenm,
+				jserr.line, jserr.position, jserr.source, jserr.text);
+			continue;
+		}
+
+		JsonWrap jswrp(jsobj, 1);
+
+		try {
+			regist_script(jsobj);
+		}
+		catch(const Exception& e) {
+			ALOGW("load asset template:%s failed, cause:%s", filenm, e.what());
+		}
+	}
+	AAssetDir_close(adir);
+}
+#endif
 
 Script* Vm::get_script_impl(const char* procname) throw (Exception)
 {
