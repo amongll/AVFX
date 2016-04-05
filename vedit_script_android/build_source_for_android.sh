@@ -5,6 +5,9 @@ set +x
 
 source build_toolchain.sh
 
+EXTRA_CFLAGS=
+EXTRA_LDFLAGS=
+
 
 compile_for_abi()
 {
@@ -17,6 +20,7 @@ compile_for_abi()
     fi
 
     export PATH="$MY_TOOLCHAIN_ROOT/$LOCAL_ABI/bin:$SAVE_PATH"
+ #   export AS=${CROSS_PREFIX}-as
     export CC=${CROSS_PREFIX}-gcc
     export LD=${CROSS_PREFIX}-ld
     export AR=${CROSS_PREFIX}-ar
@@ -28,8 +32,11 @@ compile_for_abi()
     CAN_ABI=armeabi
     case "$LOCAL_ABI" in
         arm)
+            EXTRA_CFLAGS='-march=armv5te -mtune=arm9tdmi -msoft-float'
         ;;
         armv7a)
+            EXTRA_CFLAGS='-march=armv7-a -mcpu=cortex-a8 -mfpu=vfpv3-d16 -mfloat-abi=softfp -mthumb'
+            EXTRA_LDFLAGS='-Wl,--fix-cortex-a8'
             CAN_ABI=armeabi-v7a
         ;;
         arm64)
@@ -39,8 +46,14 @@ compile_for_abi()
         ;;
     esac
     
+    [ -f ${MY_ROOT}/${SOURCE_DIR}_config_opts.sh ] && source  ${MY_ROOT}/${SOURCE_DIR}_config_opts.sh
     mkdir -p ${MY_OUTPUT_ROOT}/$CAN_ABI/build/${SOURCE_DIR}
     cd ${MY_OUTPUT_ROOT}/$CAN_ABI/build/${SOURCE_DIR}
+    curdir=$(pwd)
+    if [ ${MY_VPATH_OK} -eq 0 ]; then
+        cp -rf ${MY_ROOT}/${SOURCE_DIR}/* ${curdir}
+    fi
+
 
     PKG_CONFIG_PATH=${MY_OUTPUT_ROOT}/$CAN_ABI/install/lib/pkgconfig
 
@@ -64,12 +77,22 @@ compile_for_abi()
     echo $AR
     echo $STRIP
     
-    echo \
-    ${MY_ROOT}/${SOURCE_DIR}/configure --prefix=${MY_OUTPUT_ROOT}/$CAN_ABI/install \
-        --host=$CROSS_HOST --with-sysroot=$my_sysroot
+    if [ ${MY_VPATH_OK} -eq 0 ]; then
+        echo \
+        ./configure --prefix=${MY_OUTPUT_ROOT}/$CAN_ABI/install \
+         --host=$CROSS_HOST --with-sysroot=$my_sysroot ${MY_CONFIG_OPTS} 
 
-    ${MY_ROOT}/${SOURCE_DIR}/configure --prefix=${MY_OUTPUT_ROOT}/$CAN_ABI/install \
-        --host=$CROSS_HOST --with-sysroot=$my_sysroot
+        ./configure --prefix=${MY_OUTPUT_ROOT}/$CAN_ABI/install \
+         --host=$CROSS_HOST --with-sysroot=$my_sysroot ${MY_CONFIG_OPTS} 
+        
+    else
+        echo \
+        ${MY_ROOT}/${SOURCE_DIR}/configure --prefix=${MY_OUTPUT_ROOT}/$CAN_ABI/install \
+         --host=$CROSS_HOST --with-sysroot=$my_sysroot ${MY_CONFIG_OPTS} 
+
+        ${MY_ROOT}/${SOURCE_DIR}/configure --prefix=${MY_OUTPUT_ROOT}/$CAN_ABI/install \
+         --host=$CROSS_HOST --with-sysroot=$my_sysroot ${MY_CONFIG_OPTS} 
+    fi
 
     make clean
     make uninstall

@@ -27,6 +27,7 @@ compile_for_abi()
     case "$LOCAL_ABI" in
         arm)
             CAN_ABI=armeabi
+            FF_ROOT=
         ;;
         armv7a)
             CAN_ABI=armeabi-v7a
@@ -43,13 +44,14 @@ compile_for_abi()
     MY_EXTRA_LDFLAGS=
     source ./module.sh
     
-    rm -rf ${MY_OUTPUT_ROOT}/$CAN_ABI/build
-    mkdir -p  ${MY_OUTPUT_ROOT}/$CAN_ABI/build
-    rm -fr ${MY_OUTPUT_ROOT}/$CAN_ABI/source
-    cp -Lr ${MY_ROOT}/source  ${MY_OUTPUT_ROOT}/$CAN_ABI/source
-    cd ${MY_OUTPUT_ROOT}/$CAN_ABI/source
+    #rm -rf ${MY_OUTPUT_ROOT}/$CAN_ABI/build
+    mkdir -p  ${MY_OUTPUT_ROOT}/$CAN_ABI/build/mlt
+    #rm -fr ${MY_OUTPUT_ROOT}/$CAN_ABI/source
+    #cp -Lr ${MY_ROOT}/source  ${MY_OUTPUT_ROOT}/$CAN_ABI/source
+    cp -Lr ${MY_ROOT}/mlt/*  ${MY_OUTPUT_ROOT}/${CAN_ABI}/build/mlt/
+    cd ${MY_OUTPUT_ROOT}/$CAN_ABI/build/mlt
     
-    COMMON_MY_CFG_FLAGS="$COMMON_MY_CFG_FLAGS --target-os=Android --ff-root=/opt/lilei/ijkplayer-master/android/contrib/build \
+    COMMON_MY_CFG_FLAGS="$COMMON_MY_CFG_FLAGS --target-os=Android --ff-root=${MY_OUTPUT_ROOT}/$CAN_ABI/install \
         --ff-libname=ijkffmpeg"
 
     MY_EXTRA_CFLAGS="$MY_EXTRA_CFLAGS --sysroot=$my_sysroot"

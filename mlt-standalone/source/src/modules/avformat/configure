@@ -36,7 +36,7 @@ else
                 --cpu=* )                       cpu="${i#--cpu=}" ;;
                 --target-os=* )                 targetos="${i#--target-os=}" ;;
                 --target-arch=* )               targetarch="${i#--target-arch=}" ;;
-                --ff-root=* )               ffmpegcross="${i#--ff-root=}" ;;
+                --ff-root=* )               ffmpegroot="${i#--ff-root=}" ;;
                 --ff-libname=* )               ffmpegcrosslib="${i#--ff-libname=}" ;;
                 --ff-arch=* )               FF_ARCH="${i#--ff-arch=}" ;;
         	esac
@@ -44,10 +44,10 @@ else
 		export LIBSUF=.so	
 
 				
-		ffmpegroot=$ffmpegcross/ffmpeg-${FF_ARCH}/output
+		#ffmpegroot=$ffmpegcross/ffmpeg-${FF_ARCH}/output
 		echo > config.${FF_ARCH}.mak	
 		echo "CFLAGS+=-I$ffmpegroot/include" >> config.${FF_ARCH}.mak
-		echo "LDFLAGS+=-L$ffmpegroot -l${ffmpegcrosslib}" >> config.${FF_ARCH}.mak
+		echo "LDFLAGS+=-L$ffmpegroot/lib -l${ffmpegcrosslib}" >> config.${FF_ARCH}.mak
 cat <<EOF  >> config.${FF_ARCH}.mak
 EXTRA_LIBS=
 CODECS=1
